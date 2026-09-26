@@ -1,0 +1,16 @@
+{
+  "name": "fitpass-booking",
+  "version": "1.6.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "helmet": "^8.0.0"
+  },
+  "engines": {
+    "node": "24.x"
+  }
+}

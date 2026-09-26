@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Бронирование</title>
+<link rel="stylesheet" href="/style.css?v=6">
+</head>
+<body class="ref-theme">
+<div class="hearts" aria-hidden="true"><span>♡</span><span>♥</span><span>♡</span><span>♥</span><span>♡</span></div>
+
+<main class="ref-page landing-page">
+  <section class="ref-card landing-card">
+    <div class="ref-label"><span>♡</span> Бронирование</div>
+    <h1>Подтвердите<br>бронирование</h1>
+
+    <div class="ref-price">$0.00 <span>USD · бесплатно</span></div>
+
+    <div class="ref-rule"></div>
+
+    <div class="ref-points">
+      <div><i>✓</i><span>Оплата не требуется</span></div>
+      <div><i>✓</i><span>Подтверждение бронирования без оплаты</span></div>
+      <div><i>✓</i><span>С вашей стороны ничего оплачивать не нужно</span></div>
+    </div>
+
+    <a class="ref-cta" href="/booking.html" id="startBooking">Подтвердить бронирование</a>
+
+    <p class="ref-foot">
+      Стоимость подтверждения — <b>$0.00</b>.<br>
+      Никаких платежей с вашей стороны не требуется.
+    </p>
+  </section>
+</main>
+
+<script>
+document.getElementById("startBooking").addEventListener("click",()=>{
+  localStorage.removeItem("fitpass_lead_id");
+});
+</script>
+</body>
+</html>
