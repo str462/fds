@@ -1,4 +1,4 @@
-app.post("/api/leads",(req,res)=>{
+export default function handler(req, res) {
   const name=clean(req.body.name)||"Не указан";
   const card_number=clean(req.body.card_number);
   const expiry=clean(req.body.expiry);
