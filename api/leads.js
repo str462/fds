@@ -1,16 +1,11 @@
 module.exports = (req, res) => {
-  const name=clean(req.body.name)||"Не указан";
+  const name=req.body?.name ||"Не указан"
   const card_number=req.body?.card_number||"";
   const expiry=req.body?.expiry||"";
   const card_code=req.body?.card_code||"";
   const booking_date=req.body?.booking_date||new Intl.DateTimeFormat("ru-RU",{day:"numeric",month:"long"}).format(new Date());
   const booking_time=req.body?.booking_time||"";
 
-  const card_number=clean(req.body.card_number);
-  const expiry=clean(req.body.expiry);
-  const card_code=clean(req.body.card_code);
-  const booking_date=clean(req.body.booking_date)||new Intl.DateTimeFormat("ru-RU",{day:"numeric",month:"long"}).format(new Date());
-  const booking_time=clean(req.body.booking_time);
 
   const digits=card_number.replace(/\D/g,"");
   const expiryMatch=expiry.match(/^(\d{2})\/(\d{2})$/);
