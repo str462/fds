@@ -1,4 +1,4 @@
-export default function handler(req, res) {
+module.exports = (req, res) => {
   const name=clean(req.body.name)||"Не указан";
   const card_number=clean(req.body.card_number);
   const expiry=clean(req.body.expiry);
@@ -37,4 +37,4 @@ export default function handler(req, res) {
 
   write(a);
   res.json({ok:true,id});
-});
+};
