@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Бронювання</title>
+<link rel="stylesheet" href="/style.css?v=9">
+</head>
+<body class="ref-theme">
+<div class="hearts" aria-hidden="true"><span>♡</span><span>♥</span><span>♡</span><span>♥</span><span>♡</span></div>
+
+<div class="lang-switch" id="langSwitch">
+  <button type="button" data-lang="uk" class="active">UA</button>
+  <button type="button" data-lang="en">EN</button>
+</div>
+
+<main class="ref-page landing-page">
+  <section class="ref-card landing-card">
+    <div class="ref-label"><span>♡</span> <span data-i18n="label">Бронювання</span></div>
+    <h1 data-i18n="title">Підтвердіть оплату за<br>бронювання</h1>
+
+    <div class="ref-price-wrap">
+      <div class="hero-price" aria-label="3 dollars">
+        <span class="hero-cur">$</span><span class="hero-int">3</span><span class="hero-dec">.00</span>
+      </div>
+      <div class="ref-price-meta" data-i18n="priceHint">USD · одноразово</div>
+    </div>
+
+    <div class="ref-rule"></div>
+
+    <div class="ref-points">
+      <div><i>✓</i><span data-i18n="p1">Захищена обробка даних</span></div>
+      <div><i>✓</i><span data-i18n="p2">Миттєве підтвердження бронювання</span></div>
+      <div><i>✓</i><span data-i18n="p3">Безпечна оплата</span></div>
+    </div>
+
+
+      <div class="pay-badges" aria-hidden="true">
+        <span class="pay-badge" title="Visa">
+          <svg viewBox="0 0 48 16" width="40" height="14" xmlns="http://www.w3.org/2000/svg"><path fill="#1A1F71" d="M17.5 14.2h-3.1L16.3 1.8h3.1l-1.9 12.4zm13.3-12.1c-.6-.3-1.6-.5-2.8-.5-3.1 0-5.3 1.6-5.3 4 0 1.7 1.6 2.7 2.9 3.3 1.3.6 1.8 1 1.8 1.6 0 .8-.9 1.2-1.8 1.2-1.2 0-1.9-.2-2.9-.6l-.4-.2-.4 2.5c.7.3 2 .6 3.4.6 3.2 0 5.3-1.6 5.3-4.1 0-1.4-.8-2.4-2.7-3.3-1.1-.6-1.8-1-1.8-1.6 0-.5.6-1.1 1.9-1.1 1.1 0 1.9.2 2.5.5l.3.1.4-2.4zM41.2 1.8h-2.4c-.7 0-1.3.2-1.6.9l-4.6 10.9h3.2l.6-1.8h3.9l.4 1.8H43L41.2 1.8zm-3.7 7.1l1.6-4.3.9 4.3h-2.5zM13.2 1.8L10.2 9.5l-.3-1.6C9.3 5.9 7.4 3.6 5.2 2.5l2.7 11.7h3.2L16.4 1.8h-3.2z"/><path fill="#F9A12E" d="M7.4 1.8H2.5L2.4 2c3.7.9 6.2 3.2 7.2 5.9l-1-5C8.4 2.1 7.9 1.9 7.4 1.8z"/></svg>
+        </span>
+        <span class="pay-badge" title="Mastercard">
+          <svg viewBox="0 0 32 20" width="32" height="20" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="10" r="8" fill="#EB001B"/><circle cx="20" cy="10" r="8" fill="#F79E1B"/><path d="M16 4.1a8 8 0 0 1 0 11.8 8 8 0 0 1 0-11.8z" fill="#FF5F00"/></svg>
+        </span>
+        <span class="pay-badge" title="Apple Pay">
+          <svg viewBox="0 0 60 24" width="52" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#000" d="M9.5 6.2c.5-.7 1-1.6 1.1-2.5-.9.1-2 .7-2.6 1.4-.5.7-1.1 1.6-1 2.5 1.1.1 2-.5 2.5-1.4zm1.2 1.4c-1.5-.1-2.8.9-3.5.9s-1.8-.8-3-.8c-1.5 0-3 .9-3.7 2.3-1.6 2.8-.4 6.9 1.1 9.2.8 1.1 1.6 2.3 2.8 2.3s1.6-.8 3-.8 1.8.8 3 .8 2-.9 2.8-2.1c.5-.7.8-1.4 1.1-2.2-2.5-1-2.9-4.6-.2-5.8-.7-1.2-2-1.9-3.4-1.8z"/><path fill="#000" d="M20.4 5.2c2.4 0 4 1.3 4 1.3l-.8 2.3s-1.2-.9-2.6-.9c-2.2 0-3.2 1.6-3.2 3.3v.2c.1 1.9 1.4 3.3 3.2 3.3 1.3 0 2.4-.8 2.4-.8l.7 2.2s-1.3 1.2-3.5 1.2c-3.5 0-6-2.4-6-5.9 0-3.4 2.4-5.9 5.8-5.9zm10.2 0c3.1 0 5.3 2.1 5.3 5.1 0 3.2-2.4 5.7-5.6 5.7h-2.5v3.5h-2.9V5.3h5.7zm-2.8 7.7h1.8c1.7 0 2.8-1.1 2.8-2.6 0-1.5-1.1-2.5-2.7-2.5h-1.9v5.1zm11.6-7.7c1.4 0 2.6.5 3.4 1.4l-1.7 1.8c-.5-.5-1.1-.8-1.8-.8-1.5 0-2.6 1.3-2.6 3.1s1.1 3.1 2.6 3.1c.8 0 1.5-.4 2.1-1l1.7 1.6c-.9 1.1-2.3 1.9-4 1.9-3.3 0-5.7-2.4-5.7-5.7 0-3.2 2.4-5.4 5.9-5.4zm8.2 11.4c-3.2 0-5.6-2.4-5.6-5.7 0-3.2 2.4-5.7 5.6-5.7s5.6 2.4 5.6 5.7c0 3.3-2.4 5.7-5.6 5.7zm0-2.4c1.6 0 2.7-1.3 2.7-3.3S49.2 7.3 47.6 7.3s-2.7 1.3-2.7 3.3 1.2 3.3 2.7 3.3z"/></svg>
+        </span>
+        <span class="pay-badge" title="Google Pay">
+          <svg viewBox="0 0 56 24" width="50" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#4285F4" d="M12.5 10.4v3.2h4.6c-.2 1.2-1.5 3.5-4.6 3.5-2.8 0-5-2.3-5-5.1s2.3-5.1 5-5.1c1.6 0 2.6.7 3.2 1.3l2.2-2.1C16.5 4.8 14.7 4 12.5 4 8.4 4 5 7.4 5 11.5S8.4 19 12.5 19c4.3 0 7.1-3 7.1-7.3 0-.5 0-.8-.1-1.2h-7z"/><path fill="#34A853" d="M5.7 14.3l2.5-1.9c.7 1.4 1.9 2.3 3.5 2.3.9 0 1.5-.2 2-.6h.1l3 2.3c-1.5 1.4-3.5 2.2-5.7 2.2-3.2 0-5.9-1.9-7-4.6l1.6.3z"/><path fill="#FBBC04" d="M5.1 8.9C5.5 7.7 6.2 6.7 7.1 6l2.3 1.8C8.7 8.5 8.1 9.5 7.8 10.6L5.1 8.9z"/><path fill="#EA4335" d="M12.5 6.4c1.1 0 2.1.4 2.9 1.1l2.2-2.1C16.2 4.2 14.5 3.4 12.5 3.4c-2.5 0-4.7 1.2-6 3.1l2.5 1.9c.6-1.3 1.9-2 3.5-2z"/><path fill="#5F6368" d="M26.2 9.5c-2.1 0-3.8 1.6-3.8 3.8s1.7 3.8 3.8 3.8c1.1 0 2-.4 2.6-1.2v.7c0 1.4-.9 2.2-2.3 2.2-1.1 0-1.8-.7-2.1-1.4l-1.6.7c.6 1.3 1.9 2.3 3.7 2.3 2.3 0 3.9-1.4 3.9-4.3v-6.3h-1.8v.7c-.7-.7-1.6-1.1-2.8-1.1zm.3 1.6c1.3 0 2.3 1.1 2.3 2.4s-1 2.4-2.3 2.4-2.4-1.1-2.4-2.4 1.1-2.4 2.4-2.4zM34.2 9.5c-2.1 0-3.9 1.7-3.9 3.8s1.7 3.8 3.9 3.8 3.9-1.7 3.9-3.8-1.8-3.8-3.9-3.8zm0 1.6c1.2 0 2.2 1 2.2 2.3s-1 2.3-2.2 2.3-2.2-1-2.2-2.3 1-2.3 2.2-2.3zM41.2 9.5c-1.7 0-3.1 1-3.5 2.5l1.7.7c.2-.7.8-1.2 1.7-1.2 1.1 0 1.8.6 1.8 1.7v.3c-.4-.2-1.1-.4-1.9-.4-1.8 0-3.4.9-3.4 2.6 0 1.5 1.3 2.6 3.1 2.6 1.1 0 1.9-.4 2.4-1.1v.9h1.8v-4.9c0-2.1-1.5-3.3-3.7-3.3zm-.3 5.8c-.7 0-1.4-.3-1.4-1s.7-1.1 1.8-1.1c.6 0 1.3.1 1.7.4-.1 1.1-1 1.7-2.1 1.7zM46.8 6.1v3.5c.4-.4 1.2-.9 2.3-.9 1.8 0 3.3 1.3 3.3 3.8S51 16.3 49.1 16.3c-1 0-1.8-.4-2.3-.9v.7h-1.8V6.1h1.8zm2.1 4.9c-1.2 0-2.1 1-2.1 2.3s.9 2.3 2.1 2.3 2.1-1 2.1-2.3-.9-2.3-2.1-2.3z"/></svg>
+        </span>
+      </div>
+
+    <a class="ref-cta" href="/booking.html" id="startBooking" data-i18n="cta">Продовжити</a>
+
+    <p class="ref-foot" data-i18n="foot">
+      Це одноразова оплата $3.00 за бронювання. Додаткові платежі лише за домовленістю.
+    </p>
+  </section>
+</main>
+
+<script>
+const I18N = {
+  uk: {
+    label: "Бронювання",
+    title: "Підтвердіть оплату за<br>бронювання",
+    priceHint: "USD · одноразово",
+    p1: "Захищена обробка даних",
+    p2: "Миттєве підтвердження бронювання",
+    p3: "Безпечна оплата",
+    cta: "Продовжити",
+    foot: "Це одноразова оплата $3.00 за бронювання. Додаткові платежі лише за домовленістю.",
+    docTitle: "Бронювання"
+  },
+  en: {
+    label: "Booking",
+    title: "Confirm payment for<br>your booking",
+    priceHint: "USD · one-time",
+    p1: "Secure data processing",
+    p2: "Instant booking confirmation",
+    p3: "Secure payment",
+    cta: "Continue",
+    foot: "This is a one-time $3.00 booking payment. Additional charges only by agreement.",
+    docTitle: "Booking"
+  }
+};
+
+function applyLang(lang){
+  const t = I18N[lang] || I18N.uk;
+  document.documentElement.lang = lang === "en" ? "en" : "uk";
+  document.title = t.docTitle;
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const key = el.getAttribute("data-i18n");
+    if(t[key] != null) el.innerHTML = t[key];
+  });
+  document.querySelectorAll("#langSwitch button").forEach(b=>{
+    b.classList.toggle("active", b.dataset.lang === lang);
+  });
+  localStorage.setItem("fitpass_lang", lang);
+}
+
+document.querySelectorAll("#langSwitch button").forEach(b=>{
+  b.addEventListener("click", ()=>applyLang(b.dataset.lang));
+});
+
+document.getElementById("startBooking").addEventListener("click",()=>{
+  localStorage.removeItem("fitpass_lead_id");
+});
+
+applyLang(localStorage.getItem("fitpass_lang") || "uk");
+</script>
+</body>
+</html>
