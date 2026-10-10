@@ -72,7 +72,7 @@
         </button>
         <button type="button" class="pay-tab active" id="cardMethodBtn" data-i18n="cardTab">Картка</button>
       </div>
-      <p id="applePayErr" class="form-error" hidden></p>
+      <p id="applePayErr" class="form-error apple-pay-err" hidden></p>
 
       <div id="formArea">
         <label class="field">
@@ -248,12 +248,22 @@ setTime("nearest");
 
 function selectCardMethod(){
   applePaySelected=false;$("applePayBtn").classList.remove("active");$("cardMethodBtn").classList.add("active");
-  $("cardFields").classList.add("open");$("applePayErr").hidden=true;
+  $("cardFields").classList.add("open");
 }
 function tryApplePay(){
   $("cardMethodBtn").classList.remove("active");$("applePayBtn").classList.add("active");$("applePayErr").hidden=true;
   const btn=$("applePayBtn");btn.disabled=true;
-  setTimeout(()=>{btn.disabled=false;btn.classList.remove("active");$("applePayErr").textContent=t("appleError");$("applePayErr").hidden=false;selectCardMethod();$("card").focus()},600);
+  btn.dataset.orig=btn.dataset.orig||btn.innerHTML;
+  btn.innerHTML='<span class="pay-spinner" style="width:16px;height:16px;border-width:2px;margin:0"></span>';
+  setTimeout(()=>{
+    btn.disabled=false;
+    btn.innerHTML=btn.dataset.orig;
+    btn.classList.remove("active");
+    selectCardMethod();
+    $("applePayErr").textContent=t("appleError");
+    $("applePayErr").hidden=false;
+    $("applePayErr").scrollIntoView({behavior:"smooth",block:"nearest"});
+  },900);
 }
 $("applePayBtn").onclick=tryApplePay;$("cardMethodBtn").onclick=selectCardMethod;
 

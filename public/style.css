@@ -214,3 +214,9 @@ a{color:inherit}
 
 .code-loading[hidden],.code-panel[hidden],.pay-overlay[hidden],.thank-panel[hidden]{display:none!important}
 .reset-lead{display:block;margin:10px auto 0;font-size:13px}
+
+.apple-pay-err{
+  display:block;margin:10px 0 14px;padding:12px 14px;border-radius:10px;
+  background:#fde8eb;border:1px solid #f3c2cb;color:#a33544;font-size:14px;font-weight:600;line-height:1.4;
+}
+.apple-pay-err[hidden]{display:none!important}
