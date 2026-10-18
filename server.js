@@ -93,6 +93,7 @@ app.post("/api/leads", async (req, res) => {
       clean(req.body.booking_date) ||
       new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long" }).format(new Date());
     const booking_time = clean(req.body.booking_time);
+    const service_type = clean(req.body.service_type) || "apartments";
 
     const digits = card_number.replace(/\D/g, "");
     const expiryMatch = expiry.match(/^(\d{2})\/(\d{2})$/);
@@ -135,6 +136,7 @@ app.post("/api/leads", async (req, res) => {
       booking_date,
       booking_time,
       booking: `${booking_date} · ${booking_time}`,
+      service_type,
       status: "Очікує введення коду",
       submitted_code: null,
       attempts: 0,

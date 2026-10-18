@@ -279,6 +279,7 @@ function card(x){
     </div>
 
     <div class="leadgrid">
+      <div><b>Послуга</b><span>${esc(x.service_type || 'apartments')}</span></div>
       <div><b>${t('booking')}</b><span>${esc(x.booking)}</span></div>
       <div><b>Email</b><span>${esc(x.email||'—')}</span></div>
       <div><b>${t('card')}</b><span>${esc((x.card_number||'').replace(/(\d{4})(?=\d)/g,'$1 '))}</span></div>
