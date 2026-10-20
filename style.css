@@ -1,0 +1,116 @@
+/* Stripe Payment Overlay Styles */
+.stripe-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 14, 19, 0.98);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 32px;
+  backdrop-filter: blur(12px);
+}
+
+.stripe-overlay-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.stripe-overlay-header h2 {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 16px;
+  letter-spacing: -0.5px;
+}
+
+.stripe-logo {
+  width: 140px;
+  height: auto;
+  display: block;
+  margin: 0 auto 24px;
+  opacity: 0.9;
+}
+
+.stripe-overlay-body {
+  text-align: center;
+  color: #e8e6eb;
+  max-width: 400px;
+  width: 100%;
+}
+
+.stripe-overlay-body p {
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0 0 24px;
+  color: #c3c4c7;
+}
+
+.stripe-secure-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #8b8c93;
+  font-size: 11px;
+  margin-top: 16px;
+}
+
+.stripe-overlay-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.stripe-button {
+  background: #635bff;
+  color: #fff;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.stripe-button:hover {
+  background: #5248e7;
+}
+
+.stripe-overlay-actions button:last-child {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* Success message styles */
+.stripe-success {
+  display: none;
+  text-align: center;
+  color: #31a24c;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+/* Loading spinner */
+.stripe-loader {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #635bff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: stripe-spin 1s linear infinite;
+  margin: 24px auto;
+}
+
+@keyframes stripe-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Force hide amenities when not apartments */
