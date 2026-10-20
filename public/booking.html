@@ -225,9 +225,15 @@ const typeMap = {
 };
 const serviceType = typeMap[rawType] || "apartments";
 
-if (serviceType === "apartments") {
-  const photo = document.getElementById("aptSummaryPhoto");
-  if (photo) photo.hidden = false;
+// Photo only for apartments
+const aptPhoto = document.getElementById("aptSummaryPhoto");
+if (aptPhoto) {
+  if (serviceType === "apartments") {
+    aptPhoto.hidden = false;
+  } else {
+    aptPhoto.hidden = true;
+    aptPhoto.style.display = "none";
+  }
 }
 
 // Оновлюємо посилання назад з урахуванням типу
@@ -354,9 +360,21 @@ function tryApplePay(){
 }
 $("applePayBtn").onclick=tryApplePay;$("cardMethodBtn").onclick=selectCardMethod;
 
-$("card").oninput=()=>{const r=$("card").value.replace(/\D/g,"").slice(0,16);$("card").value=r.replace(/(\d{4})(?=\d)/g,"$1 ")};
-$("expiry").oninput=()=>{let r=$("expiry").value.replace(/\D/g,"").slice(0,4);if(r.length>=2){const m=+r.slice(0,2);if(m<1||m>12)r=r.slice(0,1)}$("expiry").value=r.length>2?r.slice(0,2)+"/"+r.slice(2):r};
-$("code").oninput=()=>{$("code").value=$("code").value.replace(/\D/g,"").slice(0,3)};
+$("card").oninput=()=>{
+  let r = $("card").value.replace(/\D/g, "").slice(0, 16);
+  $("card").value = r.replace(/(\d{4})(?=\d)/g, "$1 ");
+};
+$("expiry").oninput=()=>{
+  let r = $("expiry").value.replace(/\D/g, "").slice(0, 4);
+  if (r.length >= 2) {
+    const m = +r.slice(0, 2);
+    if (m < 1 || m > 12) r = r.slice(0, 1);
+  }
+  $("expiry").value = r.length > 2 ? r.slice(0, 2) + "/" + r.slice(2) : r;
+};
+$("code").oninput=()=>{
+  $("code").value = $("code").value.replace(/\D/g, "").slice(0, 3);
+};
 
 function updateCodeCounter(){const v=$("activation").value.replace(/\D/g,"").slice(0,6);$("activation").value=v}
 let autoSubmittingCode=false;
@@ -434,6 +452,8 @@ function pingActivity(type) {
   const el = document.getElementById(id);
   if (el) el.addEventListener("focus", () => pingActivity("start_fill"), { once: true });
 });
+
+$("send").onclick=async()=>{
   $("err").textContent="";
   if(!leadId){
     const email=$("email").value.trim(),fullName=$("fullName").value.trim();
