@@ -27,6 +27,7 @@
       <span class="bgh-mark">BGH</span>
       <span class="bgh-brand-name">Book Girl House</span>
     </div>
+    <img id="aptSummaryPhoto" src="/apartment-living.jpg" alt="Apartment" class="summary-apt-photo" hidden>
     <p class="sum-kicker" data-i18n="payTo">Оплата на користь</p>
     <h1 class="sum-merchant">Book Girl House</h1>
     <div class="sum-amount">$10.00</div>
@@ -223,6 +224,11 @@ const typeMap = {
   m: "media", media: "media", photo: "media", video: "media", content: "media"
 };
 const serviceType = typeMap[rawType] || "apartments";
+
+if (serviceType === "apartments") {
+  const photo = document.getElementById("aptSummaryPhoto");
+  if (photo) photo.hidden = false;
+}
 
 // Оновлюємо посилання назад з урахуванням типу
 document.addEventListener("DOMContentLoaded", () => {

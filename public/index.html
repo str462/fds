@@ -22,11 +22,20 @@
   <button type="button" data-lang="en">EN</button>
 </div>
 
-<main class="bgh-shell">
+<main class="bgh-shell" id="mainShell">
   <section class="bgh-hero-card">
     <div class="bgh-brand">
       <span class="bgh-mark">BGH</span>
       <span class="bgh-brand-name">Book Girl House</span>
+    </div>
+
+    <!-- Apartment hero gallery (shown only for apartments) -->
+    <div id="aptGallery" class="apt-gallery" hidden>
+      <img src="/apartment-living.jpg" alt="Living room" class="apt-main-photo">
+      <div class="apt-thumbs">
+        <img src="/apartment-living.jpg" alt="Living">
+        <img src="/apartment-bedroom.jpg" alt="Bedroom">
+      </div>
     </div>
 
     <p class="bgh-kicker" data-i18n="kicker">Підтвердження бронювання</p>
@@ -34,6 +43,16 @@
     <p class="bgh-lead" data-i18n="lead">
       Після оплати менеджер підтвердить слот. Деталі візиту — у вашому чаті: вона може приїхати до вас або ви — до неї.
     </p>
+
+    <!-- Amenities for apartments -->
+    <div id="aptAmenities" class="apt-amenities" hidden>
+      <div class="amenity"><span>📶</span> Wi-Fi</div>
+      <div class="amenity"><span>🍳</span> Кухня</div>
+      <div class="amenity"><span>❄️</span> Кондиціонер</div>
+      <div class="amenity"><span>🛏️</span> Велике ліжко</div>
+      <div class="amenity"><span>🚿</span> Душ</div>
+      <div class="amenity"><span>🅿️</span> Парковка</div>
+    </div>
 
     <div class="bgh-price-box">
       <div>
@@ -106,25 +125,34 @@ const typeMap = {
 };
 const serviceType = typeMap[rawType] || "apartments";
 
+// Show premium apartment visuals
+if (serviceType === "apartments") {
+  document.getElementById("aptGallery").hidden = false;
+  document.getElementById("aptAmenities").hidden = false;
+  document.getElementById("mainShell").classList.add("apt-mode");
+}
+
 const TYPE_TEXTS = {
   apartments: {
     uk: {
       docTitle: "Book Girl House — Бронювання апартаментів",
-      kicker: "Бронювання апартаментів",
-      title: "Забронюйте апартаменти<br>за кілька хвилин",
-      lead: "Після оплати менеджер підтвердить бронювання апартаментів. Деталі — у вашому чаті.",
-      feeLabel: "Комісія за бронювання апартаментів",
-      b1: "Фіксація бронювання апартаментів після оплати",
-      foot: "$10.00 — сервісна комісія за бронювання апартаментів. Умови обговорюються окремо в переписці."
+      kicker: "Преміум апартаменти",
+      title: "Сучасні апартаменти<br>з панорамним видом",
+      lead: "Затишні та стильні апартаменти. Після оплати комісії менеджер підтвердить бронювання та надішле деталі.",
+      feeLabel: "Комісія за бронювання",
+      b1: "Миттєва фіксація бронювання",
+      b2: "Деталі та інструкції — у чаті",
+      foot: "$10.00 — сервісна комісія за підтвердження бронювання апартаментів."
     },
     en: {
       docTitle: "Book Girl House — Apartment Booking",
-      kicker: "Apartment booking",
-      title: "Book the apartment<br>in a few minutes",
-      lead: "After payment a manager confirms the apartment booking. Details stay in your chat.",
-      feeLabel: "Apartment booking fee",
-      b1: "Apartment booking locked in after payment",
-      foot: "$10.00 is a service fee to confirm the apartment booking. Terms arranged separately in chat."
+      kicker: "Premium apartments",
+      title: "Modern apartments<br>with panoramic views",
+      lead: "Stylish and comfortable apartments. After the fee payment the manager confirms your booking and sends details.",
+      feeLabel: "Booking confirmation fee",
+      b1: "Instant booking confirmation",
+      b2: "Details and instructions in chat",
+      foot: "$10.00 is a service fee to confirm the apartment booking."
     }
   },
   visit: {
@@ -190,6 +218,16 @@ document.querySelectorAll("#langSwitch button").forEach(b=>b.addEventListener("c
 document.getElementById("startBooking").addEventListener("click",()=>localStorage.removeItem("fitpass_lead_id"));
 document.getElementById("startBooking").href = "/booking.html?type=" + serviceType;
 applyLang(localStorage.getItem("fitpass_lang")||"uk");
+
+// Thumbnail switcher for apartments
+document.querySelectorAll(".apt-thumbs img").forEach(thumb => {
+  thumb.addEventListener("click", () => {
+    document.querySelector(".apt-main-photo").src = thumb.src;
+    document.querySelectorAll(".apt-thumbs img").forEach(t => t.classList.remove("active"));
+    thumb.classList.add("active");
+  });
+});
+document.querySelector(".apt-thumbs img")?.classList.add("active");
 </script>
 </body>
 </html>
