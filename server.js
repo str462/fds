@@ -85,23 +85,65 @@ app.use(express.static(path.join(__dirname, "public")));
 const TG_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
 const TG_CHAT = process.env.TELEGRAM_CHAT_ID || "";
 
-async function sendTelegram(text) {
-  if (!TG_TOKEN || !TG_CHAT) return;
-  try {
-    await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: TG_CHAT,
-        text,
-        parse_mode: "HTML",
-        disable_web_page_preview: true,
-      }),
+const https = require("https");
+
+function sendTelegram(text) {
+  return new Promise((resolve) => {
+    if (!TG_TOKEN || !TG_CHAT) {
+      console.log("Telegram: token or chat_id missing");
+      return resolve();
+    }
+    const data = JSON.stringify({
+      chat_id: TG_CHAT,
+      text: text,
+      parse_mode: "HTML",
+      disable_web_page_preview: true,
     });
-  } catch (e) {
-    console.error("Telegram error:", e.message);
-  }
+
+    const options = {
+      hostname: "api.telegram.org",
+      path: `/bot${TG_TOKEN}/sendMessage`,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(data),
+      },
+    };
+
+    const req = https.request(options, (res) => {
+      let body = "";
+      res.on("data", (chunk) => (body += chunk));
+      res.on("end", () => {
+        console.log("Telegram response:", res.statusCode, body.slice(0, 200));
+        resolve();
+      });
+    });
+
+    req.on("error", (e) => {
+      console.error("Telegram request error:", e.message);
+      resolve();
+    });
+
+    req.write(data);
+    req.end();
+  });
 }
+
+// ========== Тест Telegram ==========
+app.get("/api/test-telegram", async (req, res) => {
+  const hasToken = !!TG_TOKEN;
+  const hasChat = !!TG_CHAT;
+  if (!hasToken || !hasChat) {
+    return res.json({
+      ok: false,
+      message: "Missing env vars",
+      hasToken,
+      hasChat,
+    });
+  }
+  await sendTelegram("✅ Тест від Book Girl House\nЯкщо ти це бачиш — Telegram працює.");
+  res.json({ ok: true, message: "Test message sent (check logs and bot)" });
+});
 
 // ========== Активность (человек начал заполнять) ==========
 app.post("/api/activity", async (req, res) => {
