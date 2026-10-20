@@ -297,3 +297,9 @@ a{color:inherit}
     padding: 28px 20px !important;
   }
 }
+
+/* Force hide amenities when not apartments */
+.apt-amenities[hidden],
+.apt-amenities[style*="display: none"] {
+  display: none !important;
+}

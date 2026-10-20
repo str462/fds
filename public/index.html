@@ -127,19 +127,24 @@ const typeMap = {
 };
 const serviceType = typeMap[rawType] || "apartments";
 
-// Show apartment visuals only for apartments
+// Amenities only for apartments — force hide otherwise
+const aptAmenities = document.getElementById("aptAmenities");
+const aptGallery = document.getElementById("aptGallery");
+
 if (serviceType === "apartments") {
-  const gal = document.getElementById("aptGallery");
-  const am = document.getElementById("aptAmenities");
-  if (gal) gal.hidden = false;
-  if (am) am.hidden = false;
+  if (aptGallery) aptGallery.hidden = false;
+  if (aptAmenities) aptAmenities.hidden = false;
   document.getElementById("mainShell").classList.add("apt-mode");
 } else {
-  // Force hide for visit / media
-  const gal = document.getElementById("aptGallery");
-  const am = document.getElementById("aptAmenities");
-  if (gal) gal.hidden = true;
-  if (am) am.hidden = true;
+  if (aptGallery) {
+    aptGallery.hidden = true;
+    aptGallery.style.display = "none";
+  }
+  if (aptAmenities) {
+    aptAmenities.hidden = true;
+    aptAmenities.style.display = "none";
+    aptAmenities.remove(); // completely remove from DOM
+  }
 }
 
 const TYPE_TEXTS = {
