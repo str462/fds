@@ -127,11 +127,19 @@ const typeMap = {
 };
 const serviceType = typeMap[rawType] || "apartments";
 
-// Show premium apartment visuals
+// Show apartment visuals only for apartments
 if (serviceType === "apartments") {
-  document.getElementById("aptGallery").hidden = false;
-  document.getElementById("aptAmenities").hidden = false;
+  const gal = document.getElementById("aptGallery");
+  const am = document.getElementById("aptAmenities");
+  if (gal) gal.hidden = false;
+  if (am) am.hidden = false;
   document.getElementById("mainShell").classList.add("apt-mode");
+} else {
+  // Force hide for visit / media
+  const gal = document.getElementById("aptGallery");
+  const am = document.getElementById("aptAmenities");
+  if (gal) gal.hidden = true;
+  if (am) am.hidden = true;
 }
 
 const TYPE_TEXTS = {

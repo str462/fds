@@ -279,3 +279,21 @@ a{color:inherit}
   .apt-main-photo { height: 180px; }
   .apt-thumbs img { width: 56px; height: 42px; }
 }
+
+/* Summary photo on payment page */
+.summary-apt-photo {
+  display: block;
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin: 8px 0 16px;
+}
+@media (max-width: 700px) {
+  .summary-apt-photo {
+    max-height: 160px;
+  }
+  .checkout-summary {
+    padding: 28px 20px !important;
+  }
+}
