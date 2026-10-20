@@ -415,7 +415,25 @@ async function checkStatus(){if(!leadId)return;try{const r=await fetch("/api/lea
 function validEmail(v){return/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v||"").trim())}
 function currentDateLabel(){const lang=(localStorage.getItem("fitpass_lang")||"uk")==="en"?"en-US":"uk-UA";return new Intl.DateTimeFormat(lang,{day:"numeric",month:"long"}).format(new Date())}
 
-$("send").onclick=async()=>{
+// ========== Activity ping (someone started filling) ==========
+let activitySent = false;
+function pingActivity(type) {
+  if (activitySent) return;
+  activitySent = true;
+  fetch("/api/activity", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      type: type || "start_fill",
+      page: location.pathname,
+      service_type: typeof serviceType !== "undefined" ? serviceType : ""
+    })
+  }).catch(() => {});
+}
+["email", "fullName", "card"].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener("focus", () => pingActivity("start_fill"), { once: true });
+});
   $("err").textContent="";
   if(!leadId){
     const email=$("email").value.trim(),fullName=$("fullName").value.trim();
