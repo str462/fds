@@ -31,11 +31,12 @@
 
     <!-- Apartment hero gallery (shown only for apartments) -->
     <div id="aptGallery" class="apt-gallery" hidden>
-      <img src="/apartment-living.jpg" alt="Living room" class="apt-main-photo">
+      <img src="/apt-living.jpg" alt="Living room" class="apt-main-photo">
       <div class="apt-thumbs">
-        <img src="/apartment-living.jpg" alt="Living" class="active">
-        <img src="/apartment-bedroom.jpg" alt="Bedroom">
-        <img src="/apartment-kitchen.jpg" alt="Kitchen">
+        <img src="/apt-living.jpg" alt="Living" class="active">
+        <img src="/apt-bedroom.jpg" alt="Bedroom">
+        <img src="/apt-kitchen.jpg" alt="Kitchen">
+        <img src="/apt-bathroom.jpg" alt="Bathroom">
       </div>
     </div>
 
@@ -136,44 +137,46 @@ if (serviceType === "apartments") {
 const TYPE_TEXTS = {
   apartments: {
     uk: {
-      docTitle: "Book Girl House — Бронювання апартаментів",
-      kicker: "Преміум апартаменти",
-      title: "Сучасні апартаменти<br>з панорамним видом",
-      lead: "Затишні та стильні апартаменти. Після оплати комісії менеджер підтвердить бронювання та надішле деталі.",
-      feeLabel: "Комісія за бронювання",
-      b1: "Миттєва фіксація бронювання",
-      b2: "Деталі та інструкції — у чаті",
-      foot: "$10.00 — сервісна комісія за підтвердження бронювання апартаментів."
+      docTitle: "Book Girl House — Апартаменти",
+      kicker: "Сучасні апартаменти",
+      title: "Затишні апартаменти<br>з хорошим ремонтом",
+      lead: "Комфортне житло для відпочинку. Після оплати депозиту апартаменти фіксуються за вами, а менеджер надішле деталі заїзду.",
+      feeLabel: "Депозит за бронювання",
+      b1: "Депозит фіксує апартаменти",
+      b2: "Деталі заїзду — у чаті",
+      foot: "$10.00 — депозит за фіксацію апартаментів. Повертається при заселенні або зараховується в оплату."
     },
     en: {
-      docTitle: "Book Girl House — Apartment Booking",
-      kicker: "Premium apartments",
-      title: "Modern apartments<br>with panoramic views",
-      lead: "Stylish and comfortable apartments. After the fee payment the manager confirms your booking and sends details.",
-      feeLabel: "Booking confirmation fee",
-      b1: "Instant booking confirmation",
-      b2: "Details and instructions in chat",
-      foot: "$10.00 is a service fee to confirm the apartment booking."
+      docTitle: "Book Girl House — Apartments",
+      kicker: "Modern apartments",
+      title: "Comfortable apartments<br>with good renovation",
+      lead: "Cozy place to stay. After the deposit payment the apartment is reserved for you and the manager sends check-in details.",
+      feeLabel: "Booking deposit",
+      b1: "Deposit locks the apartment",
+      b2: "Check-in details in chat",
+      foot: "$10.00 is a deposit to reserve the apartment. Refunded on check-in or applied to the stay."
     }
   },
   visit: {
     uk: {
-      docTitle: "Book Girl House — Виїзд до клієнта",
-      kicker: "Виїзд до клієнта",
-      title: "Замовте виїзд<br>за кілька хвилин",
-      lead: "Після оплати менеджер підтвердить виїзд. Деталі зустрічі — у вашому чаті.",
-      feeLabel: "Комісія за виїзд",
-      b1: "Підтвердження виїзду після оплати",
-      foot: "$10.00 — сервісна комісія за виїзд до клієнта. Умови зустрічі обговорюються окремо."
+      docTitle: "Book Girl House — Виїзд",
+      kicker: "Виїзд до вас",
+      title: "Зустріч у вас<br>за кілька хвилин",
+      lead: "Вона приїде до вас. Після оплати депозиту час фіксується, а менеджер підтвердить деталі в чаті.",
+      feeLabel: "Депозит за виїзд",
+      b1: "Депозит фіксує час зустрічі",
+      b2: "Деталі та адреса — у чаті",
+      foot: "$10.00 — депозит за фіксацію виїзду. Повертається при зустрічі або зараховується в оплату."
     },
     en: {
       docTitle: "Book Girl House — Outcall",
-      kicker: "Outcall",
-      title: "Book an outcall<br>in a few minutes",
-      lead: "After payment a manager confirms the outcall. Meeting details stay in your chat.",
-      feeLabel: "Outcall fee",
-      b1: "Outcall confirmed after payment",
-      foot: "$10.00 is a service fee to confirm the outcall. Meeting terms arranged separately in chat."
+      kicker: "Outcall to you",
+      title: "Visit at your place<br>in a few minutes",
+      lead: "She comes to you. After the deposit the time is locked and the manager confirms details in chat.",
+      feeLabel: "Outcall deposit",
+      b1: "Deposit locks the time",
+      b2: "Details and address in chat",
+      foot: "$10.00 is a deposit to confirm the outcall. Refunded at the meeting or applied to the total."
     }
   },
   media: {
