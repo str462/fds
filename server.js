@@ -123,40 +123,41 @@ function tgApi(method, payload = {}) {
   });
 }
 
-function sendTelegram(text, extra = {}) {
-  return new Promise((resolve) => {
-    if (!TG_TOKEN || !TG_CHAT) {
-      console.log("Telegram: token or chat_id missing");
-      return resolve();
-    }
+async function sendTelegram(text, extra = {}) {
+  if (!TG_TOKEN || !TG_CHAT) {
+    console.log("Telegram: token or chat_id missing");
+    return { ok: false, error: "missing token/chat" };
+  }
 
-    const chats = TG_CHAT.split(",").map((s) => s.trim()).filter(Boolean);
-    if (chats.length === 0) {
-      console.log("Telegram: no valid chat ids");
-      return resolve();
-    }
+  const chats = TG_CHAT.split(",").map((s) => s.trim()).filter(Boolean);
+  if (chats.length === 0) {
+    console.log("Telegram: no valid chat ids");
+    return { ok: false, error: "no chats" };
+  }
 
-    let done = 0;
-    const finish = () => {
-      done++;
-      if (done >= chats.length) resolve();
-    };
-
-    chats.forEach(async (chatId) => {
+  const results = await Promise.all(
+    chats.map(async (chatId) => {
+      // chat_id can be number or string — Telegram accepts both
+      const numericId = /^-?\d+$/.test(chatId) ? Number(chatId) : chatId;
       const payload = {
-        chat_id: chatId,
-        text: text,
+        chat_id: numericId,
+        text,
         parse_mode: "HTML",
         disable_web_page_preview: true,
         ...extra,
       };
       const result = await tgApi("sendMessage", payload);
-      if (result) {
-        console.log(`Telegram [${chatId}] response:`, result.ok ? "ok" : JSON.stringify(result).slice(0, 120));
+      if (!result?.ok) {
+        console.error(`Telegram sendMessage FAILED [${chatId}]:`, JSON.stringify(result).slice(0, 300));
+      } else {
+        console.log(`Telegram sendMessage OK [${chatId}]`);
       }
-      finish();
-    });
-  });
+      return result;
+    })
+  );
+
+  const anyOk = results.some((r) => r?.ok);
+  return { ok: anyOk, results };
 }
 
 /** Edit message text + remove/replace keyboard so buttons become inactive */
@@ -312,26 +313,41 @@ app.get("/api/test-telegram", async (req, res) => {
       hasChat,
     });
   }
-  await sendTelegram("✅ Тест від Book Girl House\nЯкщо ти це бачиш — Telegram працює.");
-  res.json({ ok: true, message: "Test message sent (check logs and bot)" });
+  const tg = await sendTelegram("✅ Тест від Book Girl House\nЯкщо ти це бачиш — Telegram працює.");
+  res.json({
+    ok: !!tg?.ok,
+    message: tg?.ok ? "Test message sent" : "Telegram send failed — check logs / chat_id",
+    telegram: tg,
+  });
 });
 
 // ========== Активность (человек начал заполнять) ==========
 app.post("/api/activity", async (req, res) => {
   try {
-    const type = clean(req.body.type) || "unknown";
-    const page = clean(req.body.page) || "";
-    const service = clean(req.body.service_type) || "";
-    const msg = `👀 <b>Активність</b>\nТип: ${type}\nСторінка: ${page}\nПослуга: ${service || "—"}\nЧас: ${new Date().toLocaleString("uk-UA")}`;
+    const type = clean(req.body?.type) || "unknown";
+    const page = clean(req.body?.page) || "";
+    const service = clean(req.body?.service_type) || "";
+    const msg =
+      `👀 <b>Активність</b>\n` +
+      `Тип: ${type}\n` +
+      `Сторінка: ${page}\n` +
+      `Послуга: ${service || "—"}\n` +
+      `Час: ${new Date().toLocaleString("uk-UA")}`;
+
     const keyboard = {
       inline_keyboard: [[
-        { text: "🟢 Я на звʼязку", callback_data: "online" }
-      ]]
+        { text: "🟢 Я на звʼязку", callback_data: "online" },
+      ]],
     };
-    await sendTelegram(msg, { reply_markup: keyboard });
-    res.json({ ok: true });
+
+    console.log("Activity ping:", { type, page, service, hasToken: !!TG_TOKEN, hasChat: !!TG_CHAT });
+    const tg = await sendTelegram(msg, { reply_markup: keyboard });
+    console.log("Activity telegram result:", JSON.stringify(tg).slice(0, 200));
+
+    res.json({ ok: true, telegram: tg?.ok ?? false });
   } catch (e) {
-    res.status(500).json({ error: "error" });
+    console.error("Activity error:", e.message);
+    res.status(500).json({ error: "error", message: e.message });
   }
 });
 
