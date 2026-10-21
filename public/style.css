@@ -211,6 +211,14 @@ img { max-width: 100%; display: block; }
   color: #a89ec8;
   margin-left: 5px;
 }
+.bgh-price-uah {
+  margin-top: 4px;
+  font-size: 13.5px;
+  font-weight: 550;
+  color: #c5bff0;
+  letter-spacing: -0.01em;
+  opacity: 0.9;
+}
 .bgh-badge {
   font-size: 11px;
   font-weight: 700;
@@ -414,6 +422,17 @@ img { max-width: 100%; display: block; }
   color: #89a0b8;
   font-weight: 600;
   letter-spacing: 0.04em;
+}
+.sum-uah {
+  font-weight: 500;
+  color: #a8c0d4;
+  letter-spacing: 0;
+}
+.line-uah {
+  font-weight: 500;
+  color: #89a0b8;
+  font-size: 12.5px;
+  margin-left: 6px;
 }
 .sum-line {
   display: flex;

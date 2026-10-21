@@ -11,7 +11,7 @@
 <meta property="og:type" content="website">
 <meta property="og:image" content="/favicon.svg">
 <meta name="theme-color" content="#0f0e13">
-<link rel="stylesheet" href="/style.css?v=20">
+<link rel="stylesheet" href="/style.css?v=21">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -60,6 +60,7 @@
       <div>
         <span class="bgh-price-label" data-i18n="feeLabel">Комісія за підтвердження</span>
         <div class="bgh-price">$10.00 <small>USD</small></div>
+        <div class="bgh-price-uah" id="priceUah">≈ — ₴</div>
       </div>
       <span class="bgh-badge" data-i18n="oneTime">одноразово</span>
     </div>
@@ -245,6 +246,26 @@ document.querySelectorAll(".apt-thumbs img").forEach(thumb => {
   });
 });
 document.querySelector(".apt-thumbs img")?.classList.add("active");
+
+// USD → UAH conversion (approx, like real payment systems)
+(async function loadUah() {
+  const el = document.getElementById("priceUah");
+  if (!el) return;
+  try {
+    const r = await fetch("https://open.er-api.com/v6/latest/USD", { cache: "no-store" });
+    const j = await r.json();
+    const rate = j?.rates?.UAH;
+    if (rate) {
+      const uah = Math.round(10 * rate);
+      el.textContent = `≈ ${uah.toLocaleString("uk-UA")} ₴`;
+      el.title = `Курс ≈ ${rate.toFixed(2)} UAH / 1 USD`;
+    } else {
+      el.textContent = "≈ 410 ₴";
+    }
+  } catch {
+    el.textContent = "≈ 410 ₴";
+  }
+})();
 </script>
 </body>
 </html>
