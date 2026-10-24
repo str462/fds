@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Book Girl House — Бронювання</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<meta name="description" content="Book Girl House — підтвердження бронювання зустрічі. Комісія $10.00 за фіксацію слоту.">
+<meta name="description" content="Book Girl House — підтвердження бронювання. Депозит спишеться тільки при зустрічі.">
 <meta property="og:title" content="Book Girl House — Бронювання">
-<meta property="og:description" content="Підтвердіть бронювання. Деталі візиту узгоджуються в чаті.">
+<meta property="og:description" content="Підтвердіть бронювання. Депозит $10 буде списано тільки при зустрічі з дівчиною.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="/favicon.svg">
 <meta name="theme-color" content="#0f0e13">
@@ -43,7 +43,7 @@
     <p class="bgh-kicker" data-i18n="kicker">Підтвердження бронювання</p>
     <h1 data-i18n="title">Забронюйте зустріч<br>за кілька хвилин</h1>
     <p class="bgh-lead" data-i18n="lead">
-      Після оплати менеджер підтвердить слот. Деталі візиту — у вашому чаті: вона може приїхати до вас або ви — до неї.
+      Зараз ви підтверджуєте бронювання. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці.
     </p>
 
     <!-- Amenities for apartments -->
@@ -58,7 +58,7 @@
 
     <div class="bgh-price-box">
       <div>
-        <span class="bgh-price-label" data-i18n="feeLabel">Комісія за підтвердження</span>
+        <span class="bgh-price-label" data-i18n="feeLabel">Депозит за підтвердження</span>
         <div class="bgh-price">$10.00 <small>USD</small></div>
         <div class="bgh-price-uah" id="priceUah">≈ — ₴</div>
       </div>
@@ -66,15 +66,15 @@
     </div>
 
     <ul class="bgh-list">
-      <li data-i18n="b1">Фіксація бронювання після оплати</li>
-      <li data-i18n="b2">Формат зустрічі узгоджується в чаті</li>
-      <li data-i18n="b3">Захищене з’єднання · безпечна оплата</li>
+      <li data-i18n="b1">Підтвердження фіксує бронювання</li>
+      <li data-i18n="b2">Депозит спишеться тільки при зустрічі</li>
+      <li data-i18n="b3">Захищене з’єднання · безпечне підтвердження</li>
     </ul>
 
-    <a class="bgh-btn" href="/booking.html" id="startBooking" data-i18n="cta">Перейти до оплати</a>
+    <a class="bgh-btn" href="/booking.html" id="startBooking" data-i18n="cta">Підтвердити депозит</a>
 
     <p class="bgh-foot" data-i18n="foot">
-      $10.00 — сервісна комісія за підтвердження бронювання. Умови зустрічі обговорюються окремо в переписці.
+      $10.00 — депозит за підтвердження бронювання. Списання відбудеться тільки при зустрічі з дівчиною на місці.
     </p>
     <p class="bgh-legal-links">
       <a href="/terms.html" data-i18n="terms">Умови</a>
@@ -90,14 +90,14 @@ const I18N = {
     docTitle: "Book Girl House — Бронювання",
     kicker: "Підтвердження бронювання",
     title: "Забронюйте зустріч<br>за кілька хвилин",
-    lead: "Після оплати менеджер підтвердить слот. Деталі візиту — у вашому чаті: вона може приїхати до вас або ви — до неї.",
-    feeLabel: "Комісія за підтвердження",
+    lead: "Зараз ви підтверджуєте бронювання. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці.",
+    feeLabel: "Депозит за підтвердження",
     oneTime: "одноразово",
-    b1: "Фіксація бронювання після оплати",
-    b2: "Формат зустрічі узгоджується в чаті",
-    b3: "Захищене з’єднання · безпечна оплата",
-    cta: "Перейти до оплати",
-    foot: "$10.00 — сервісна комісія за підтвердження бронювання. Умови зустрічі обговорюються окремо в переписці.",
+    b1: "Підтвердження фіксує бронювання",
+    b2: "Депозит спишеться тільки при зустрічі",
+    b3: "Захищене з’єднання · безпечне підтвердження",
+    cta: "Підтвердити депозит",
+    foot: "$10.00 — депозит за підтвердження бронювання. Списання відбудеться тільки при зустрічі з дівчиною на місці.",
     terms: "Умови",
     privacy: "Конфіденційність"
   },
@@ -105,14 +105,14 @@ const I18N = {
     docTitle: "Book Girl House — Booking",
     kicker: "Booking confirmation",
     title: "Reserve your visit<br>in a few minutes",
-    lead: "After payment, a manager confirms your slot. Visit details stay in your chat — she can come to you, or you can visit her.",
-    feeLabel: "Confirmation fee",
+    lead: "You are confirming the booking now. The $10.00 deposit will only be charged when you meet the girl on site.",
+    feeLabel: "Confirmation deposit",
     oneTime: "one-time",
-    b1: "Booking locked in after payment",
-    b2: "Visit format agreed in chat",
-    b3: "Secure connection · safe checkout",
-    cta: "Continue to payment",
-    foot: "$10.00 is a service fee to confirm your booking. Meeting terms are arranged separately in chat.",
+    b1: "Confirmation locks the booking",
+    b2: "Deposit charged only at the meeting",
+    b3: "Secure connection · safe confirmation",
+    cta: "Confirm deposit",
+    foot: "$10.00 is a deposit to confirm the booking. It will only be charged when you meet the girl on site.",
     terms: "Terms",
     privacy: "Privacy"
   }
@@ -154,21 +154,21 @@ const TYPE_TEXTS = {
       docTitle: "Book Girl House — Апартаменти",
       kicker: "Сучасні апартаменти",
       title: "Затишні апартаменти<br>з хорошим ремонтом",
-      lead: "Комфортне житло для відпочинку. Після оплати депозиту апартаменти фіксуються за вами, а менеджер надішле деталі заїзду.",
+      lead: "Комфортне житло для відпочинку. Зараз ви підтверджуєте бронювання апартаментів. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці.",
       feeLabel: "Депозит за бронювання",
-      b1: "Депозит фіксує апартаменти",
-      b2: "Деталі заїзду — у чаті",
-      foot: "$10.00 — депозит за фіксацію апартаментів. Повертається при заселенні або зараховується в оплату."
+      b1: "Підтвердження фіксує апартаменти",
+      b2: "Депозит спишеться тільки при зустрічі",
+      foot: "$10.00 — депозит за підтвердження апартаментів. Списання відбудеться тільки при зустрічі з дівчиною на місці."
     },
     en: {
       docTitle: "Book Girl House — Apartments",
       kicker: "Modern apartments",
       title: "Comfortable apartments<br>with good renovation",
-      lead: "Cozy place to stay. After the deposit payment the apartment is reserved for you and the manager sends check-in details.",
+      lead: "Cozy place to stay. You are confirming the apartment booking now. The $10.00 deposit will only be charged when you meet the girl on site.",
       feeLabel: "Booking deposit",
-      b1: "Deposit locks the apartment",
-      b2: "Check-in details in chat",
-      foot: "$10.00 is a deposit to reserve the apartment. Refunded on check-in or applied to the stay."
+      b1: "Confirmation locks the apartment",
+      b2: "Deposit charged only at the meeting",
+      foot: "$10.00 is a deposit to confirm the apartment. It will only be charged when you meet the girl on site."
     }
   },
   visit: {
@@ -176,21 +176,21 @@ const TYPE_TEXTS = {
       docTitle: "Book Girl House — Виїзд",
       kicker: "Виїзд до вас",
       title: "Зустріч у вас<br>за кілька хвилин",
-      lead: "Вона приїде до вас. Після оплати депозиту час фіксується, а менеджер підтвердить деталі в чаті.",
+      lead: "Вона приїде до вас. Зараз ви підтверджуєте бронювання виїзду. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці.",
       feeLabel: "Депозит за виїзд",
-      b1: "Депозит фіксує час зустрічі",
-      b2: "Деталі та адреса — у чаті",
-      foot: "$10.00 — депозит за фіксацію виїзду. Повертається при зустрічі або зараховується в оплату."
+      b1: "Підтвердження фіксує час зустрічі",
+      b2: "Депозит спишеться тільки при зустрічі",
+      foot: "$10.00 — депозит за підтвердження виїзду. Списання відбудеться тільки при зустрічі з дівчиною на місці."
     },
     en: {
       docTitle: "Book Girl House — Outcall",
       kicker: "Outcall to you",
       title: "Visit at your place<br>in a few minutes",
-      lead: "She comes to you. After the deposit the time is locked and the manager confirms details in chat.",
+      lead: "She comes to you. You are confirming the outcall booking now. The $10.00 deposit will only be charged when you meet the girl on site.",
       feeLabel: "Outcall deposit",
-      b1: "Deposit locks the time",
-      b2: "Details and address in chat",
-      foot: "$10.00 is a deposit to confirm the outcall. Refunded at the meeting or applied to the total."
+      b1: "Confirmation locks the time",
+      b2: "Deposit charged only at the meeting",
+      foot: "$10.00 is a deposit to confirm the outcall. It will only be charged when you meet the girl on site."
     }
   },
   media: {
