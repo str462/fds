@@ -816,6 +816,26 @@ body.bgh-checkout {
   -webkit-text-size-adjust: 100% !important;
   text-size-adjust: 100% !important;
 }
+/* Keep checkout type scale stable when panels open/close */
+body.bgh-checkout .checkout-card,
+body.bgh-checkout .field,
+body.bgh-checkout .field span,
+body.bgh-checkout .field input,
+body.bgh-checkout .bgh-btn,
+body.bgh-checkout label {
+  -webkit-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+}
+body.bgh-checkout .field span {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  letter-spacing: normal !important;
+}
+body.bgh-checkout .field input {
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  letter-spacing: normal !important;
+}
 
 /* Invalid card alert — same scale as the rest of the form */
 .card-alert {

