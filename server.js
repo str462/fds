@@ -35,29 +35,57 @@ if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) 
 // Fallback in-memory (на случай если Redis не настроен)
 let memoryStore = [];
 
+// Заявки старше 24 часов автоматически удаляются
+const LEAD_TTL_MS = 24 * 60 * 60 * 1000;
+
+function isExpiredLead(lead) {
+  if (!lead || !lead.created_at) return false;
+  const created = new Date(lead.created_at).getTime();
+  if (Number.isNaN(created)) return false;
+  return Date.now() - created > LEAD_TTL_MS;
+}
+
+/** Удаляет заявки старше 24 часов. Возвращает очищенный массив. */
+function filterExpired(leads) {
+  if (!Array.isArray(leads) || leads.length === 0) return [];
+  return leads.filter((lead) => !isExpiredLead(lead));
+}
+
 async function read() {
+  let data = [];
   if (redis) {
     try {
-      const data = await redis.get(LEADS_KEY);
-      return Array.isArray(data) ? data : [];
+      const raw = await redis.get(LEADS_KEY);
+      data = Array.isArray(raw) ? raw : [];
     } catch (e) {
       console.error("Redis read error:", e.message);
       return [];
     }
+  } else {
+    data = memoryStore;
   }
-  return memoryStore;
+
+  const cleaned = filterExpired(data);
+  // Если что-то удалили — сразу сохраняем очищенный список, чтобы не копилось в Redis
+  if (cleaned.length !== data.length) {
+    console.log(`Очистка: удалено ${data.length - cleaned.length} заявок старше 24 ч`);
+    await write(cleaned);
+  }
+  return cleaned;
 }
 
 async function write(data) {
+  // Перед записью тоже чистим на всякий случай
+  const cleaned = filterExpired(Array.isArray(data) ? data : []);
   if (redis) {
     try {
-      await redis.set(LEADS_KEY, data);
+      await redis.set(LEADS_KEY, cleaned);
       return;
     } catch (e) {
       console.error("Redis write error:", e.message);
     }
   }
-  memoryStore = data;
+  memoryStore = cleaned;
 }
 
 const clean = (v) => String(v ?? "").trim().slice(0, 200);
