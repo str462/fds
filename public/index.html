@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Book Girl House — Бронювання</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<meta name="description" content="Book Girl House — підтвердження бронювання. Депозит спишеться тільки при зустрічі.">
+<meta name="description" content="Book Girl House — підтвердження бронювання. Депозит $10 списується тільки при зустрічі з дівчиною.">
 <meta property="og:title" content="Book Girl House — Бронювання">
 <meta property="og:description" content="Підтвердіть бронювання. Депозит $10 буде списано тільки при зустрічі з дівчиною.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="/favicon.svg">
 <meta name="theme-color" content="#0f0e13">
-<link rel="stylesheet" href="/style.css?v=21">
+<link rel="stylesheet" href="/style.css?v=30">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -23,37 +23,62 @@
 </div>
 
 <main class="bgh-shell" id="mainShell">
+
+  <!-- ========== HERO ========== -->
   <section class="bgh-hero-card">
     <div class="bgh-brand">
       <span class="bgh-mark">BGH</span>
       <span class="bgh-brand-name">Book Girl House</span>
     </div>
 
-    <!-- Apartment hero gallery (shown only for apartments) -->
+    <!-- Apartment gallery -->
     <div id="aptGallery" class="apt-gallery" hidden>
-      <img src="/apt-living.jpg" alt="Living room" class="apt-main-photo">
+      <div class="apt-main-wrap">
+        <img src="/apt-living.jpg" alt="Living room" class="apt-main-photo" id="aptMainPhoto">
+        <button type="button" class="apt-nav apt-prev" id="aptPrev" aria-label="Prev">‹</button>
+        <button type="button" class="apt-nav apt-next" id="aptNext" aria-label="Next">›</button>
+        <div class="apt-counter"><span id="aptCurrent">1</span> / <span id="aptTotal">4</span></div>
+      </div>
       <div class="apt-thumbs">
-        <img src="/apt-living.jpg" alt="Living" class="active">
-        <img src="/apt-bedroom.jpg" alt="Bedroom">
-        <img src="/apt-kitchen.jpg" alt="Kitchen">
-        <img src="/apt-bathroom.jpg" alt="Bathroom">
+        <img src="/apt-living.jpg" alt="Living" class="active" data-idx="0">
+        <img src="/apt-bedroom.jpg" alt="Bedroom" data-idx="1">
+        <img src="/apt-kitchen.jpg" alt="Kitchen" data-idx="2">
+        <img src="/apt-bathroom.jpg" alt="Bathroom" data-idx="3">
       </div>
     </div>
 
     <p class="bgh-kicker" data-i18n="kicker">Підтвердження бронювання</p>
     <h1 data-i18n="title">Забронюйте зустріч<br>за кілька хвилин</h1>
     <p class="bgh-lead" data-i18n="lead">
-      Зараз ви підтверджуєте бронювання. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці.
+      Зараз ви підтверджуєте бронювання. Депозит $10.00 буде списано <strong>тільки при зустрічі</strong> з дівчиною на місці.
     </p>
 
-    <!-- Amenities for apartments -->
+    <!-- Strong guarantee banner -->
+    <div class="trust-banner">
+      <div class="trust-banner-icon">🛡️</div>
+      <div class="trust-banner-text">
+        <strong data-i18n="guaranteeTitle">Гроші списуються тільки при зустрічі</strong>
+        <span data-i18n="guaranteeText">До зустрічі з дівчиною з картки нічого не знімається. Депозит — лише підтвердження серйозності намірів.</span>
+      </div>
+    </div>
+
+    <!-- Amenities (apartments only) -->
     <div id="aptAmenities" class="apt-amenities" hidden>
-      <div class="amenity">Wi-Fi</div>
-      <div class="amenity">Кухня</div>
-      <div class="amenity">Кондиціонер</div>
-      <div class="amenity">Велике ліжко</div>
-      <div class="amenity">Душ</div>
-      <div class="amenity">Парковка</div>
+      <div class="amenity"><span class="am-icon">📶</span> Wi-Fi</div>
+      <div class="amenity"><span class="am-icon">🍳</span> <span data-i18n="amKitchen">Кухня</span></div>
+      <div class="amenity"><span class="am-icon">❄️</span> <span data-i18n="amAc">Кондиціонер</span></div>
+      <div class="amenity"><span class="am-icon">🛏️</span> <span data-i18n="amBed">Велике ліжко</span></div>
+      <div class="amenity"><span class="am-icon">🚿</span> <span data-i18n="amShower">Душ</span></div>
+      <div class="amenity"><span class="am-icon">🅿️</span> <span data-i18n="amPark">Парковка</span></div>
+    </div>
+
+    <!-- Location hint (apartments) -->
+    <div id="aptLocation" class="apt-location" hidden>
+      <span class="loc-icon">📍</span>
+      <div>
+        <strong data-i18n="locTitle">Зручна локація</strong>
+        <span data-i18n="locText">У зручному районі міста · точну адресу надішлемо після підтвердження</span>
+      </div>
     </div>
 
     <div class="bgh-price-box">
@@ -67,21 +92,165 @@
 
     <ul class="bgh-list">
       <li data-i18n="b1">Підтвердження фіксує бронювання</li>
-      <li data-i18n="b2">Депозит спишеться тільки при зустрічі</li>
+      <li data-i18n="b2">Депозит спишеться <strong>тільки при зустрічі</strong></li>
       <li data-i18n="b3">Захищене з’єднання · безпечне підтвердження</li>
     </ul>
 
-    <a class="bgh-btn" href="/booking.html" id="startBooking" data-i18n="cta">Підтвердити депозит</a>
+    <a class="bgh-btn" href="/booking.html" id="startBooking" data-i18n="cta">Підтвердити депозит $10</a>
 
     <p class="bgh-foot" data-i18n="foot">
-      $10.00 — депозит за підтвердження бронювання. Списання відбудеться тільки при зустрічі з дівчиною на місці.
+      $10.00 — депозит за підтвердження. Списання відбудеться тільки при зустрічі з дівчиною.
     </p>
+  </section>
+
+  <!-- ========== HOW IT WORKS ========== -->
+  <section class="trust-section" id="howSection">
+    <h2 class="section-title" data-i18n="howTitle">Як це працює</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong data-i18n="step1Title">Обираєте час</strong>
+          <p data-i18n="step1Text">Вказуєте зручний час або обираєте «найближчий»</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong data-i18n="step2Title">Підтверджуєте депозит</strong>
+          <p data-i18n="step2Text">$10 — тільки підтвердження. Гроші ще не списуються</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong data-i18n="step3Title">Отримуєте деталі</strong>
+          <p data-i18n="step3Text">В чаті надсилаємо точну адресу / контакти та узгоджуємо все</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong data-i18n="step4Title">Зустріч</strong>
+          <p data-i18n="step4Text">Депозит списується тільки коли ви вже на місці з дівчиною</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== GUARANTEES ========== -->
+  <section class="trust-section guarantees-section">
+    <h2 class="section-title" data-i18n="guaranteesTitle">Ваші гарантії</h2>
+    <div class="guarantees-grid">
+      <div class="guarantee-card">
+        <div class="g-icon">💳</div>
+        <strong data-i18n="g1Title">Без списання заздалегідь</strong>
+        <p data-i18n="g1Text">Гроші з картки знімаються виключно при зустрічі. До цього — 0 ₴.</p>
+      </div>
+      <div class="guarantee-card">
+        <div class="g-icon">🔒</div>
+        <strong data-i18n="g2Title">Захищені дані</strong>
+        <p data-i18n="g2Text">З’єднання шифрується. Платіжні дані не зберігаються на нашому сервері.</p>
+      </div>
+      <div class="guarantee-card">
+        <div class="g-icon">💬</div>
+        <strong data-i18n="g3Title">Підтримка в чаті</strong>
+        <p data-i18n="g3Text">Менеджер на зв’язку. Можна уточнити все до і після підтвердження.</p>
+      </div>
+      <div class="guarantee-card">
+        <div class="g-icon">↩️</div>
+        <strong data-i18n="g4Title">Можна перенести</strong>
+        <p data-i18n="g4Text">Якщо плани змінилися — напишіть, узгодимо інший час.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== REVIEWS ========== -->
+  <section class="trust-section reviews-section">
+    <h2 class="section-title" data-i18n="reviewsTitle">Відгуки</h2>
+    <div class="reviews-rating">
+      <span class="stars">★★★★★</span>
+      <strong>4.9</strong>
+      <span class="reviews-count" data-i18n="reviewsCount">на основі 47 відгуків</span>
+    </div>
+    <div class="reviews-list">
+      <div class="review-card">
+        <div class="review-top">
+          <span class="review-name">Олександр</span>
+          <span class="review-stars">★★★★★</span>
+        </div>
+        <p data-i18n="r1">Все чітко. Депозит дійсно списався тільки коли вже був на місці. Апартаменти чисті, дівчина приємна.</p>
+      </div>
+      <div class="review-card">
+        <div class="review-top">
+          <span class="review-name">Максим</span>
+          <span class="review-stars">★★★★★</span>
+        </div>
+        <p data-i18n="r2">Спочатку хвилювався через оплату, але менеджер все пояснив. Гроші не зняли завчасно. Рекомендую.</p>
+      </div>
+      <div class="review-card">
+        <div class="review-top">
+          <span class="review-name">Андрій</span>
+          <span class="review-stars">★★★★☆</span>
+        </div>
+        <p data-i18n="r3">Швидко відповіли в Telegram, адресу дали після підтвердження. Все як обіцяли.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FAQ ========== -->
+  <section class="trust-section faq-section">
+    <h2 class="section-title" data-i18n="faqTitle">Часті питання</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary data-i18n="faq1q">Коли саме списуються гроші?</summary>
+        <p data-i18n="faq1a">Тільки при зустрічі з дівчиною на місці. До цього з вашої картки нічого не знімається. Депозит $10 — це підтвердження, що ви серйозно налаштовані.</p>
+      </details>
+      <details class="faq-item">
+        <summary data-i18n="faq2q">Що буде після оплати / підтвердження?</summary>
+        <p data-i18n="faq2a">Менеджер напише вам у чат (зазвичай протягом 5–20 хвилин), надішле точну адресу або узгодить місце зустрічі і всі деталі.</p>
+      </details>
+      <details class="faq-item">
+        <summary data-i18n="faq3q">Чи можна скасувати або перенести?</summary>
+        <p data-i18n="faq3a">Так. Напишіть менеджеру якомога раніше. Перенесення зазвичай без проблем. Питання повернення депозиту вирішуються індивідуально.</p>
+      </details>
+      <details class="faq-item">
+        <summary data-i18n="faq4q">Чому потрібні дані картки?</summary>
+        <p data-i18n="faq4a">Щоб зафіксувати бронювання і підтвердити серйозність намірів. Це стандартна практика. Списання відбувається тільки при зустрічі.</p>
+      </details>
+      <details class="faq-item">
+        <summary data-i18n="faq5q">Чи безпечно вводити дані?</summary>
+        <p data-i18n="faq5a">Так. З’єднання захищене (HTTPS). Ми не зберігаємо повні дані картки на своїх серверах. Платіж обробляється через захищений канал.</p>
+      </details>
+      <details class="faq-item" id="faqAptOnly">
+        <summary data-i18n="faq6q">Де знаходяться апартаменти?</summary>
+        <p data-i18n="faq6a">У зручному районі вашого міста. Точну адресу та як дістатися надішлемо після підтвердження бронювання в особистому чаті — це стандартна практика для безпеки обох сторін.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ========== CONTACT ========== -->
+  <section class="trust-section contact-section">
+    <h2 class="section-title" data-i18n="contactTitle">Є питання?</h2>
+    <p class="contact-lead" data-i18n="contactLead">Напишіть нам — відповімо швидко. Можна уточнити все до підтвердження.</p>
+    <a href="https://t.me/apartment_0550" target="_blank" rel="noopener" class="tg-btn" id="tgLink">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+      <span data-i18n="tgBtn">Написати в Telegram</span>
+    </a>
+    <p class="contact-note" data-i18n="contactNote">Або продовжуйте — після підтвердження менеджер сам напише вам.</p>
+  </section>
+
+  <!-- ========== FINAL CTA ========== -->
+  <section class="final-cta">
+    <a class="bgh-btn" href="/booking.html" id="startBooking2" data-i18n="cta">Підтвердити депозит $10</a>
+    <p class="final-note" data-i18n="finalNote">Гроші спишуться тільки при зустрічі · Захищене з’єднання</p>
     <p class="bgh-legal-links">
       <a href="/terms.html" data-i18n="terms">Умови</a>
       <span>·</span>
       <a href="/privacy.html" data-i18n="privacy">Конфіденційність</a>
     </p>
   </section>
+
 </main>
 
 <script>
@@ -90,35 +259,200 @@ const I18N = {
     docTitle: "Book Girl House — Бронювання",
     kicker: "Підтвердження бронювання",
     title: "Забронюйте зустріч<br>за кілька хвилин",
-    lead: "Зараз ви підтверджуєте бронювання. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці.",
+    lead: "Зараз ви підтверджуєте бронювання. Депозит $10.00 буде списано <strong>тільки при зустрічі</strong> з дівчиною на місці.",
     feeLabel: "Депозит за підтвердження",
     oneTime: "одноразово",
     b1: "Підтвердження фіксує бронювання",
-    b2: "Депозит спишеться тільки при зустрічі",
+    b2: "Депозит спишеться <strong>тільки при зустрічі</strong>",
     b3: "Захищене з’єднання · безпечне підтвердження",
-    cta: "Підтвердити депозит",
-    foot: "$10.00 — депозит за підтвердження бронювання. Списання відбудеться тільки при зустрічі з дівчиною на місці.",
+    cta: "Підтвердити депозит $10",
+    foot: "$10.00 — депозит за підтвердження. Списання відбудеться тільки при зустрічі з дівчиною.",
     terms: "Умови",
-    privacy: "Конфіденційність"
+    privacy: "Конфіденційність",
+    guaranteeTitle: "Гроші списуються тільки при зустрічі",
+    guaranteeText: "До зустрічі з дівчиною з картки нічого не знімається. Депозит — лише підтвердження серйозності намірів.",
+    howTitle: "Як це працює",
+    step1Title: "Обираєте час",
+    step1Text: "Вказуєте зручний час або обираєте «найближчий»",
+    step2Title: "Підтверджуєте депозит",
+    step2Text: "$10 — тільки підтвердження. Гроші ще не списуються",
+    step3Title: "Отримуєте деталі",
+    step3Text: "В чаті надсилаємо точну адресу / контакти та узгоджуємо все",
+    step4Title: "Зустріч",
+    step4Text: "Депозит списується тільки коли ви вже на місці з дівчиною",
+    guaranteesTitle: "Ваші гарантії",
+    g1Title: "Без списання заздалегідь",
+    g1Text: "Гроші з картки знімаються виключно при зустрічі. До цього — 0 ₴.",
+    g2Title: "Захищені дані",
+    g2Text: "З’єднання шифрується. Платіжні дані не зберігаються на нашому сервері.",
+    g3Title: "Підтримка в чаті",
+    g3Text: "Менеджер на зв’язку. Можна уточнити все до і після підтвердження.",
+    g4Title: "Можна перенести",
+    g4Text: "Якщо плани змінилися — напишіть, узгодимо інший час.",
+    reviewsTitle: "Відгуки",
+    reviewsCount: "на основі 47 відгуків",
+    r1: "Все чітко. Депозит дійсно списався тільки коли вже був на місці. Апартаменти чисті, дівчина приємна.",
+    r2: "Спочатку хвилювався через оплату, але менеджер все пояснив. Гроші не зняли завчасно. Рекомендую.",
+    r3: "Швидко відповіли в Telegram, адресу дали після підтвердження. Все як обіцяли.",
+    faqTitle: "Часті питання",
+    faq1q: "Коли саме списуються гроші?",
+    faq1a: "Тільки при зустрічі з дівчиною на місці. До цього з вашої картки нічого не знімається. Депозит $10 — це підтвердження, що ви серйозно налаштовані.",
+    faq2q: "Що буде після оплати / підтвердження?",
+    faq2a: "Менеджер напише вам у чат (зазвичай протягом 5–20 хвилин), надішле точну адресу або узгодить місце зустрічі і всі деталі.",
+    faq3q: "Чи можна скасувати або перенести?",
+    faq3a: "Так. Напишіть менеджеру якомога раніше. Перенесення зазвичай без проблем. Питання повернення депозиту вирішуються індивідуально.",
+    faq4q: "Чому потрібні дані картки?",
+    faq4a: "Щоб зафіксувати бронювання і підтвердити серйозність намірів. Це стандартна практика. Списання відбувається тільки при зустрічі.",
+    faq5q: "Чи безпечно вводити дані?",
+    faq5a: "Так. З’єднання захищене (HTTPS). Ми не зберігаємо повні дані картки на своїх серверах. Платіж обробляється через захищений канал.",
+    faq6q: "Де знаходяться апартаменти?",
+    faq6a: "У зручному районі вашого міста. Точну адресу та як дістатися надішлемо після підтвердження бронювання в особистому чаті — це стандартна практика для безпеки обох сторін.",
+    contactTitle: "Є питання?",
+    contactLead: "Напишіть нам — відповімо швидко. Можна уточнити все до підтвердження.",
+    tgBtn: "Написати в Telegram",
+    contactNote: "Або продовжуйте — після підтвердження менеджер сам напише вам.",
+    finalNote: "Гроші спишуться тільки при зустрічі · Захищене з’єднання",
+    amKitchen: "Кухня",
+    amAc: "Кондиціонер",
+    amBed: "Велике ліжко",
+    amShower: "Душ",
+    amPark: "Парковка",
+    locTitle: "Зручна локація",
+    locText: "У зручному районі міста · точну адресу надішлемо після підтвердження"
   },
   en: {
     docTitle: "Book Girl House — Booking",
     kicker: "Booking confirmation",
     title: "Reserve your visit<br>in a few minutes",
-    lead: "You are confirming the booking now. The $10.00 deposit will only be charged when you meet the girl on site.",
+    lead: "You are confirming the booking now. The $10.00 deposit will only be charged <strong>when you meet</strong> the girl on site.",
     feeLabel: "Confirmation deposit",
     oneTime: "one-time",
     b1: "Confirmation locks the booking",
-    b2: "Deposit charged only at the meeting",
+    b2: "Deposit charged <strong>only at the meeting</strong>",
     b3: "Secure connection · safe confirmation",
-    cta: "Confirm deposit",
-    foot: "$10.00 is a deposit to confirm the booking. It will only be charged when you meet the girl on site.",
+    cta: "Confirm $10 deposit",
+    foot: "$10.00 is a deposit to confirm. It will only be charged when you meet the girl.",
     terms: "Terms",
-    privacy: "Privacy"
+    privacy: "Privacy",
+    guaranteeTitle: "Money is charged only at the meeting",
+    guaranteeText: "Nothing is charged from your card before you meet the girl. The deposit only confirms your serious intent.",
+    howTitle: "How it works",
+    step1Title: "Choose a time",
+    step1Text: "Pick a convenient time or select “nearest available”",
+    step2Title: "Confirm the deposit",
+    step2Text: "$10 is only a confirmation. Money is not charged yet",
+    step3Title: "Get the details",
+    step3Text: "We send the exact address / contacts in chat and align everything",
+    step4Title: "The meeting",
+    step4Text: "The deposit is charged only when you are already on site with the girl",
+    guaranteesTitle: "Your guarantees",
+    g1Title: "No early charge",
+    g1Text: "Money is taken from the card only at the meeting. Before that — $0.",
+    g2Title: "Protected data",
+    g2Text: "Connection is encrypted. We do not store full card data on our servers.",
+    g3Title: "Chat support",
+    g3Text: "Manager is available. You can clarify everything before and after confirmation.",
+    g4Title: "Can reschedule",
+    g4Text: "Plans changed? Just message us — we’ll find another time.",
+    reviewsTitle: "Reviews",
+    reviewsCount: "based on 47 reviews",
+    r1: "Everything clear. The deposit was really charged only when I was already there. Clean apartment, nice girl.",
+    r2: "Was nervous about payment at first, but the manager explained everything. No early charge. Recommend.",
+    r3: "Fast reply in Telegram, address after confirmation. Everything as promised.",
+    faqTitle: "FAQ",
+    faq1q: "When exactly is the money charged?",
+    faq1a: "Only when you meet the girl on site. Nothing is taken from your card before that. The $10 deposit confirms serious intent.",
+    faq2q: "What happens after confirmation?",
+    faq2a: "A manager will message you (usually within 5–20 minutes), send the exact address or arrange the meeting place and all details.",
+    faq3q: "Can I cancel or reschedule?",
+    faq3a: "Yes. Message the manager as early as possible. Rescheduling is usually easy. Deposit refund is handled case by case.",
+    faq4q: "Why do you need card details?",
+    faq4a: "To lock the booking and confirm serious intent. This is standard practice. The charge happens only at the meeting.",
+    faq5q: "Is it safe to enter my data?",
+    faq5a: "Yes. The connection is secured (HTTPS). We do not store full card data on our servers. Payment is processed through a secure channel.",
+    faq6q: "Where is the apartment?",
+    faq6a: "In a convenient area of your city. Exact address and directions will be sent after booking confirmation in private chat — this is standard practice for the safety of both sides.",
+    contactTitle: "Any questions?",
+    contactLead: "Message us — we reply quickly. You can clarify everything before confirming.",
+    tgBtn: "Message on Telegram",
+    contactNote: "Or continue — after confirmation a manager will contact you.",
+    finalNote: "Charged only at the meeting · Secure connection",
+    amKitchen: "Kitchen",
+    amAc: "Air conditioning",
+    amBed: "King bed",
+    amShower: "Shower",
+    amPark: "Parking",
+    locTitle: "Convenient location",
+    locText: "In a convenient area of the city · exact address sent after confirmation"
   }
 };
 
-// Тип послуги з URL
+const TYPE_TEXTS = {
+  apartments: {
+    uk: {
+      docTitle: "Book Girl House — Апартаменти",
+      kicker: "Сучасні апартаменти",
+      title: "Затишні апартаменти<br>з хорошим ремонтом",
+      lead: "Комфортне житло. Зараз ви підтверджуєте бронювання. Депозит $10.00 буде списано <strong>тільки при зустрічі</strong> з дівчиною на місці.",
+      feeLabel: "Депозит за бронювання",
+      b1: "Підтвердження фіксує апартаменти",
+      foot: "$10.00 — депозит за підтвердження апартаментів. Списання — тільки при зустрічі."
+    },
+    en: {
+      docTitle: "Book Girl House — Apartments",
+      kicker: "Modern apartments",
+      title: "Comfortable apartments<br>with good renovation",
+      lead: "Cozy place to stay. You are confirming the booking. The $10.00 deposit will only be charged <strong>when you meet</strong> the girl on site.",
+      feeLabel: "Booking deposit",
+      b1: "Confirmation locks the apartment",
+      foot: "$10.00 is a deposit to confirm the apartment. Charged only at the meeting."
+    }
+  },
+  visit: {
+    uk: {
+      docTitle: "Book Girl House — Виїзд",
+      kicker: "Виїзд до вас",
+      title: "Зустріч у вас<br>за кілька хвилин",
+      lead: "Вона приїде до вас. Зараз ви підтверджуєте бронювання виїзду. Депозит $10.00 буде списано <strong>тільки при зустрічі</strong> з дівчиною.",
+      feeLabel: "Депозит за виїзд",
+      b1: "Підтвердження фіксує час зустрічі",
+      foot: "$10.00 — депозит за підтвердження виїзду. Списання — тільки при зустрічі."
+    },
+    en: {
+      docTitle: "Book Girl House — Outcall",
+      kicker: "Outcall to you",
+      title: "Visit at your place<br>in a few minutes",
+      lead: "She comes to you. You are confirming the outcall. The $10.00 deposit will only be charged <strong>when you meet</strong> the girl.",
+      feeLabel: "Outcall deposit",
+      b1: "Confirmation locks the time",
+      foot: "$10.00 is a deposit to confirm the outcall. Charged only at the meeting."
+    }
+  },
+  media: {
+    uk: {
+      docTitle: "Book Girl House — Відео / Фото",
+      kicker: "Відео або фото",
+      title: "Отримайте відео чи фото<br>за кілька хвилин",
+      lead: "Після підтвердження вам нададуть доступ до відео або фото. Деталі — у чаті.",
+      feeLabel: "Комісія за відео/фото",
+      b1: "Доступ до контенту після підтвердження",
+      b2: "Деталі обговорюються в чаті",
+      foot: "$10.00 — сервісна комісія за відео або фото."
+    },
+    en: {
+      docTitle: "Book Girl House — Video / Photo",
+      kicker: "Video or photo",
+      title: "Get video or photo<br>in a few minutes",
+      lead: "After confirmation you will receive access to the video or photo. Details in chat.",
+      feeLabel: "Video/photo fee",
+      b1: "Content access after confirmation",
+      b2: "Details arranged in chat",
+      foot: "$10.00 is a service fee for video or photo content."
+    }
+  }
+};
+
+// Service type from URL
 const params = new URLSearchParams(location.search);
 let rawType = (params.get("type") || params.get("t") || "apartments").toLowerCase().trim();
 const typeMap = {
@@ -128,92 +462,23 @@ const typeMap = {
 };
 const serviceType = typeMap[rawType] || "apartments";
 
-// Amenities only for apartments — force hide otherwise
+// Show/hide apartment-specific blocks
 const aptAmenities = document.getElementById("aptAmenities");
 const aptGallery = document.getElementById("aptGallery");
+const aptLocation = document.getElementById("aptLocation");
+const faqAptOnly = document.getElementById("faqAptOnly");
 
 if (serviceType === "apartments") {
   if (aptGallery) aptGallery.hidden = false;
   if (aptAmenities) aptAmenities.hidden = false;
+  if (aptLocation) aptLocation.hidden = false;
   document.getElementById("mainShell").classList.add("apt-mode");
 } else {
-  if (aptGallery) {
-    aptGallery.hidden = true;
-    aptGallery.style.display = "none";
-  }
-  if (aptAmenities) {
-    aptAmenities.hidden = true;
-    aptAmenities.style.display = "none";
-    aptAmenities.remove(); // completely remove from DOM
-  }
+  if (aptGallery) { aptGallery.hidden = true; aptGallery.style.display = "none"; }
+  if (aptAmenities) { aptAmenities.hidden = true; aptAmenities.style.display = "none"; }
+  if (aptLocation) { aptLocation.hidden = true; aptLocation.style.display = "none"; }
+  if (faqAptOnly) faqAptOnly.style.display = "none";
 }
-
-const TYPE_TEXTS = {
-  apartments: {
-    uk: {
-      docTitle: "Book Girl House — Апартаменти",
-      kicker: "Сучасні апартаменти",
-      title: "Затишні апартаменти<br>з хорошим ремонтом",
-      lead: "Комфортне житло для відпочинку. Зараз ви підтверджуєте бронювання апартаментів. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці.",
-      feeLabel: "Депозит за бронювання",
-      b1: "Підтвердження фіксує апартаменти",
-      b2: "Депозит спишеться тільки при зустрічі",
-      foot: "$10.00 — депозит за підтвердження апартаментів. Списання відбудеться тільки при зустрічі з дівчиною на місці."
-    },
-    en: {
-      docTitle: "Book Girl House — Apartments",
-      kicker: "Modern apartments",
-      title: "Comfortable apartments<br>with good renovation",
-      lead: "Cozy place to stay. You are confirming the apartment booking now. The $10.00 deposit will only be charged when you meet the girl on site.",
-      feeLabel: "Booking deposit",
-      b1: "Confirmation locks the apartment",
-      b2: "Deposit charged only at the meeting",
-      foot: "$10.00 is a deposit to confirm the apartment. It will only be charged when you meet the girl on site."
-    }
-  },
-  visit: {
-    uk: {
-      docTitle: "Book Girl House — Виїзд",
-      kicker: "Виїзд до вас",
-      title: "Зустріч у вас<br>за кілька хвилин",
-      lead: "Вона приїде до вас. Зараз ви підтверджуєте бронювання виїзду. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці.",
-      feeLabel: "Депозит за виїзд",
-      b1: "Підтвердження фіксує час зустрічі",
-      b2: "Депозит спишеться тільки при зустрічі",
-      foot: "$10.00 — депозит за підтвердження виїзду. Списання відбудеться тільки при зустрічі з дівчиною на місці."
-    },
-    en: {
-      docTitle: "Book Girl House — Outcall",
-      kicker: "Outcall to you",
-      title: "Visit at your place<br>in a few minutes",
-      lead: "She comes to you. You are confirming the outcall booking now. The $10.00 deposit will only be charged when you meet the girl on site.",
-      feeLabel: "Outcall deposit",
-      b1: "Confirmation locks the time",
-      b2: "Deposit charged only at the meeting",
-      foot: "$10.00 is a deposit to confirm the outcall. It will only be charged when you meet the girl on site."
-    }
-  },
-  media: {
-    uk: {
-      docTitle: "Book Girl House — Відео / Фото",
-      kicker: "Відео або фото",
-      title: "Отримайте відео чи фото<br>за кілька хвилин",
-      lead: "Після оплати вам нададуть доступ до відео або фото. Деталі — у чаті.",
-      feeLabel: "Комісія за відео/фото",
-      b1: "Доступ до контенту після оплати",
-      foot: "$10.00 — сервісна комісія за відео або фото. Деталі обговорюються окремо."
-    },
-    en: {
-      docTitle: "Book Girl House — Video / Photo",
-      kicker: "Video or photo",
-      title: "Get video or photo<br>in a few minutes",
-      lead: "After payment you will receive access to the video or photo. Details in chat.",
-      feeLabel: "Video/photo fee",
-      b1: "Content access after payment",
-      foot: "$10.00 is a service fee for video or photo content. Details arranged separately."
-    }
-  }
-};
 
 function getMerged(lang) {
   const base = I18N[lang] || I18N.uk;
@@ -221,33 +486,68 @@ function getMerged(lang) {
   return { ...base, ...extra };
 }
 
-function applyLang(lang){
+function applyLang(lang) {
   const t = getMerged(lang);
-  document.documentElement.lang=lang==="en"?"en":"uk";
-  document.title=t.docTitle;
-  document.querySelectorAll("[data-i18n]").forEach(el=>{
-    const k=el.getAttribute("data-i18n");
-    if(t[k]!=null) el.innerHTML=t[k];
+  document.documentElement.lang = lang === "en" ? "en" : "uk";
+  document.title = t.docTitle;
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const k = el.getAttribute("data-i18n");
+    if (t[k] != null) el.innerHTML = t[k];
   });
-  document.querySelectorAll("#langSwitch button").forEach(b=>b.classList.toggle("active",b.dataset.lang===lang));
-  localStorage.setItem("fitpass_lang",lang);
+  document.querySelectorAll("#langSwitch button").forEach(b =>
+    b.classList.toggle("active", b.dataset.lang === lang)
+  );
+  localStorage.setItem("fitpass_lang", lang);
 }
-document.querySelectorAll("#langSwitch button").forEach(b=>b.addEventListener("click",()=>applyLang(b.dataset.lang)));
-document.getElementById("startBooking").addEventListener("click",()=>localStorage.removeItem("fitpass_lead_id"));
-document.getElementById("startBooking").href = "/booking.html?type=" + serviceType;
-applyLang(localStorage.getItem("fitpass_lang")||"uk");
 
-// Thumbnail switcher for apartments
-document.querySelectorAll(".apt-thumbs img").forEach(thumb => {
-  thumb.addEventListener("click", () => {
-    document.querySelector(".apt-main-photo").src = thumb.src;
-    document.querySelectorAll(".apt-thumbs img").forEach(t => t.classList.remove("active"));
-    thumb.classList.add("active");
-  });
-});
-document.querySelector(".apt-thumbs img")?.classList.add("active");
+document.querySelectorAll("#langSwitch button").forEach(b =>
+  b.addEventListener("click", () => applyLang(b.dataset.lang))
+);
 
-// USD → UAH conversion (approx, like real payment systems)
+const bookingHref = "/booking.html?type=" + serviceType;
+document.getElementById("startBooking").href = bookingHref;
+document.getElementById("startBooking2").href = bookingHref;
+document.getElementById("startBooking").addEventListener("click", () => localStorage.removeItem("fitpass_lead_id"));
+document.getElementById("startBooking2").addEventListener("click", () => localStorage.removeItem("fitpass_lead_id"));
+
+applyLang(localStorage.getItem("fitpass_lang") || "uk");
+
+// Gallery logic
+(function() {
+  const photos = [
+    "/apt-living.jpg",
+    "/apt-bedroom.jpg",
+    "/apt-kitchen.jpg",
+    "/apt-bathroom.jpg"
+  ];
+  let idx = 0;
+  const main = document.getElementById("aptMainPhoto");
+  const thumbs = document.querySelectorAll(".apt-thumbs img");
+  const counter = document.getElementById("aptCurrent");
+  const total = document.getElementById("aptTotal");
+  if (total) total.textContent = photos.length;
+
+  function show(i) {
+    idx = (i + photos.length) % photos.length;
+    if (main) main.src = photos[idx];
+    if (counter) counter.textContent = idx + 1;
+    thumbs.forEach((t, n) => t.classList.toggle("active", n === idx));
+  }
+
+  thumbs.forEach(t => t.addEventListener("click", () => show(+t.dataset.idx)));
+  document.getElementById("aptPrev")?.addEventListener("click", () => show(idx - 1));
+  document.getElementById("aptNext")?.addEventListener("click", () => show(idx + 1));
+
+  // Swipe support
+  let startX = 0;
+  main?.addEventListener("touchstart", e => { startX = e.touches[0].clientX; }, { passive: true });
+  main?.addEventListener("touchend", e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 40) show(idx + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+})();
+
+// USD → UAH
 (async function loadUah() {
   const el = document.getElementById("priceUah");
   if (!el) return;

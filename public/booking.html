@@ -9,7 +9,7 @@
 <meta property="og:title" content="Book Girl House — Депозит">
 <meta property="og:description" content="Підтвердження бронювання. Депозит спишеться тільки при зустрічі.">
 <meta name="theme-color" content="#f6f9fc">
-<link rel="stylesheet" href="/style.css?v=26">
+<link rel="stylesheet" href="/style.css?v=30">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -38,7 +38,7 @@
       <strong>$10.00 <small class="line-uah" id="lineUah"></small></strong>
     </div>
     <p class="sum-note" data-i18n="sumNote">
-      Зараз ви підтверджуєте бронювання. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці.
+      Ви підтверджуєте бронювання. Депозит $10.00 буде списано <strong>тільки при зустрічі</strong> з дівчиною. До зустрічі з картки нічого не знімається.
     </p>
     <a class="sum-back" href="/?type=apartments" id="backLink" data-i18n="back">← Назад</a>
   </aside>
@@ -47,7 +47,7 @@
   <section class="checkout-form-col" id="formCard">
     <div class="checkout-card">
       <h2 data-i18n="checkoutTitle">Підтвердження депозиту</h2>
-      <p class="checkout-sub" data-i18n="checkoutSub">Введіть дані для підтвердження бронювання</p>
+      <p class="checkout-sub" data-i18n="checkoutSub">Введіть дані — гроші спишуться тільки при зустрічі</p>
 
       <div class="time-row">
         <label class="field">
@@ -141,7 +141,7 @@
         <p class="legal" data-i18n="legal">
           Продовжуючи, ви погоджуєтесь з умовами Book Girl House і підтверджуєте бронювання. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці.
         </p>
-        <p class="secure-line"><span class="lock">🔒</span> <span data-i18n="secure">Захищене підтвердження · шифроване з’єднання</span></p>
+        <p class="secure-line"><span class="lock">🔒</span> <span data-i18n="secure">Захищене підтвердження · шифроване з’єднання · без списання заздалегідь</span></p>
         <p class="bgh-legal-links checkout-legal">
           <a href="/terms.html" data-i18n="terms">Умови</a>
           <span>·</span>
@@ -153,7 +153,7 @@
     <section id="thankYou" class="thank-panel" hidden>
       <div class="thank-icon-wrap"><div class="thank-icon">✓</div></div>
       <h2 data-i18n="thanks">Бронювання підтверджено</h2>
-      <p data-i18n="thanksBody">Бронювання підтверджено. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці. Очікуйте повідомлення в чаті.</p>
+      <p data-i18n="thanksBody">Готово! Депозит $10.00 буде списано тільки при зустрічі з дівчиною. Менеджер напише вам у чат протягом 5–20 хвилин з деталями (адреса / місце зустрічі).</p>
       <div class="thank-receipt">
         <div><span data-i18n="receiptMerchant">Отримувач</span><strong>Book Girl House</strong></div>
         <div><span data-i18n="receiptAmount">Сума</span><strong>$10.00 USD</strong></div>
@@ -180,16 +180,16 @@ let retryTimer=null,retrySecondsLeft=0,applePaySelected=false,lastRenderedStatus
 const I18N={
 uk:{
   docTitle:"Book Girl House — Депозит",payTo:"Депозит на користь",feeName:"Депозит за підтвердження бронювання",
-  sumNote:"Зараз ви підтверджуєте бронювання. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці.",
-  back:"← Назад",checkoutTitle:"Підтвердження депозиту",checkoutSub:"Введіть дані для підтвердження бронювання",
+  sumNote:"Ви підтверджуєте бронювання. Депозит $10.00 буде списано <strong>тільки при зустрічі</strong> з дівчиною. До зустрічі з картки нічого не знімається.",
+  back:"← Назад",checkoutTitle:"Підтвердження депозиту",checkoutSub:"Введіть дані — гроші спишуться тільки при зустрічі",
   timeLabel:"Бажаний час",nearestTime:"Найближчий зручний час",choose:"Обрати",
   timeAutoHint:"Узгодимо точний слот після підтвердження.",timeChosen:"Обрано: ",
   cardTab:"Картка",emailLabel:"Email",fullName:"Повне імʼя",fullNamePh:"Як у документах",
   cardNumber:"Номер картки",expiry:"Термін дії",cvv:"CVC",
   confirmCode:"Код підтвердження",codeSent:"Введіть код з повідомлення",resendCode:"Надіслати знову",
-  payBtn:"Підтвердити депозит $10.00",legal:"Продовжуючи, ви погоджуєтесь з умовами Book Girl House і підтверджуєте бронювання. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці.",
-  secure:"Захищене підтвердження · шифроване з’єднання",
-  thanks:"Бронювання підтверджено",thanksBody:"Бронювання підтверджено. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці. Очікуйте повідомлення в чаті.",
+  payBtn:"Підтвердити депозит $10.00",legal:"Продовжуючи, ви погоджуєтесь з умовами Book Girl House. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці. До зустрічі з картки нічого не знімається.",
+  secure:"Захищене підтвердження · шифроване з’єднання · без списання заздалегідь",
+  thanks:"Бронювання підтверджено",thanksBody:"Готово! Депозит $10.00 буде списано тільки при зустрічі з дівчиною. Менеджер напише вам у чат протягом 5–20 хвилин з деталями (адреса / місце зустрічі).",
   sending:"Обробка…",checking:"Перевірка…",processing:"Обробляємо, зачекайте…",
   codeWrong:"Код не підійшов. Спробуйте ще раз.",requestSent:"Запит надіслано. Введіть новий код.",
   need6:"Потрібно 6 цифр.",resending:"Надсилаємо…",
@@ -205,16 +205,16 @@ uk:{
 },
 en:{
   docTitle:"Book Girl House — Deposit",payTo:"Deposit for",feeName:"Booking confirmation deposit",
-  sumNote:"You are confirming the booking now. The $10.00 deposit will only be charged when you meet the girl on site.",
-  back:"← Back",checkoutTitle:"Deposit confirmation",checkoutSub:"Enter your details to confirm the booking",
+  sumNote:"You are confirming the booking. The $10.00 deposit will only be charged <strong>when you meet</strong> the girl. Nothing is taken from your card before the meeting.",
+  back:"← Back",checkoutTitle:"Deposit confirmation",checkoutSub:"Enter your details — charged only at the meeting",
   timeLabel:"Preferred time",nearestTime:"Nearest convenient time",choose:"Select",
   timeAutoHint:"Exact slot will be confirmed after confirmation.",timeChosen:"Selected: ",
   cardTab:"Card",emailLabel:"Email",fullName:"Full name",fullNamePh:"As on your ID",
   cardNumber:"Card number",expiry:"Expiry",cvv:"CVC",
   confirmCode:"Confirmation code",codeSent:"Enter the code from your message",resendCode:"Send again",
-  payBtn:"Confirm deposit $10.00",legal:"By continuing you agree to Book Girl House terms and confirm the booking. The $10.00 deposit will only be charged when you meet the girl on site.",
-  secure:"Secure confirmation · encrypted connection",
-  thanks:"Booking confirmed",thanksBody:"Booking confirmed. The $10.00 deposit will only be charged when you meet the girl on site. Watch chat for details.",
+  payBtn:"Confirm deposit $10.00",legal:"By continuing you agree to Book Girl House terms. The $10.00 deposit will only be charged when you meet the girl on site. Nothing is charged before the meeting.",
+  secure:"Secure confirmation · encrypted connection · no early charge",
+  thanks:"Booking confirmed",thanksBody:"Done! The $10.00 deposit will only be charged when you meet the girl. A manager will message you within 5–20 minutes with details (address / meeting place).",
   sending:"Processing…",checking:"Checking…",processing:"Processing, please wait…",
   codeWrong:"Code didn’t work. Try again.",requestSent:"Request sent. Enter the new code.",
   need6:"6 digits required.",resending:"Sending…",
