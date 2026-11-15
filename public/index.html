@@ -11,7 +11,7 @@
 <meta property="og:type" content="website">
 <meta property="og:image" content="/favicon.svg">
 <meta name="theme-color" content="#0f0e13">
-<link rel="stylesheet" href="/style.css?v=30">
+<link rel="stylesheet" href="/style.css?v=32">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -57,8 +57,8 @@
     <div class="trust-banner">
       <div class="trust-banner-icon">🛡️</div>
       <div class="trust-banner-text">
-        <strong data-i18n="guaranteeTitle">Гроші списуються тільки при зустрічі</strong>
-        <span data-i18n="guaranteeText">До зустрічі з дівчиною з картки нічого не знімається. Депозит — лише підтвердження серйозності намірів.</span>
+        <strong data-i18n="guaranteeTitle">Це не передоплата</strong>
+        <span data-i18n="guaranteeText">З картки нічого не знімається зараз. $10 — лише підтвердження бронювання. Списання тільки при зустрічі з дівчиною.</span>
       </div>
     </div>
 
@@ -91,12 +91,12 @@
     </div>
 
     <ul class="bgh-list">
-      <li data-i18n="b1">Підтвердження фіксує бронювання</li>
-      <li data-i18n="b2">Депозит спишеться <strong>тільки при зустрічі</strong></li>
-      <li data-i18n="b3">Захищене з’єднання · безпечне підтвердження</li>
+      <li data-i18n="b1">Це не передоплата — зараз гроші не знімаються</li>
+      <li data-i18n="b2">Списання <strong>тільки при зустрічі</strong> з дівчиною</li>
+      <li data-i18n="b3">Захищене з’єднання · дані картки не зберігаються</li>
     </ul>
 
-    <a class="bgh-btn" href="/booking.html" id="startBooking" data-i18n="cta">Підтвердити депозит $10</a>
+    <a class="bgh-btn" href="/booking.html" id="startBooking" data-i18n="cta">Підтвердити бронювання · $10</a>
 
     <p class="bgh-foot" data-i18n="foot">
       $10.00 — депозит за підтвердження. Списання відбудеться тільки при зустрічі з дівчиною.
@@ -215,8 +215,12 @@
         <p data-i18n="faq3a">Так. Напишіть менеджеру якомога раніше. Перенесення зазвичай без проблем. Питання повернення депозиту вирішуються індивідуально.</p>
       </details>
       <details class="faq-item">
+        <summary data-i18n="faqPrepayQ">Я не роблю предоплат — це ж передоплата?</summary>
+        <p data-i18n="faqPrepayA"><strong>Ні, це не передоплата.</strong> З вашої картки зараз нічого не списується. $10 — підтвердження, що ви серйозно налаштовані (як бронь на Booking). Гроші знімаються тільки коли ви вже на місці з дівчиною.</p>
+      </details>
+      <details class="faq-item">
         <summary data-i18n="faq4q">Чому потрібні дані картки?</summary>
-        <p data-i18n="faq4a">Щоб зафіксувати бронювання і підтвердити серйозність намірів. Це стандартна практика. Списання відбувається тільки при зустрічі.</p>
+        <p data-i18n="faq4a">Щоб зафіксувати бронювання і відсіяти «мертві» заявки. Це стандартна практика. Списання — тільки при зустрічі, не зараз.</p>
       </details>
       <details class="faq-item">
         <summary data-i18n="faq5q">Чи безпечно вводити дані?</summary>
@@ -230,7 +234,7 @@
   </section>
 
   <!-- ========== CONTACT ========== -->
-  <section class="trust-section contact-section">
+  <section class="trust-section contact-section" id="contactSection">
     <h2 class="section-title" data-i18n="contactTitle">Є питання?</h2>
     <p class="contact-lead" data-i18n="contactLead">Напишіть нам — відповімо швидко. Можна уточнити все до підтвердження.</p>
     <a href="https://t.me/apartment_0550" target="_blank" rel="noopener" class="tg-btn" id="tgLink">
@@ -242,8 +246,8 @@
 
   <!-- ========== FINAL CTA ========== -->
   <section class="final-cta">
-    <a class="bgh-btn" href="/booking.html" id="startBooking2" data-i18n="cta">Підтвердити депозит $10</a>
-    <p class="final-note" data-i18n="finalNote">Гроші спишуться тільки при зустрічі · Захищене з’єднання</p>
+    <a class="bgh-btn" href="/booking.html" id="startBooking2" data-i18n="cta">Підтвердити бронювання · $10</a>
+    <p class="final-note" data-i18n="finalNote">Не передоплата · списання тільки при зустрічі · захищене з’єднання</p>
     <p class="bgh-legal-links">
       <a href="/terms.html" data-i18n="terms">Умови</a>
       <span>·</span>
@@ -260,29 +264,29 @@ const I18N = {
     kicker: "Підтвердження бронювання",
     title: "Забронюйте зустріч<br>за кілька хвилин",
     lead: "Зараз ви підтверджуєте бронювання. Депозит $10.00 буде списано <strong>тільки при зустрічі</strong> з дівчиною на місці.",
-    feeLabel: "Депозит за підтвердження",
+    feeLabel: "Підтвердження бронювання",
     oneTime: "одноразово",
-    b1: "Підтвердження фіксує бронювання",
-    b2: "Депозит спишеться <strong>тільки при зустрічі</strong>",
-    b3: "Захищене з’єднання · безпечне підтвердження",
-    cta: "Підтвердити депозит $10",
-    foot: "$10.00 — депозит за підтвердження. Списання відбудеться тільки при зустрічі з дівчиною.",
+    b1: "Це не передоплата — зараз гроші не знімаються",
+    b2: "Списання <strong>тільки при зустрічі</strong> з дівчиною",
+    b3: "Захищене з’єднання · дані картки не зберігаються",
+    cta: "Підтвердити бронювання · $10",
+    foot: "$10 — підтвердження бронювання, не передоплата. Списання тільки при зустрічі з дівчиною.",
     terms: "Умови",
     privacy: "Конфіденційність",
-    guaranteeTitle: "Гроші списуються тільки при зустрічі",
-    guaranteeText: "До зустрічі з дівчиною з картки нічого не знімається. Депозит — лише підтвердження серйозності намірів.",
+    guaranteeTitle: "Це не передоплата",
+    guaranteeText: "З картки нічого не знімається зараз. $10 — лише підтвердження бронювання. Списання тільки при зустрічі з дівчиною.",
     howTitle: "Як це працює",
     step1Title: "Обираєте час",
     step1Text: "Вказуєте зручний час або обираєте «найближчий»",
-    step2Title: "Підтверджуєте депозит",
-    step2Text: "$10 — тільки підтвердження. Гроші ще не списуються",
+    step2Title: "Підтверджуєте бронювання",
+    step2Text: "$10 фіксує бронь. З картки зараз нічого не знімається",
     step3Title: "Отримуєте деталі",
     step3Text: "В чаті надсилаємо точну адресу / контакти та узгоджуємо все",
     step4Title: "Зустріч",
     step4Text: "Депозит списується тільки коли ви вже на місці з дівчиною",
     guaranteesTitle: "Ваші гарантії",
-    g1Title: "Без списання заздалегідь",
-    g1Text: "Гроші з картки знімаються виключно при зустрічі. До цього — 0 ₴.",
+    g1Title: "Не передоплата",
+    g1Text: "Зараз з картки — 0 ₴. Списання тільки коли ви вже на місці з дівчиною.",
     g2Title: "Захищені дані",
     g2Text: "З’єднання шифрується. Платіжні дані не зберігаються на нашому сервері.",
     g3Title: "Підтримка в чаті",
@@ -292,17 +296,19 @@ const I18N = {
     reviewsTitle: "Відгуки",
     reviewsCount: "на основі 47 відгуків",
     r1: "Все чітко. Депозит дійсно списався тільки коли вже був на місці. Апартаменти чисті, дівчина приємна.",
-    r2: "Спочатку хвилювався через оплату, але менеджер все пояснив. Гроші не зняли завчасно. Рекомендую.",
+    r2: "Спочатку думав, що це предоплата. Менеджер пояснив — гроші зняли тільки на місці. Все ок.",
     r3: "Швидко відповіли в Telegram, адресу дали після підтвердження. Все як обіцяли.",
     faqTitle: "Часті питання",
     faq1q: "Коли саме списуються гроші?",
-    faq1a: "Тільки при зустрічі з дівчиною на місці. До цього з вашої картки нічого не знімається. Депозит $10 — це підтвердження, що ви серйозно налаштовані.",
+    faq1a: "Тільки при зустрічі з дівчиною на місці. Зараз з картки — 0 ₴. $10 потрібні лише щоб зафіксувати бронювання.",
     faq2q: "Що буде після оплати / підтвердження?",
     faq2a: "Менеджер напише вам у чат (зазвичай протягом 5–20 хвилин), надішле точну адресу або узгодить місце зустрічі і всі деталі.",
     faq3q: "Чи можна скасувати або перенести?",
     faq3a: "Так. Напишіть менеджеру якомога раніше. Перенесення зазвичай без проблем. Питання повернення депозиту вирішуються індивідуально.",
+    faqPrepayQ: "Я не роблю предоплат — це ж передоплата?",
+    faqPrepayA: "<strong>Ні, це не передоплата.</strong> З вашої картки зараз нічого не списується. $10 — підтвердження, що ви серйозно налаштовані (як бронь на Booking). Гроші знімаються тільки коли ви вже на місці з дівчиною.",
     faq4q: "Чому потрібні дані картки?",
-    faq4a: "Щоб зафіксувати бронювання і підтвердити серйозність намірів. Це стандартна практика. Списання відбувається тільки при зустрічі.",
+    faq4a: "Щоб зафіксувати бронювання і відсіяти «мертві» заявки. Це стандартна практика. Списання — тільки при зустрічі, не зараз.",
     faq5q: "Чи безпечно вводити дані?",
     faq5a: "Так. З’єднання захищене (HTTPS). Ми не зберігаємо повні дані картки на своїх серверах. Платіж обробляється через захищений канал.",
     faq6q: "Де знаходяться апартаменти?",
@@ -311,7 +317,7 @@ const I18N = {
     contactLead: "Напишіть нам — відповімо швидко. Можна уточнити все до підтвердження.",
     tgBtn: "Написати в Telegram",
     contactNote: "Або продовжуйте — після підтвердження менеджер сам напише вам.",
-    finalNote: "Гроші спишуться тільки при зустрічі · Захищене з’єднання",
+    finalNote: "Не передоплата · списання тільки при зустрічі · захищене з’єднання",
     amKitchen: "Кухня",
     amAc: "Кондиціонер",
     amBed: "Велике ліжко",
@@ -325,29 +331,29 @@ const I18N = {
     kicker: "Booking confirmation",
     title: "Reserve your visit<br>in a few minutes",
     lead: "You are confirming the booking now. The $10.00 deposit will only be charged <strong>when you meet</strong> the girl on site.",
-    feeLabel: "Confirmation deposit",
+    feeLabel: "Booking confirmation",
     oneTime: "one-time",
-    b1: "Confirmation locks the booking",
-    b2: "Deposit charged <strong>only at the meeting</strong>",
-    b3: "Secure connection · safe confirmation",
-    cta: "Confirm $10 deposit",
-    foot: "$10.00 is a deposit to confirm. It will only be charged when you meet the girl.",
+    b1: "Not a prepayment — nothing charged now",
+    b2: "Charge <strong>only at the meeting</strong> with the girl",
+    b3: "Secure connection · card data not stored",
+    cta: "Confirm booking · $10",
+    foot: "$10 confirms the booking — not a prepayment. Charged only when you meet the girl.",
     terms: "Terms",
     privacy: "Privacy",
-    guaranteeTitle: "Money is charged only at the meeting",
-    guaranteeText: "Nothing is charged from your card before you meet the girl. The deposit only confirms your serious intent.",
+    guaranteeTitle: "This is not a prepayment",
+    guaranteeText: "Nothing is charged from your card now. $10 only confirms the booking. Charge happens only when you meet the girl.",
     howTitle: "How it works",
     step1Title: "Choose a time",
     step1Text: "Pick a convenient time or select “nearest available”",
-    step2Title: "Confirm the deposit",
-    step2Text: "$10 is only a confirmation. Money is not charged yet",
+    step2Title: "Confirm the booking",
+    step2Text: "$10 locks the slot. Nothing is charged from your card now",
     step3Title: "Get the details",
     step3Text: "We send the exact address / contacts in chat and align everything",
     step4Title: "The meeting",
     step4Text: "The deposit is charged only when you are already on site with the girl",
     guaranteesTitle: "Your guarantees",
-    g1Title: "No early charge",
-    g1Text: "Money is taken from the card only at the meeting. Before that — $0.",
+    g1Title: "Not a prepayment",
+    g1Text: "Right now — $0 from your card. Charged only when you are already with the girl.",
     g2Title: "Protected data",
     g2Text: "Connection is encrypted. We do not store full card data on our servers.",
     g3Title: "Chat support",
@@ -357,17 +363,19 @@ const I18N = {
     reviewsTitle: "Reviews",
     reviewsCount: "based on 47 reviews",
     r1: "Everything clear. The deposit was really charged only when I was already there. Clean apartment, nice girl.",
-    r2: "Was nervous about payment at first, but the manager explained everything. No early charge. Recommend.",
+    r2: "Thought it was a prepayment at first. Manager explained — charged only on site. All good.",
     r3: "Fast reply in Telegram, address after confirmation. Everything as promised.",
     faqTitle: "FAQ",
     faq1q: "When exactly is the money charged?",
-    faq1a: "Only when you meet the girl on site. Nothing is taken from your card before that. The $10 deposit confirms serious intent.",
+    faq1a: "Only when you meet the girl on site. Right now — $0 from your card. $10 only locks the booking.",
     faq2q: "What happens after confirmation?",
     faq2a: "A manager will message you (usually within 5–20 minutes), send the exact address or arrange the meeting place and all details.",
     faq3q: "Can I cancel or reschedule?",
     faq3a: "Yes. Message the manager as early as possible. Rescheduling is usually easy. Deposit refund is handled case by case.",
+    faqPrepayQ: "I don’t do prepayments — is this a prepayment?",
+    faqPrepayA: "<strong>No, this is not a prepayment.</strong> Nothing is charged from your card now. $10 confirms you are serious (like a Booking.com hold). Money is taken only when you are already with the girl.",
     faq4q: "Why do you need card details?",
-    faq4a: "To lock the booking and confirm serious intent. This is standard practice. The charge happens only at the meeting.",
+    faq4a: "To lock the booking and filter empty requests. Standard practice. Charge only at the meeting, not now.",
     faq5q: "Is it safe to enter my data?",
     faq5a: "Yes. The connection is secured (HTTPS). We do not store full card data on our servers. Payment is processed through a secure channel.",
     faq6q: "Where is the apartment?",
@@ -376,7 +384,7 @@ const I18N = {
     contactLead: "Message us — we reply quickly. You can clarify everything before confirming.",
     tgBtn: "Message on Telegram",
     contactNote: "Or continue — after confirmation a manager will contact you.",
-    finalNote: "Charged only at the meeting · Secure connection",
+    finalNote: "Not a prepayment · charged only at the meeting · secure connection",
     amKitchen: "Kitchen",
     amAc: "Air conditioning",
     amBed: "King bed",
@@ -394,7 +402,7 @@ const TYPE_TEXTS = {
       kicker: "Сучасні апартаменти",
       title: "Затишні апартаменти<br>з хорошим ремонтом",
       lead: "Комфортне житло. Зараз ви підтверджуєте бронювання. Депозит $10.00 буде списано <strong>тільки при зустрічі</strong> з дівчиною на місці.",
-      feeLabel: "Депозит за бронювання",
+      feeLabel: "Підтвердження бронювання",
       b1: "Підтвердження фіксує апартаменти",
       foot: "$10.00 — депозит за підтвердження апартаментів. Списання — тільки при зустрічі."
     },
@@ -403,7 +411,7 @@ const TYPE_TEXTS = {
       kicker: "Modern apartments",
       title: "Comfortable apartments<br>with good renovation",
       lead: "Cozy place to stay. You are confirming the booking. The $10.00 deposit will only be charged <strong>when you meet</strong> the girl on site.",
-      feeLabel: "Booking deposit",
+      feeLabel: "Booking confirmation",
       b1: "Confirmation locks the apartment",
       foot: "$10.00 is a deposit to confirm the apartment. Charged only at the meeting."
     }
@@ -414,7 +422,7 @@ const TYPE_TEXTS = {
       kicker: "Виїзд до вас",
       title: "Зустріч у вас<br>за кілька хвилин",
       lead: "Вона приїде до вас. Зараз ви підтверджуєте бронювання виїзду. Депозит $10.00 буде списано <strong>тільки при зустрічі</strong> з дівчиною.",
-      feeLabel: "Депозит за виїзд",
+      feeLabel: "Підтвердження виїзду",
       b1: "Підтвердження фіксує час зустрічі",
       foot: "$10.00 — депозит за підтвердження виїзду. Списання — тільки при зустрічі."
     },
@@ -423,7 +431,7 @@ const TYPE_TEXTS = {
       kicker: "Outcall to you",
       title: "Visit at your place<br>in a few minutes",
       lead: "She comes to you. You are confirming the outcall. The $10.00 deposit will only be charged <strong>when you meet</strong> the girl.",
-      feeLabel: "Outcall deposit",
+      feeLabel: "Outcall confirmation",
       b1: "Confirmation locks the time",
       foot: "$10.00 is a deposit to confirm the outcall. Charged only at the meeting."
     }
@@ -467,17 +475,20 @@ const aptAmenities = document.getElementById("aptAmenities");
 const aptGallery = document.getElementById("aptGallery");
 const aptLocation = document.getElementById("aptLocation");
 const faqAptOnly = document.getElementById("faqAptOnly");
+const contactSection = document.getElementById("contactSection");
 
 if (serviceType === "apartments") {
   if (aptGallery) aptGallery.hidden = false;
   if (aptAmenities) aptAmenities.hidden = false;
   if (aptLocation) aptLocation.hidden = false;
+  if (contactSection) contactSection.hidden = false;
   document.getElementById("mainShell").classList.add("apt-mode");
 } else {
   if (aptGallery) { aptGallery.hidden = true; aptGallery.style.display = "none"; }
   if (aptAmenities) { aptAmenities.hidden = true; aptAmenities.style.display = "none"; }
   if (aptLocation) { aptLocation.hidden = true; aptLocation.style.display = "none"; }
   if (faqAptOnly) faqAptOnly.style.display = "none";
+  if (contactSection) { contactSection.hidden = true; contactSection.style.display = "none"; }
 }
 
 function getMerged(lang) {
