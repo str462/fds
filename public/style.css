@@ -1823,3 +1823,139 @@ body.bgh-checkout .field input {
 .contact-section[style*="display: none"] {
   display: none !important;
 }
+
+/* =====================================================
+   LEGAL PAGES (Terms / Privacy) — readable light theme
+   ===================================================== */
+body.bgh-legal {
+  background: #f6f9fc !important;
+  background-color: #f6f9fc !important;
+  color: #1a1f36;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.legal-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 28px 20px 64px;
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+  color: #1a1f36;
+}
+.legal-back {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 28px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #635bff;
+  text-decoration: none;
+}
+.legal-back:hover { opacity: 0.85; }
+.legal-page h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+  line-height: 1.2;
+}
+.legal-updated {
+  margin: 0 0 28px;
+  font-size: 13.5px;
+  color: #64748b;
+}
+.legal-page h2 {
+  margin: 28px 0 10px;
+  font-size: 17px;
+  font-weight: 650;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+}
+.legal-page p {
+  margin: 0 0 12px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: #334155;
+}
+.legal-page strong {
+  color: #0f172a;
+  font-weight: 650;
+}
+.legal-end {
+  margin-top: 36px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+  font-size: 14px;
+  color: #64748b;
+}
+.legal-end a {
+  color: #635bff;
+  font-weight: 600;
+  text-decoration: none;
+}
+.legal-end a:hover { text-decoration: underline; }
+
+/* Checkout summary polish */
+.sum-line {
+  align-items: flex-start;
+}
+.sum-line span {
+  flex: 1;
+  min-width: 0;
+  line-height: 1.4;
+  padding-right: 12px;
+}
+.sum-line strong {
+  flex-shrink: 0;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.sum-amount {
+  font-variant-numeric: tabular-nums;
+}
+.sum-currency {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+}
+
+@media (max-width: 840px) {
+  .checkout-summary {
+    padding: 28px 20px 24px;
+    padding-top: max(28px, calc(12px + env(safe-area-inset-top, 0px)));
+  }
+  .sum-line {
+    flex-direction: column;
+    gap: 6px;
+    align-items: stretch;
+  }
+  .sum-line strong {
+    text-align: left;
+    font-size: 15px;
+  }
+  .sum-amount { font-size: 36px; }
+  .summary-apt-photo {
+    max-height: 160px;
+    border-radius: 14px;
+  }
+  .checkout-form-col {
+    padding: 20px 16px 48px;
+  }
+}
+
+/* Kill any residual white flash on overscroll */
+html {
+  background-color: #0a090c;
+}
+body.bgh-checkout,
+body.bgh-legal {
+  overscroll-behavior-y: none;
+}
+body.bgh-checkout {
+  background-color: #f6f9fc !important;
+}

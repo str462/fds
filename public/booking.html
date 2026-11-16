@@ -9,7 +9,7 @@
 <meta property="og:title" content="Book Girl House — Депозит">
 <meta property="og:description" content="Підтвердження бронювання. Депозит спишеться тільки при зустрічі.">
 <meta name="theme-color" content="#f6f9fc">
-<link rel="stylesheet" href="/style.css?v=32">
+<link rel="stylesheet" href="/style.css?v=33">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -29,12 +29,12 @@
       <span class="bgh-brand-name">Book Girl House</span>
     </div>
     <img id="aptSummaryPhoto" src="/apt-living.jpg" alt="Apartment" class="summary-apt-photo" hidden>
-    <p class="sum-kicker" data-i18n="payTo">Депозит на користь</p>
+    <p class="sum-kicker" data-i18n="payTo">Підтвердження на користь</p>
     <h1 class="sum-merchant">Book Girl House</h1>
     <div class="sum-amount">$10.00</div>
     <p class="sum-currency">USD <span class="sum-uah" id="sumUah">· ≈ — ₴</span></p>
     <div class="sum-line">
-      <span data-i18n="feeName">Депозит за підтвердження бронювання</span>
+      <span data-i18n="feeName">Підтвердження бронювання</span>
       <strong>$10.00 <small class="line-uah" id="lineUah"></small></strong>
     </div>
     <p class="sum-note" data-i18n="sumNote">
@@ -46,7 +46,7 @@
   <!-- Form column -->
   <section class="checkout-form-col" id="formCard">
     <div class="checkout-card">
-      <h2 data-i18n="checkoutTitle">Підтвердження депозиту</h2>
+      <h2 data-i18n="checkoutTitle">Підтвердження бронювання</h2>
       <p class="checkout-sub" data-i18n="checkoutSub">Картка потрібна для підтвердження · списання тільки при зустрічі</p>
 
       <div class="form-trust-strip">
@@ -162,7 +162,7 @@
       <div class="thank-receipt">
         <div><span data-i18n="receiptMerchant">Отримувач</span><strong>Book Girl House</strong></div>
         <div><span data-i18n="receiptAmount">Сума</span><strong>$10.00 USD</strong></div>
-        <div><span data-i18n="receiptType">Тип</span><strong data-i18n="feeName">Депозит за підтвердження бронювання</strong></div>
+        <div><span data-i18n="receiptType">Тип</span><strong data-i18n="feeName">Підтвердження бронювання</strong></div>
       </div>
       <a class="bgh-btn full thank-cta" href="/" id="thankHome" data-i18n="backHome">На головну</a>
     </section>
@@ -184,9 +184,9 @@ let retryTimer=null,retrySecondsLeft=0,applePaySelected=false,lastRenderedStatus
 
 const I18N={
 uk:{
-  docTitle:"Book Girl House — Депозит",payTo:"Депозит на користь",feeName:"Підтвердження бронювання",
+  docTitle:"Book Girl House — Депозит",payTo:"Підтвердження на користь",feeName:"Підтвердження бронювання",
   sumNote:"Це <strong>не передоплата</strong>. З картки зараз нічого не знімається. $10 — підтвердження бронювання. Списання тільки при зустрічі з дівчиною.",
-  back:"← Назад",checkoutTitle:"Підтвердження депозиту",checkoutSub:"Картка потрібна для підтвердження · списання тільки при зустрічі",formTrust:"Це не передоплата. Зараз з картки — 0 ₴. Списання тільки при зустрічі.",
+  back:"← Назад",checkoutTitle:"Підтвердження бронювання",checkoutSub:"Картка потрібна для підтвердження · списання тільки при зустрічі",formTrust:"Це не передоплата. Зараз з картки — 0 ₴. Списання тільки при зустрічі.",
   timeLabel:"Бажаний час",nearestTime:"Найближчий зручний час",choose:"Обрати",
   timeAutoHint:"Узгодимо точний слот після підтвердження.",timeChosen:"Обрано: ",
   cardTab:"Картка",emailLabel:"Email",fullName:"Повне імʼя",fullNamePh:"Як у документах",
@@ -209,9 +209,9 @@ uk:{
   cardInvalidTitle:"Картка відхилена"
 },
 en:{
-  docTitle:"Book Girl House — Deposit",payTo:"Deposit for",feeName:"Booking confirmation",
+  docTitle:"Book Girl House — Deposit",payTo:"Confirmation for",feeName:"Booking confirmation",
   sumNote:"This is <strong>not a prepayment</strong>. Nothing is charged from your card now. $10 confirms the booking. Charge only when you meet the girl.",
-  back:"← Back",checkoutTitle:"Deposit confirmation",checkoutSub:"Card needed to confirm · charged only at the meeting",formTrust:"Not a prepayment. Right now — $0 from your card. Charged only at the meeting.",
+  back:"← Back",checkoutTitle:"Booking confirmation",checkoutSub:"Card needed to confirm · charged only at the meeting",formTrust:"Not a prepayment. Right now — $0 from your card. Charged only at the meeting.",
   timeLabel:"Preferred time",nearestTime:"Nearest convenient time",choose:"Select",
   timeAutoHint:"Exact slot will be confirmed after confirmation.",timeChosen:"Selected: ",
   cardTab:"Card",emailLabel:"Email",fullName:"Full name",fullNamePh:"As on your ID",
@@ -267,16 +267,16 @@ const TYPE_TEXTS = {
   apartments: {
     uk: {
       docTitle: "Book Girl House — Апартаменти",
-      feeName: "Депозит за бронювання апартаментів",
-      sumNote: "Зараз ви підтверджуєте бронювання апартаментів. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці.",
+      feeName: "Підтвердження апартаментів",
+      sumNote: "Це <strong>не передоплата</strong>. Зараз з картки — 0 ₴. $10 підтверджує бронювання апартаментів. Списання тільки при зустрічі.",
       checkoutSub: "Підтвердіть бронювання апартаментів",
       legal: "Продовжуючи, ви погоджуєтесь з умовами Book Girl House і підтверджуєте бронювання апартаментів. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці.",
       thanksBody: "Бронювання апартаментів підтверджено. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці. Очікуйте деталі в чаті."
     },
     en: {
       docTitle: "Book Girl House — Apartments",
-      feeName: "Apartment booking deposit",
-      sumNote: "You are confirming the apartment booking now. The $10.00 deposit will only be charged when you meet the girl on site.",
+      feeName: "Apartment confirmation",
+      sumNote: "This is <strong>not a prepayment</strong>. Right now — $0 from your card. $10 confirms the apartment. Charged only at the meeting.",
       checkoutSub: "Confirm apartment booking",
       legal: "By continuing you agree to Book Girl House terms and confirm the apartment booking. The $10.00 deposit will only be charged when you meet the girl on site.",
       thanksBody: "Apartment booking confirmed. The $10.00 deposit will only be charged when you meet the girl on site. Watch chat for details."
@@ -285,16 +285,16 @@ const TYPE_TEXTS = {
   visit: {
     uk: {
       docTitle: "Book Girl House — Виїзд",
-      feeName: "Депозит за виїзд",
-      sumNote: "Зараз ви підтверджуєте бронювання виїзду. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці.",
+      feeName: "Підтвердження виїзду",
+      sumNote: "Це <strong>не передоплата</strong>. Зараз з картки — 0 ₴. $10 підтверджує виїзд. Списання тільки при зустрічі.",
       checkoutSub: "Підтвердіть бронювання виїзду",
       legal: "Продовжуючи, ви погоджуєтесь з умовами Book Girl House і підтверджуєте бронювання виїзду. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці.",
       thanksBody: "Виїзд підтверджено. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці. Очікуйте деталі в чаті."
     },
     en: {
       docTitle: "Book Girl House — Outcall",
-      feeName: "Outcall deposit",
-      sumNote: "You are confirming the outcall booking now. The $10.00 deposit will only be charged when you meet the girl on site.",
+      feeName: "Outcall confirmation",
+      sumNote: "This is <strong>not a prepayment</strong>. Right now — $0 from your card. $10 confirms the outcall. Charged only at the meeting.",
       checkoutSub: "Confirm outcall booking",
       legal: "By continuing you agree to Book Girl House terms and confirm the outcall booking. The $10.00 deposit will only be charged when you meet the girl on site.",
       thanksBody: "Outcall confirmed. The $10.00 deposit will only be charged when you meet the girl on site. Watch chat for details."
@@ -303,16 +303,16 @@ const TYPE_TEXTS = {
   media: {
     uk: {
       docTitle: "Book Girl House — Відео / Фото",
-      feeName: "Комісія за відео або фото",
-      sumNote: "Після оплати доступ до контенту (відео або фото) буде надано. Деталі — у чаті.",
+      feeName: "Відео / фото",
+      sumNote: "$10 — підтвердження замовлення відео або фото. Деталі після підтвердження в чаті.",
       checkoutSub: "Введіть дані для отримання відео чи фото",
       legal: "Продовжуючи, ви погоджуєтесь з умовами Book Girl House і авторизуєте списання комісії $10.00 за відео/фото.",
       thanksBody: "Комісію $10.00 підтверджено. Доступ до контенту буде надано — очікуйте повідомлення в чаті."
     },
     en: {
       docTitle: "Book Girl House — Video / Photo",
-      feeName: "Video or photo content fee",
-      sumNote: "After payment access to the content (video or photo) will be provided. Details in chat.",
+      feeName: "Video / photo",
+      sumNote: "$10 confirms the video or photo order. Details after confirmation in chat.",
       checkoutSub: "Enter details to receive video or photo",
       legal: "By continuing you agree to Book Girl House terms and authorize a $10.00 video/photo fee.",
       thanksBody: "Your $10.00 fee is confirmed. Content access will be provided — watch chat for details."
