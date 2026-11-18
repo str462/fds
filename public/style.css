@@ -2080,3 +2080,100 @@ body.bgh-checkout {
   opacity: 1 !important;
   overflow: visible !important;
 }
+
+/* ========== Mobile + consistent field sizes (Stripe form) ========== */
+.bgh-checkout .field input,
+.bgh-checkout .time-selector,
+.bgh-checkout .stripe-billing select,
+.bgh-checkout .stripe-card-box input {
+  min-height: 48px;
+  height: 48px;
+  padding: 12px 14px;
+  font-size: 16px;
+  line-height: 1.25;
+  box-sizing: border-box;
+  width: 100%;
+}
+.bgh-checkout .stripe-card-box {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+.bgh-checkout .stripe-card-number input,
+.bgh-checkout .stripe-card-meta input {
+  min-height: 48px;
+  height: 48px;
+}
+.bgh-checkout .pay-tab {
+  min-height: 48px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.bgh-checkout .pay-methods-row.stripe-methods {
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.bgh-checkout .checkout-card {
+  padding: 20px 16px 28px;
+  overflow: hidden;
+  max-width: 100%;
+}
+.bgh-checkout .checkout-form-col {
+  padding-left: max(12px, env(safe-area-inset-left, 0px));
+  padding-right: max(12px, env(safe-area-inset-right, 0px));
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.bgh-checkout .lang-switch.light {
+  top: max(10px, env(safe-area-inset-top, 10px));
+  right: max(10px, env(safe-area-inset-right, 10px));
+  transform: scale(0.92);
+  transform-origin: top right;
+}
+.bgh-checkout .field-grid {
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.bgh-checkout .stripe-section-label {
+  margin-top: 14px;
+}
+.bgh-checkout .form-trust-strip {
+  font-size: 12.5px;
+  padding: 10px 12px;
+}
+.bgh-checkout .stripe-check {
+  font-size: 13.5px;
+}
+.bgh-checkout .stripe-check-hint {
+  font-size: 12px;
+  margin-left: 28px;
+}
+
+@media (max-width: 840px) {
+  .bgh-checkout .checkout-layout {
+    display: block;
+  }
+  .bgh-checkout .checkout-summary {
+    padding: 20px 16px 18px;
+  }
+  .bgh-checkout .checkout-form-col {
+    padding-top: 12px;
+    padding-bottom: max(32px, env(safe-area-inset-bottom, 32px));
+  }
+  .bgh-checkout .sum-amount {
+    font-size: 32px;
+  }
+  .bgh-checkout .time-row {
+    margin-bottom: 4px;
+  }
+}
+
+@media (max-width: 380px) {
+  .bgh-checkout .field-grid {
+    grid-template-columns: 1fr;
+  }
+  .bgh-checkout .checkout-card {
+    padding: 16px 12px 24px;
+  }
+}

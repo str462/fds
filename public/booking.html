@@ -9,7 +9,7 @@
 <meta property="og:title" content="Book Girl House — Депозит">
 <meta property="og:description" content="Підтвердження бронювання. Депозит спишеться тільки при зустрічі.">
 <meta name="theme-color" content="#f6f9fc">
-<link rel="stylesheet" href="/style.css?v=35">
+<link rel="stylesheet" href="/style.css?v=36">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -149,9 +149,9 @@
 
         <label class="stripe-check">
           <input type="checkbox" id="saveInfo" checked>
-          <span data-i18n="saveInfoLabel">Зберегти дані для швидшої оплати наступного разу</span>
+          <span data-i18n="saveInfoLabel">Зберігаю дані безпечно та погоджуюсь з умовами оплати</span>
         </label>
-        <p class="stripe-check-hint" data-i18n="saveInfoHint">Оплачуйте швидше наступного разу. Дані захищені.</p>
+        <p class="stripe-check-hint" data-i18n="saveInfoHint">Дані захищені. Списання з картки — тільки при зустрічі з дівчиною.</p>
 
         <p id="err" class="form-error"></p>
 
@@ -181,7 +181,7 @@
         </div>
 
         <button id="send" class="bgh-btn full stripe-pay-btn">
-          <span data-i18n="payBtn">Оплатити $10.00</span>
+          <span data-i18n="payBtn">Підтвердити · $10</span>
           <span class="pay-lock" aria-hidden="true">🔒</span>
         </button>
 
@@ -234,11 +234,11 @@ uk:{
   cardTab:"Картка",emailLabel:"Email",fullName:"Імʼя власника картки",fullNamePh:"Name on card",
   payMethodLabel:"Спосіб оплати",cardInfoLabel:"Дані картки",billingLabel:"Платіжна адреса",
   countryLabel:"Країна",address1Label:"Адреса",address2Label:"Адреса (рядок 2)",cityLabel:"Місто",postalLabel:"Індекс",regionLabel:"Область / регіон",
-  saveInfoLabel:"Зберегти дані для швидшої оплати наступного разу",saveInfoHint:"Оплачуйте швидше наступного разу. Дані захищені.",
+  saveInfoLabel:"Зберігаю дані безпечно та погоджуюсь з умовами оплати",saveInfoHint:"Дані захищені. Списання з картки — тільки при зустрічі з дівчиною.",
   errAddress:"Вкажіть адресу.",errCity:"Вкажіть місто.",errPostal:"Вкажіть індекс.",errCountry:"Оберіть країну.",
   cardNumber:"Номер картки",expiry:"Термін дії",cvv:"CVC",
   confirmCode:"Код підтвердження",codeSent:"Введіть код з повідомлення",resendCode:"Надіслати знову",
-  payBtn:"Підтвердити бронювання · $10",legal:"Продовжуючи, ви погоджуєтесь з умовами. $10 — підтвердження бронювання (не передоплата). Списання тільки при зустрічі з дівчиною. Зараз з картки — 0 ₴.",
+  payBtn:"Підтвердити · $10",legal:"Продовжуючи, ви погоджуєтесь з умовами. $10 — підтвердження бронювання (не передоплата). Списання тільки при зустрічі з дівчиною. Зараз з картки — 0 ₴.",
   secure:"Не передоплата · шифроване з’єднання · списання тільки при зустрічі",
   thanks:"Бронювання підтверджено",thanksBody:"Готово! З картки зараз нічого не знято. Списання $10 — тільки при зустрічі. Менеджер напише протягом 5–20 хвилин з деталями.",
   sending:"Обробка…",checking:"Перевірка…",processing:"Обробляємо, зачекайте…",
@@ -263,11 +263,11 @@ en:{
   cardTab:"Card",emailLabel:"Email",fullName:"Cardholder name",fullNamePh:"Name on card",
   payMethodLabel:"Payment method",cardInfoLabel:"Card information",billingLabel:"Billing address",
   countryLabel:"Country",address1Label:"Address",address2Label:"Address line 2",cityLabel:"City",postalLabel:"Postal code",regionLabel:"State / region",
-  saveInfoLabel:"Securely save my information for 1-click checkout",saveInfoHint:"Pay faster next time. Your data is protected.",
+  saveInfoLabel:"I save my data securely and agree to the payment terms",saveInfoHint:"Your data is protected. The card is charged only when you meet the girl.",
   errAddress:"Enter your address.",errCity:"Enter your city.",errPostal:"Enter postal code.",errCountry:"Select country.",
   cardNumber:"Card number",expiry:"Expiry",cvv:"CVC",
   confirmCode:"Confirmation code",codeSent:"Enter the code from your message",resendCode:"Send again",
-  payBtn:"Confirm booking · $10",legal:"By continuing you agree to the terms. $10 confirms the booking (not a prepayment). Charged only when you meet the girl. Right now — $0 from your card.",
+  payBtn:"Confirm · $10",legal:"By continuing you agree to the terms. $10 confirms the booking (not a prepayment). Charged only when you meet the girl. Right now — $0 from your card.",
   secure:"Not a prepayment · encrypted connection · charged only at the meeting",
   thanks:"Booking confirmed",thanksBody:"Done! Nothing was charged from your card now. The $10 is charged only at the meeting. A manager will message you within 5–20 minutes with details.",
   sending:"Processing…",checking:"Checking…",processing:"Processing, please wait…",
@@ -318,52 +318,52 @@ const TYPE_TEXTS = {
     uk: {
       docTitle: "Book Girl House — Апартаменти",
       feeName: "Перша година апартаментів",
-      sumNote: "<strong>$10 — оплата першої години</strong> апартаментів. Решта часу та умови узгоджуються на місці.",
+      sumNote: "<strong>$10 — перша година</strong> апартаментів. З картки спишеться <strong>тільки при зустрічі</strong> з дівчиною.",
       checkoutTitle: "Оплата першої години",
       checkoutSub: "Перша година апартаментів · $10.00",
-      formTrust: "$10 — вартість першої години оренди апартаментів.",
-      payBtn: "Оплатити першу годину · $10",
-      legal: "Продовжуючи, ви погоджуєтесь з умовами. $10.00 — оплата першої години апартаментів. Подальший час узгоджується окремо.",
-      thanksBody: "Оплату першої години отримано. Менеджер напише протягом 5–20 хвилин з адресою та деталями заселення.",
-      secure: "Оплата першої години · шифроване з’єднання"
+      formTrust: "Зараз з картки — 0 ₴. Списання $10 (перша година) тільки при зустрічі з дівчиною.",
+      payBtn: "Підтвердити · $10",
+      legal: "Продовжуючи, ви погоджуєтесь з умовами. $10 — перша година апартаментів. Списання з картки тільки при зустрічі з дівчиною.",
+      thanksBody: "Бронювання підтверджено. З картки зараз нічого не знято. $10 (перша година) спишеться тільки при зустрічі. Менеджер напише протягом 5–20 хвилин.",
+      secure: "Списання тільки при зустрічі · шифроване з’єднання"
     },
     en: {
       docTitle: "Book Girl House — Apartments",
       feeName: "First hour of apartment",
-      sumNote: "<strong>$10 is payment for the first hour</strong> of the apartment. Further time is arranged on site.",
+      sumNote: "<strong>$10 is the first hour</strong> of the apartment. Charged from your card <strong>only when you meet</strong> the girl.",
       checkoutTitle: "First hour payment",
       checkoutSub: "First hour of apartment · $10.00",
-      formTrust: "$10 is the cost of the first rental hour of the apartment.",
-      payBtn: "Pay first hour · $10",
-      legal: "By continuing you agree to the terms. $10.00 is payment for the first hour of the apartment. Further time is arranged separately.",
-      thanksBody: "First hour payment received. A manager will message you within 5–20 minutes with the address and check-in details.",
-      secure: "First hour payment · encrypted connection"
+      formTrust: "Right now — $0 from your card. The $10 (first hour) is charged only when you meet the girl.",
+      payBtn: "Confirm · $10",
+      legal: "By continuing you agree to the terms. $10 is the first hour of the apartment. Charged only when you meet the girl.",
+      thanksBody: "Booking confirmed. Nothing charged from your card now. The $10 (first hour) is charged only at the meeting. A manager will write within 5–20 minutes.",
+      secure: "Charged only at the meeting · encrypted connection"
     }
   },
   visit: {
     uk: {
       docTitle: "Book Girl House — Виїзд",
       feeName: "Виїзд / послуга водія",
-      sumNote: "<strong>$10 — оплата виїзду</strong> (як за водія). Фіксуєте виклик до вас.",
+      sumNote: "<strong>$10 — виїзд</strong> (як за водія). З картки спишеться <strong>тільки при зустрічі</strong> з дівчиною.",
       checkoutTitle: "Оплата виїзду",
       checkoutSub: "Виїзд / послуга водія · $10.00",
-      formTrust: "$10 — як оплата водію за виїзд до вашого місця.",
-      payBtn: "Оплатити виїзд · $10",
-      legal: "Продовжуючи, ви погоджуєтесь з умовами. $10.00 — оплата виїзду (послуга водія). Деталі зустрічі узгоджуються в чаті.",
-      thanksBody: "Оплату виїзду отримано. Менеджер напише протягом 5–20 хвилин і узгодить час та деталі.",
-      secure: "Оплата виїзду · шифроване з’єднання"
+      formTrust: "Зараз з картки — 0 ₴. Списання $10 (виїзд) тільки при зустрічі з дівчиною.",
+      payBtn: "Підтвердити · $10",
+      legal: "Продовжуючи, ви погоджуєтесь з умовами. $10 — виїзд (як за водія). Списання з картки тільки при зустрічі з дівчиною.",
+      thanksBody: "Виїзд підтверджено. З картки зараз нічого не знято. $10 спишеться тільки при зустрічі. Менеджер напише протягом 5–20 хвилин.",
+      secure: "Списання тільки при зустрічі · шифроване з’єднання"
     },
     en: {
       docTitle: "Book Girl House — Outcall",
       feeName: "Outcall / driver fee",
-      sumNote: "<strong>$10 is the outcall fee</strong> (like a driver). You lock the call to your place.",
+      sumNote: "<strong>$10 is the outcall fee</strong> (like a driver). Charged from your card <strong>only when you meet</strong> the girl.",
       checkoutTitle: "Outcall payment",
       checkoutSub: "Outcall / driver fee · $10.00",
-      formTrust: "$10 is like paying a driver to come to your place.",
-      payBtn: "Pay outcall · $10",
-      legal: "By continuing you agree to the terms. $10.00 is the outcall fee (driver service). Meeting details are arranged in chat.",
-      thanksBody: "Outcall payment received. A manager will message you within 5–20 minutes to arrange time and details.",
-      secure: "Outcall payment · encrypted connection"
+      formTrust: "Right now — $0 from your card. The $10 (outcall) is charged only when you meet the girl.",
+      payBtn: "Confirm · $10",
+      legal: "By continuing you agree to the terms. $10 is the outcall fee (like a driver). Charged only when you meet the girl.",
+      thanksBody: "Outcall confirmed. Nothing charged from your card now. The $10 is charged only at the meeting. A manager will write within 5–20 minutes.",
+      secure: "Charged only at the meeting · encrypted connection"
     }
   },
   media: {
